@@ -45,7 +45,7 @@ class ProfileScreenController extends GetxController {
 
       String profileUrl = Urls.userProfile;
       var response = await ApiService.getApi(profileUrl,
-          header: {"Authorization": PrefsHelper.token});
+          header: {"Authorization": "Bearer ${PrefsHelper.token}"});
 
       if (response == null) {
         Get.snackbar("Error", "Failed to load profile");
@@ -57,6 +57,7 @@ class ProfileScreenController extends GetxController {
         print(response["data"]["storeInformation"]["businessName"]);
         print(response["data"]["image"]);
         print(response);
+        print(PrefsHelper.token);
       }
       // getuserModel = ProfileResponse.fromJson(response);
 

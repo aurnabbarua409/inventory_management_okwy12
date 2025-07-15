@@ -117,7 +117,7 @@ class WholesalerProfileScreenController extends GetxController {
 
   void fetchProfile() async {
     final response = await ApiService.getApi(Urls.userProfile,
-        header: {"Authorization": PrefsHelper.token});
+        header: {"Authorization": "Bearer ${PrefsHelper.token}"});
     if (kDebugMode) {
       print(
           "=================================> running fetching profile for profile");
