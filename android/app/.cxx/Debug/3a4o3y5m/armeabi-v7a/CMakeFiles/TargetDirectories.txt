@@ -1,0 +1,2 @@
+C:/Users/Sarah/Desktop/Inventory_Management_App_okwy12_flutter_app/android/app/.cxx/Debug/3a4o3y5m/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Sarah/Desktop/Inventory_Management_App_okwy12_flutter_app/android/app/.cxx/Debug/3a4o3y5m/armeabi-v7a/CMakeFiles/rebuild_cache.dir
