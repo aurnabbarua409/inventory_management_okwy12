@@ -18,13 +18,13 @@ class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
 
   final SignupScreenController controller = Get.put(SignupScreenController());
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Form(
-        key: controller.formKey,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -88,8 +88,7 @@ class SignupScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20.0),
                     const TextWidget(
-                      text: 
-                      AppStrings.fullName,
+                      text: AppStrings.fullName,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       fontColor: AppColors.black,
@@ -173,24 +172,21 @@ class SignupScreen extends StatelessWidget {
                       fontColor: AppColors.black,
                     ),
                     const SpaceWidget(spaceHeight: 12),
-
                     TextFieldWidget(
                       controller: controller.phoneNumberController,
                       hintText: 'Enter your phone number',
                       maxLines: 1,
-
                       validator: (value) {
-
                         if (value == null || value.isEmpty) {
-
                           return 'Please enter your phone number';
+                        }
+                        if (value.length != 11) {
+                          return "Phone number should be atleast 11 character";
                         }
                         return null;
                       },
                     ),
-
                     const SpaceWidget(spaceHeight: 24),
-
                     ButtonWidget(
                       onPressed: () {
                         if (controller.selectedRole.value == null) {
@@ -199,13 +195,16 @@ class SignupScreen extends StatelessWidget {
                               snackPosition: SnackPosition.BOTTOM);
                           return;
                         }
+                        if (_formKey.currentState == null ||
+                            !_formKey.currentState!.validate()) {
+                          return;
+                        }
                         controller.handleContinue();
                       },
                       label: AppStrings.continueText,
                       backgroundColor: AppColors.primaryBlue,
                       buttonWidth: double.infinity,
                     ),
-
                     const SpaceWidget(spaceHeight: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,

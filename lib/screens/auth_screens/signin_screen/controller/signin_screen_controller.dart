@@ -10,32 +10,28 @@ import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 class SignInScreenController extends GetxController {
-  final formKey = GlobalKey<FormState>();
   var selectedRole = UserRole;
-  bool isLoading = false;
+  final RxBool isLoading = false.obs;
 
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   MSignIn? signInData;
 
   @override
   void onInit() {
     super.onInit();
-    emailController = TextEditingController(
-        text: kDebugMode
-            ? 'rahipeg395@hosintoy.com'
-            : ''); //hilaryonyenkem@yahoo.com hoyevi9323@calmpros.com  bewir47352@erapk.com
-    passwordController = TextEditingController(
-        text: kDebugMode ? '12345678' : ''); //Ctg..123 Nnadim123@
+    if (kDebugMode) {
+      emailController.text = 'j2f8ctwkgx@jkotypc.com';
+      // 'rahipeg395@hosintoy.com';
+      passwordController.text = '12345678';
+    }
+    //hilaryonyenkem@yahoo.com hoyevi9323@calmpros.com  bewir47352@erapk.com
+    //Ctg..123 Nnadim123@
   }
 
   Future<void> signInUser() async {
     try {
-      if (formKey.currentState == null || !(formKey.currentState!.validate())) {
-        return;
-      }
-
       final email = emailController.text.trim();
       final password = passwordController.text.trim();
 
@@ -44,7 +40,7 @@ class SignInScreenController extends GetxController {
         return;
       }
 
-      isLoading = true;
+      isLoading.value = true;
       update();
       final response = await _performSignInRequest(email, password);
       appLogger(response);
@@ -65,7 +61,7 @@ class SignInScreenController extends GetxController {
       Get.snackbar('Error', 'Login request failed. Please try again.');
       debugPrint("SignIn Error: $e");
     } finally {
-      isLoading = false;
+      isLoading.value = false;
       update();
     }
   }
@@ -98,11 +94,13 @@ class SignInScreenController extends GetxController {
     // Save the user data to PrefsHelper
     PrefsHelper.token = token;
     PrefsHelper.isLogIn = true;
+    PrefsHelper.userRole = role;
     PrefsHelper.setString('token', token);
     PrefsHelper.setString('userRole', role);
     PrefsHelper.setString('userId', userId);
     PrefsHelper.setString('email', email);
     PrefsHelper.setBool("isLogIn", true);
+
     await PrefsHelper.getAllPrefData();
 
     debugPrint("User Role: ======================> $role");

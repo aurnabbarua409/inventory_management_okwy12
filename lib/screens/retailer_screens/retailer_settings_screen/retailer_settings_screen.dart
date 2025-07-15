@@ -20,14 +20,9 @@ class RetailerSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppbarWidget(
+      appBar: const AppbarWidget(
         text: AppStrings.settings,
         centerTitle: true,
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Get.back();
-            }),
       ),
       body: ListView(
         children: [
@@ -151,7 +146,7 @@ class RetailerSettingsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            if (title == AppStrings.logOut)
+            if (title != AppStrings.logOut)
               const Icon(Icons.arrow_forward_ios, size: 16),
           ],
         ),

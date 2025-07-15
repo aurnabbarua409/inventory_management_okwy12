@@ -78,7 +78,8 @@ class AppStrings {
   static const String clickHere = "Click here";
   static const String toInvite =
       "to invite your customers to join ExpressList so they can easily receive your orders.";
-  static const String toInviteWholesaler = " to invite your customers to join ExpressList so they can easily send you their orders.";
+  static const String toInviteWholesaler =
+      " to invite your customers to join ExpressList so they can easily send you their orders.";
   static const String findWholeSaler = "Find Wholesaler";
   static const String wholesalerDetails = "Wholesaler Details";
   static const String invoiceDetails = "Invoice Details";
@@ -172,4 +173,6 @@ class AppStrings {
   static const String currency = "₦";
 
   static var orderId;
+
+  static const somethingWentWrong = "Something went wrong";
 }

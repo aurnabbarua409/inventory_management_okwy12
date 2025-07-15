@@ -16,7 +16,7 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
 
   final ForgotPasswordVerifyCodeScreenController controller =
       Get.put(ForgotPasswordVerifyCodeScreenController());
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> args = Get.arguments;
@@ -24,7 +24,7 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Form(
-        key: controller.formKey,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -102,8 +102,7 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 32),
                     ButtonWidget(
                       onPressed: () {
-                        if (controller.formKey.currentState?.validate() ??
-                            false) {
+                        if (_formKey.currentState?.validate() ?? false) {
                           controller.verifyOTP();
                         } else {
                           Get.snackbar(

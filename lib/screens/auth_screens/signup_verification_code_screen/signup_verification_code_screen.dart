@@ -16,7 +16,7 @@ class SignupVerificationCodeScreen extends StatelessWidget {
 
   final SignupVerifyCodeScreenController controller =
       Get.put(SignupVerifyCodeScreenController());
-
+ final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -25,7 +25,7 @@ class SignupVerificationCodeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Form(
-        key: controller.formKey,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,7 +103,7 @@ class SignupVerificationCodeScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 32),
                     ButtonWidget(
                       onPressed: () {
-                        if (controller.formKey.currentState?.validate() ??
+                        if (_formKey.currentState?.validate() ??
                             false) {
                           controller.verifyOTP();
                         } else {

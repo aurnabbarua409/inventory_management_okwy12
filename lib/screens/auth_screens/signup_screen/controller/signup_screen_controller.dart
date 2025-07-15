@@ -8,10 +8,8 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import '../../../../utils/app_enum.dart';
 
 class SignupScreenController extends GetxController {
-  final formKey = GlobalKey<FormState>();
-  
   // Initially set to null to indicate no role is selected
-  var selectedRole = Rxn<UserRole>(); 
+  var selectedRole = Rxn<UserRole>();
 
   // TextEditingControllers
   final nameController = TextEditingController();
@@ -24,12 +22,8 @@ class SignupScreenController extends GetxController {
 
   // Function to handle form submission and sign-up API call
   Future<void> handleContinue() async {
-    if (formKey.currentState == null || !formKey.currentState!.validate()) {
-      return;
-    }
-
     final userRole = selectedRole.value;
-    
+
     // Ensure a role is selected before continuing
     if (userRole == null) {
       Get.snackbar('Error', 'Please select a role (Retailer/Wholesaler)');

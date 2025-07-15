@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
@@ -123,7 +124,9 @@ class RetailerHomeScreen extends StatelessWidget {
                   const SpaceWidget(spaceHeight: 16),
                   CustomContainerWidget(
                     onTap: () {
-                      Get.toNamed(AppRoutes.retailerOrderHistoryScreen);
+                      // Get.toNamed(AppRoutes.retailerOrderHistoryScreen);
+                      final control = Get.find<BottomNavbarController>();
+                      control.changeIndex(2);
                     },
                     containerColor: AppColors.purpleLight,
                     icon: AppIconsPath.orderHistoryIcon,

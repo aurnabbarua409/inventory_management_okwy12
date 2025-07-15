@@ -17,7 +17,7 @@ class SigninScreen extends StatelessWidget {
   SigninScreen({super.key});
 
   final SignInScreenController controller = Get.put(SignInScreenController());
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +30,7 @@ class SigninScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
-                key: controller.formKey,
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -86,6 +86,10 @@ class SigninScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 24),
                     ButtonWidget(
                       onPressed: () {
+                        if (_formKey.currentState == null ||
+                            !(_formKey.currentState!.validate())) {
+                          return;
+                        }
                         controller.signInUser();
                       },
                       label: AppStrings.signIn,

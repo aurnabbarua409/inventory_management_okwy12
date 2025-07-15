@@ -18,7 +18,7 @@ class StoreInformationScreen extends StatelessWidget {
 
   final StoreInformationScreenController controller =
       Get.put(StoreInformationScreenController());
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     //final arguments = Get.arguments;
@@ -35,7 +35,7 @@ class StoreInformationScreen extends StatelessWidget {
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
-                key: controller.formKey,
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -184,6 +184,9 @@ class StoreInformationScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 40),
                     ButtonWidget(
                       onPressed: () {
+                        if (!(_formKey.currentState!.validate())) {
+                          return;
+                        }
                         controller.continueToNextScreen();
                       },
                       label: AppStrings.continueText,

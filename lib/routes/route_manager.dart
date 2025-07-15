@@ -14,6 +14,7 @@ import 'package:inventory_app/screens/wholesaler_screens/wholesaler_home_screen/
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_home_screen/wholesaler_order_details.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/wholesaler_order_history.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/add_card.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/payment_webview_page.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/subscription_screen.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_settings.dart';
 import 'package:inventory_app/screens/widgets/wholesaler_tabbar_view.dart';
@@ -255,6 +256,7 @@ class RouteManager {
         page: () => WholesalerFindWholeSellerScreen(),
         // binding: GeneralBindings(),
       ),
+      
     ];
   }
 }

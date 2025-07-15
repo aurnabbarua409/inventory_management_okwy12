@@ -36,14 +36,15 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // IconButtonWidget(
-                  //   onTap: () {
-                  //     Get.back();
-                  //   },
-                  //   icon: AppIconsPath.backIcon,
-                  //   color: AppColors.white,
-                  //   size: ResponsiveUtils.width(22), // Responsive size
-                  // ),
+                  if (initialTabIndex == 2)
+                    IconButtonWidget(
+                      onTap: () {
+                        Get.back();
+                      },
+                      icon: AppIconsPath.backIcon,
+                      color: AppColors.white,
+                      size: ResponsiveUtils.width(22), // Responsive size
+                    ),
                   const TextWidget(
                     text: AppStrings.orderHistory,
                     fontSize: 20,

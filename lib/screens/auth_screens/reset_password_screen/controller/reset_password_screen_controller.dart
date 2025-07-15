@@ -27,9 +27,8 @@ class ResetPasswordScreenController extends GetxController {
         colorText: AppColors.white,
       );
     } else {
-      Get.offAllNamed(AppRoutes.signinScreen);
-      print(
-          'Email: ${newPasswordController.text}, Password: ${confirmPasswordController.text}');
+      // need to implement
+      Get.toNamed(AppRoutes.signinScreen);      
     }
   }
 

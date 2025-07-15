@@ -6,13 +6,11 @@ import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart'; // Import webview_flutter
 
 class PaymentWebViewPage extends StatefulWidget {
-  const PaymentWebViewPage({super.key});
-
+  const PaymentWebViewPage({super.key, required this.controller});
+  final PaymentController controller;
   @override
   State<PaymentWebViewPage> createState() => _PaymentWebviewPageState();
 }
-
-final PaymentController paymentController = Get.find<PaymentController>();
 
 class _PaymentWebviewPageState extends State<PaymentWebViewPage> {
   @override
@@ -28,7 +26,7 @@ class _PaymentWebviewPageState extends State<PaymentWebViewPage> {
           },
         ),
       ),
-      body: WebViewWidget(controller: paymentController.webViewController),
+      body: WebViewWidget(controller: widget.controller.webViewController),
     );
   }
 }

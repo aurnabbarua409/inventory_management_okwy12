@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/controller/subs_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/payment_webview_page.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
@@ -17,7 +18,7 @@ class SubscriptionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   // final PaymentController paymentController = Get.put(PaymentController());
+    // final PaymentController paymentController = Get.put(PaymentController());
     return Scaffold(
       appBar: AppbarWidget(
         text: AppStrings.subscription,
@@ -124,8 +125,11 @@ class SubscriptionScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width - 50,
             child: ButtonWidget(
               onPressed: () {
-                paymentController.createPaymentPackage(); 
-                  Get.to(() => const PaymentWebViewPage()); 
+                final control = Get.find<PaymentController>();
+                control.createPaymentPackage();
+                Get.to(() => PaymentWebViewPage(
+                      controller: control,
+                    ));
               },
               label: AppStrings.subscribe,
               fontSize: 18,

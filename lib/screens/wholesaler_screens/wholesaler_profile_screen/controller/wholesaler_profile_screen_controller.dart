@@ -1,9 +1,15 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
+import 'package:inventory_app/models/retailer/retailer_settings/retailer_profile/retailer_get_profile_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 
 import '../../../../../utils/app_enum.dart';
 import '../../../../widgets/popup_widget/popup_widget.dart';
@@ -12,7 +18,7 @@ class WholesalerProfileScreenController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var selectedRole = UserRole.retailer.obs;
   final imageFile = Rx<File?>(null);
-
+  var image = Rx<String>('');
   // Controllers for form fields
   final fullNameController = TextEditingController();
   final businessNameController = TextEditingController();
@@ -107,6 +113,33 @@ class WholesalerProfileScreenController extends GetxController {
     }
     Get.toNamed(route, arguments: {'userRole': userRole});
     print("$userRole selected. Navigating to $route.");
+  }
+
+  void fetchProfile() async {
+    final response = await ApiService.getApi(Urls.userProfile,
+        header: {"Authorization": PrefsHelper.token});
+    if (kDebugMode) {
+      print(
+          "=================================> running fetching profile for profile");
+      print("======================================> $response");
+    }
+    if (response != null) {
+      fullNameController.text = response["data"]["name"];
+      businessNameController.text =
+          response["data"]["storeInformation"]["businessName"];
+      emailController.text = response["data"]["email"];
+      addressController.text = response["data"]["storeInformation"]["location"];
+      image.value = response["data"]["image"];
+    } else {
+      Get.snackbar("Error", response["message"]);
+    }
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    // fetchProfile();
   }
 
   @override

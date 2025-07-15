@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/utils/app_urls.dart';
@@ -8,8 +9,6 @@ import 'package:inventory_app/models/auth/otp_verification_model.dart';
 import '../../../../utils/app_enum.dart';
 
 class SignupVerifyCodeScreenController extends GetxController {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   var otpTextEditingController1 = TextEditingController();
   var otpTextEditingController2 = TextEditingController();
   var otpTextEditingController3 = TextEditingController();
@@ -71,16 +70,25 @@ class SignupVerifyCodeScreenController extends GetxController {
     });
   }
 
-  void resendCode() {
-    
+  void resendCode() async {
     remainingSeconds.value = 180;
     canResend.value = false;
     startTimer();
-    Get.snackbar(
-      "Code Sent",
-      "A new verification code has been sent to your email.",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    try {
+      final response =
+          await ApiService.postApi(Urls.forgetPassword, {"email": email});
+      if (response != null) {
+        Get.snackbar(
+          "Code Sent",
+          "A new verification code has been sent to your email.",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        Get.snackbar("Error", response["message"]);
+      }
+    } catch (e) {
+      Get.snackbar("Error", AppStrings.somethingWentWrong);
+    }
   }
 
   String formatTime() {

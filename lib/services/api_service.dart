@@ -60,6 +60,7 @@ class ApiService {
     } on TimeoutException {
       return null;
     } catch (e) {
+      appLogger(e);
       return null;
     }
   }
@@ -142,7 +143,12 @@ class ApiService {
       final response = await http
           .get(Uri.parse(url), headers: header ?? mainHeader)
           .timeout(const Duration(seconds: timeOut));
-
+      if (kDebugMode) {
+        print(
+            "============================== profile ================================");
+        print(response.body);
+        print("=========================================================");
+      }
       if (response.statusCode == sucess) {
         return jsonDecode(response.body);
       }

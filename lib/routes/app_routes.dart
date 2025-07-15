@@ -54,4 +54,5 @@ class AppRoutes {
   static const wholesalerNotificationScreen = '/wholesalerNotificationScreen';
   static const wholesalerFindWholeSellerScreen =
       '/wholesalerFindWholeSellerScreen';
+      
 }

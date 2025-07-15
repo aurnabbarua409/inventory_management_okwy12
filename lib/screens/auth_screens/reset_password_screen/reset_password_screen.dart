@@ -9,7 +9,7 @@ import '../../../widgets/appbar_widget/auth_appbar_widget.dart';
 import '../../../widgets/space_widget/space_widget.dart';
 import '../../../widgets/text_field_widget/text_field_widget.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
-import 'controller/resent_password_screen_controller.dart';
+import 'controller/reset_password_screen_controller.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   ResetPasswordScreen({super.key});

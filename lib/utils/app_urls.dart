@@ -26,6 +26,5 @@ class Urls {
   static const getNotification = "$baseUrl/notification/";
   static const readNotification = "$baseUrl/notification/";
   static const flutterWavePackagePay = "$baseUrl/flutter-wave-package/pay";
-
-
+  static const forgetPassword = "$baseUrl/auth/forget-password";
 }

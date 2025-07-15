@@ -51,7 +51,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   const SpaceWidget(spaceHeight: 12),
                   TextFieldWidget(
                     controller: controller.emailController,
-                    hintText: 'Enter your email or phone number',
+                    hintText: 'Enter your email address',
                     maxLines: 1,
                   ),
                   const SpaceWidget(spaceHeight: 48),

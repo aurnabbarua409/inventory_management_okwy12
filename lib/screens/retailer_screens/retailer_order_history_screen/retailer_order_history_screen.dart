@@ -26,26 +26,12 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
         backgroundColor: AppColors.whiteLight,
         body: Column(
           children: [
-            MainAppbarWidget(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButtonWidget(
-                    onTap: () {
-                      Get.back();
-                    },
-                    icon: AppIconsPath.backIcon,
-                    color: AppColors.white,
-                    size: ResponsiveUtils.width(22),
-                  ),
-                  const TextWidget(
-                    text: AppStrings.orderHistory,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    fontColor: AppColors.white,
-                  ),
-                  Container(width: ResponsiveUtils.width(28)),
-                ],
+            const MainAppbarWidget(
+              child: TextWidget(
+                text: AppStrings.orderHistory,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                fontColor: AppColors.white,
               ),
             ),
             SizedBox(height: ResponsiveUtils.height(16)),
@@ -60,8 +46,7 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
                       pendingInvoices: controller.pendingOrders.map((pending) {
                         return {
                           "company": pending.wholeSeller.name,
-                          "date":
-                              pending.createdAt.toIso8601String(),
+                          "date": pending.createdAt.toIso8601String(),
                           "logo": ClipRRect(
                             borderRadius:
                                 BorderRadius.circular(ResponsiveUtils.width(2)),

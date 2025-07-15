@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +13,7 @@ import '../../../../../utils/app_enum.dart';
 import '../../../../widgets/popup_widget/popup_widget.dart';
 
 class ProfileScreenController extends GetxController {
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   var selectedRole = UserRole.retailer.obs;
   final imageFile = Rx<File?>(null);
   var isLoading = false.obs;
@@ -23,64 +24,79 @@ class ProfileScreenController extends GetxController {
   ProfileData get getProfileData => getuserModel.data;
 
   // Controllers for form fields
-  TextEditingController fullNameController = TextEditingController();
-  TextEditingController businessNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  final businessNameController = TextEditingController();
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final addressController = TextEditingController();
+  final phoneController = TextEditingController();
 
   /// Get User Profile
-  getProfileRepo() async {
+  void getProfileRepo() async {
     isLoading.value = true;
-    update();
+    // update();
 
     try {
-      String? userId = await PrefsHelper.userId;
+      String? userId = PrefsHelper.userId;
 
-      if (userId == null || userId.isEmpty) {
+      if (userId.isEmpty) {
         Get.snackbar("Error", "User ID not found");
         return;
       }
 
       String profileUrl = Urls.userProfile;
-      var response = await ApiService.getApi(profileUrl);
+      var response = await ApiService.getApi(profileUrl,
+          header: {"Authorization": PrefsHelper.token});
 
       if (response == null) {
         Get.snackbar("Error", "Failed to load profile");
         return;
       }
-
-      getuserModel = ProfileResponse.fromJson(response);
+      if (kDebugMode) {
+        print(
+            "====================================     response       ======================");
+        print(response["data"]["storeInformation"]["businessName"]);
+        print(response["data"]["image"]);
+        print(response);
+      }
+      // getuserModel = ProfileResponse.fromJson(response);
 
       // Debugging: Print the profile data
-      debugPrint("Fetched Profile: ${getuserModel.data}");
-
+      // debugPrint(
+      //     "--------------------------------Fetched Profile: ${getuserModel.data}");
+      // if (kDebugMode) {
+      //   print(
+      //       "====================================================================>");
+      //   print(getuserModel.data.businessName);
+      //   print(
+      //       "====================================================================>");
+      // }
       // Populate Controllers with Data
-      fullNameController.text = getuserModel.data.name ?? '';
-      businessNameController.text = getuserModel.data.businessName ?? '';
-      emailController.text = getuserModel.data.email ?? '';
-      addressController.text = getuserModel.data.location ?? '';
-      image.value = getuserModel.data.image ?? '';
+      fullNameController.text = response["data"]["name"];
+      businessNameController.text =
+          response["data"]["storeInformation"]["businessName"];
+      emailController.text = response["data"]["email"];
+      addressController.text = response["data"]["storeInformation"]["location"];
+      image.value = response["data"]["image"];
     } catch (e) {
       Get.snackbar("Error", "An error occurred: $e");
     }
 
     isLoading.value = false;
-    update();
+    // update();
   }
 
   /// Update User Profile
   Future<void> updateProfileRepo() async {
     updateIsLoading.value = true;
-    update();
+    // update();
 
     // Prepare the body for the PATCH request
-     Map<String, dynamic> body = {
+    Map<String, dynamic> body = {
       "name": fullNameController.text,
       "email": emailController.text,
       "businessName": businessNameController.text,
       "location": addressController.text,
-      "image": image.value,  // You can update this to dynamically pass image URL
+      "image": image.value, // You can update this to dynamically pass image URL
       "phone": phoneController.text,
     };
 
@@ -130,7 +146,7 @@ class ProfileScreenController extends GetxController {
     }
 
     updateIsLoading.value = false;
-    update();
+    // update();
   }
 
   /// Show Image Source Selection
@@ -176,7 +192,7 @@ class ProfileScreenController extends GetxController {
 
   /// Handle Continue Button Press
   void handleContinue() {
-    if (formKey.currentState?.validate() ?? false) {
+    if (_formKey.currentState?.validate() ?? false) {
       final userRole = selectedRole.value;
       navigateToRoleSpecificScreen(userRole);
     } else {

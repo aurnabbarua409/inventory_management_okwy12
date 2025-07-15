@@ -11,7 +11,6 @@ class StoreInformationScreenController extends GetxController {
   final storeAddressController = TextEditingController();
   final locationController = TextEditingController();
   final RxBool isChecked = false.obs;
-  final formKey = GlobalKey<FormState>();
 
   var selectedBusinessCategory = 'Education'.obs;
 
@@ -38,10 +37,7 @@ class StoreInformationScreenController extends GetxController {
     selectedBusinessCategory.value = value ?? 'Education';
   }
 
-  Future<void> continueToNextScreen() async {
-    if (!(formKey.currentState!.validate())) {
-      return;
-    }
+  Future<void> continueToNextScreen() async {   
     final arguments = Get.arguments;
     final userRole = arguments['userRole'] ?? "";
     final email = arguments['email'] ?? "";

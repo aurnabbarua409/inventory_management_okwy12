@@ -28,7 +28,6 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
   final FindWholesalerController controller =
       Get.put(FindWholesalerController()); // GetX controller
 
-
   void showSendOrderDialog(String wholesalerId, BuildContext context) {
     showCustomPopup(
       context,
@@ -108,7 +107,6 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
   }
 
   // Show a popup asking to share the app with the phone number
-  
 
   void showSendOrderSuccessfulDialog(
       String wholesalerId, BuildContext context) {
@@ -182,27 +180,12 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
       body: Column(
         children: [
           // AppBar Section
-          MainAppbarWidget(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButtonWidget(
-                  onTap: () {
-                    Get.back();
-                  },
-                  icon: AppIconsPath.backIcon,
-                  color: AppColors.white,
-                  size: 22,
-                ),
-                const TextWidget(
-                  text: AppStrings.findWholeSaler,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  fontColor: AppColors.white,
-                ),
-
-                Container(width: ResponsiveUtils.width(28)),
-              ],
+          const MainAppbarWidget(
+            child: TextWidget(
+              text: AppStrings.findWholeSaler,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              fontColor: AppColors.white,
             ),
           ),
           const SpaceWidget(spaceHeight: 16),
@@ -257,7 +240,8 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Obx(() {
               if (controller.filteredWholesalers.isEmpty) {
-                return const Center(child: Text("There is no wholesaler found"));
+                return const Center(
+                    child: Text("There is no wholesaler found"));
               }
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
