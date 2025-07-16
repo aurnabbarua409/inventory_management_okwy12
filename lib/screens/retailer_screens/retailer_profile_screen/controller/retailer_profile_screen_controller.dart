@@ -19,6 +19,7 @@ class ProfileScreenController extends GetxController {
   var isLoading = false.obs;
   var updateIsLoading = false.obs;
   var image = Rx<String>(''); // Observable for image URL
+  final RxString userName = ''.obs;
 
   ProfileResponse getuserModel = ProfileResponse.fromJson({});
   ProfileData get getProfileData => getuserModel.data;
@@ -72,6 +73,7 @@ class ProfileScreenController extends GetxController {
       //       "====================================================================>");
       // }
       // Populate Controllers with Data
+      userName.value = response["data"]["name"];
       fullNameController.text = response["data"]["name"];
       businessNameController.text =
           response["data"]["storeInformation"]["businessName"];
@@ -80,6 +82,9 @@ class ProfileScreenController extends GetxController {
       image.value = response["data"]["image"];
     } catch (e) {
       Get.snackbar("Error", "An error occurred: $e");
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
 
     isLoading.value = false;

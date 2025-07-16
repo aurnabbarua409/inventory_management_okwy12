@@ -43,7 +43,35 @@ class RetailerProfileScreen extends StatelessWidget {
                     backgroundColor: Colors.grey[300],
                     child: Obx(() {
                       // Use the observable 'image' to update the profile image
+                      
                       if (controller.image.value.isNotEmpty) {
+                        if(controller.imageFile.value != null){
+                          return Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              ClipOval(
+                                child: Image.file(
+                                  controller.imageFile
+                                      .value!, // Use controller.image.value here
+                                  fit: BoxFit.cover,
+                                  height: ResponsiveUtils.width(100),
+                                  width: ResponsiveUtils.width(100),                                  
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return ClipOval(
+                                      child: Image.asset(
+                                          'assets/default_image.png',
+                                          fit: BoxFit.cover), // Fallback image
+                                    );
+                                  },
+                                ),
+                              ),
+                              Icon(
+                                Icons.camera_alt,
+                                size: ResponsiveUtils.width(25),
+                                color: AppColors.blueDarker,
+                              )
+                            ]);
+                        }
                         return Stack(
                             alignment: Alignment.bottomCenter,
                             children: [

@@ -133,7 +133,7 @@ class RouteManager {
       ),
       GetPage(
         name: AppRoutes.retailerProfile,
-        page: () => RetailerProfileScreen(),
+        page: () => const RetailerProfileScreen(),
         // binding: GeneralBindings(),
       ),
       GetPage(

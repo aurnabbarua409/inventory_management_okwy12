@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/utils/app_size.dart';
@@ -26,13 +27,30 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
         backgroundColor: AppColors.whiteLight,
         body: Column(
           children: [
-            const MainAppbarWidget(
-              child: TextWidget(
-                text: AppStrings.orderHistory,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                fontColor: AppColors.white,
-              ),
+            MainAppbarWidget(
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButtonWidget(
+                    onTap: () {
+                      final control = Get.find<BottomNavbarController>();
+                      final destination = control.selectedIndex.value - 1;
+                      control.changeIndex(destination);
+                    },
+                    icon: AppIconsPath.backIcon,
+                    color: AppColors.white,
+                    size: ResponsiveUtils.width(22),
+                  ),
+                ),
+                const Center(
+                  child: TextWidget(
+                    text: AppStrings.orderHistory,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    fontColor: AppColors.white,
+                  ),
+                ),
+              ]),
             ),
             SizedBox(height: ResponsiveUtils.height(16)),
             Expanded(

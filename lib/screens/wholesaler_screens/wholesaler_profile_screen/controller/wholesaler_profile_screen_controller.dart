@@ -19,12 +19,15 @@ class WholesalerProfileScreenController extends GetxController {
   var selectedRole = UserRole.retailer.obs;
   final imageFile = Rx<File?>(null);
   var image = Rx<String>('');
+
   // Controllers for form fields
   final fullNameController = TextEditingController();
   final businessNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
+
+  final RxString userName = ''.obs;
 
   /// Show image source selection dialog
   void showImageSourceDialog(BuildContext context) {
@@ -124,6 +127,7 @@ class WholesalerProfileScreenController extends GetxController {
       print("======================================> $response");
     }
     if (response != null) {
+      userName.value = response["data"]["name"];
       fullNameController.text = response["data"]["name"];
       businessNameController.text =
           response["data"]["storeInformation"]["businessName"];
@@ -139,7 +143,7 @@ class WholesalerProfileScreenController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    // fetchProfile();
+    fetchProfile();
   }
 
   @override

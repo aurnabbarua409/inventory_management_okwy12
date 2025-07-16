@@ -125,7 +125,7 @@ class SubscriptionScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width - 50,
             child: ButtonWidget(
               onPressed: () {
-                final control = Get.find<PaymentController>();
+                final control = Get.put(PaymentController());
                 control.createPaymentPackage();
                 Get.to(() => PaymentWebViewPage(
                       controller: control,

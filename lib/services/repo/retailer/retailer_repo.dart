@@ -13,6 +13,7 @@ class RetailerRepo {
       final response = await ApiService.getApi(Urls.pendingOrder);
 
       if (response != null) {
+        appLogger(response);
         if (response['data'] != null && response['data'] is List) {
           for (var element in response['data']) {
             // appLogger(element);

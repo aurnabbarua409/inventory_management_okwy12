@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/widget/wholesaler_profile_card.dart';
 import 'package:inventory_app/screens/widgets/search_bar_widget.dart';
@@ -180,13 +181,30 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
       body: Column(
         children: [
           // AppBar Section
-          const MainAppbarWidget(
-            child: TextWidget(
-              text: AppStrings.findWholeSaler,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              fontColor: AppColors.white,
-            ),
+          MainAppbarWidget(
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: IconButtonWidget(
+                  onTap: () {
+                    final control = Get.find<BottomNavbarController>();
+                    final destination = control.selectedIndex.value - 1;
+                    control.changeIndex(destination);
+                  },
+                  icon: AppIconsPath.backIcon,
+                  color: AppColors.white,
+                  size: ResponsiveUtils.width(22),
+                ),
+              ),
+              const Center(
+                child: TextWidget(
+                  text: AppStrings.findWholeSaler,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontColor: AppColors.white,
+                ),
+              ),
+            ]),
           ),
           const SpaceWidget(spaceHeight: 16),
 

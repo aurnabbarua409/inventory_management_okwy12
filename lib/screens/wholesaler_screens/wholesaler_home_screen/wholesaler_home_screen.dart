@@ -1,10 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/wholesaler_order_history.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_profile_screen/controller/wholesaler_profile_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
@@ -25,10 +28,13 @@ class WholesalerHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Ensure the RetailerProfileScreenController is initialized
-    final profileController = Get.put(ProfileScreenController());
+    final profileController = Get.put(WholesalerProfileScreenController());
 
     final controller = NotificationsController.instance;
-
+    if (kDebugMode) {
+      print("I am ");
+      print(PrefsHelper.myName);
+    }
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       body: Column(
@@ -82,11 +88,13 @@ class WholesalerHomeScreen extends StatelessWidget {
                   ],
                 ),
                 const SpaceWidget(spaceHeight: 6),
-                TextWidget(
-                  text: "Hi, ${profileController.fullNameController.text}",
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  fontColor: AppColors.white,
+                Obx(
+                  () => TextWidget(
+                    text: "Hi, ${profileController.userName.value}",
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    fontColor: AppColors.white,
+                  ),
                 ),
                 const SpaceWidget(spaceHeight: 16),
                 const TextWidget(

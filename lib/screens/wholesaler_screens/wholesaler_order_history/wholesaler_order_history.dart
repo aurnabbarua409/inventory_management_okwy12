@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/controller/wholesaler_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/wholesaler_tabbar_view.dart';
 import 'package:inventory_app/utils/app_size.dart';
@@ -33,25 +34,43 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
         body: Column(
           children: [
             MainAppbarWidget(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
                   if (initialTabIndex == 2)
-                    IconButtonWidget(
-                      onTap: () {
-                        Get.back();
-                      },
-                      icon: AppIconsPath.backIcon,
-                      color: AppColors.white,
-                      size: ResponsiveUtils.width(22), // Responsive size
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButtonWidget(
+                        onTap: () {
+                          Get.back();
+                        },
+                        icon: AppIconsPath.backIcon,
+                        color: AppColors.white,
+                        size: ResponsiveUtils.width(22),
+                      ),
                     ),
-                  const TextWidget(
-                    text: AppStrings.orderHistory,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    fontColor: AppColors.white,
+                  if (initialTabIndex != 2)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButtonWidget(
+                        onTap: () {
+                          final control = Get.find<BottomNavbarController>();
+                          final destination = control.selectedIndex.value - 1;
+                          control.changeIndex(destination);
+                        },
+                        icon: AppIconsPath.backIcon,
+                        color: AppColors.white,
+                        size: ResponsiveUtils.width(22),
+                      ),
+                    ),
+                  const Center(
+                    child: TextWidget(
+                      text: AppStrings.orderHistory,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      fontColor: AppColors.white,
+                    ),
                   ),
-                  Container(width: ResponsiveUtils.width(28)),
                 ],
               ),
             ),

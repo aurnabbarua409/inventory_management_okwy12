@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/auth/change_password_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
-import '../../../../utils/app_enum.dart';
+import '../../../../../utils/app_enum.dart';
 
-class WholesalerChangePasswordController extends GetxController {
+class ChangePasswordController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var selectedRole = UserRole.retailer.obs;
 
