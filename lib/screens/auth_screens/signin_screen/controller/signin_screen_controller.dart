@@ -22,10 +22,10 @@ class SignInScreenController extends GetxController {
   void onInit() {
     super.onInit();
     if (kDebugMode) {
-      emailController.text = 'bk1mlihfgi@zudpck.com';
+      emailController.text = 'j2f8ctwkgx@jkotypc.com';
       // whole saler: bk1mlihfgi@zudpck.com
       // retailer: j2f8ctwkgx@jkotypc.com
-      
+
       passwordController.text = '12345678';
     }
     //hilaryonyenkem@yahoo.com hoyevi9323@calmpros.com  bewir47352@erapk.com

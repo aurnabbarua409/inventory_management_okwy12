@@ -4,6 +4,7 @@ import 'package:inventory_app/models/api_response_model.dart';
 import 'package:inventory_app/models/notification/notification_model.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/services/socket_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 
@@ -26,7 +27,7 @@ class NotificationsController extends GetxController {
   }
 
   // Listen to New Notifications via socket
-  listenToNewNotification() async {
+  void listenToNewNotification() async {
     String id = await PrefsHelper.getString(PrefsHelper.userId);
     debugPrint(
         "===================================Notification userId : $id==============================================");
@@ -59,7 +60,7 @@ class NotificationsController extends GetxController {
   }
 
   // Fetch notifications from the repository
-  getNotificationsRepo() async {
+  void getNotificationsRepo() async {
     // if (status.value == Status.loading) return;
     // status.value = Status.loading;
     // update();
@@ -69,6 +70,7 @@ class NotificationsController extends GetxController {
       update();
       var response = await ApiService.getApi(Urls.getNotification);
       debugPrint("API Response: $response");
+      appLogger(response);
 
       if (response != null && response['data'] != null) {
         // Map the response data to NotificationModel objects

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
 
 class WholesalerSettings extends StatelessWidget {
@@ -12,15 +13,16 @@ class WholesalerSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppbarWidget(
+      appBar: AppbarWidget(
         text: AppStrings.settings,
         centerTitle: true,
-        // leading: IconButton(
-        //   icon: const Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //     Get.toNamed(AppRoutes.wholesalerHomeScreen);
-        //   },
-        // ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            final control = Get.find<BottomNavbarController>();
+            control.changeIndex(0);
+          },
+        ),
       ),
       body: ListView(
         children: [

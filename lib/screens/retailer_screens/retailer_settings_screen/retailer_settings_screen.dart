@@ -6,7 +6,10 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/utils/app_logger.dart';
+import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 
@@ -20,9 +23,18 @@ class RetailerSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const AppbarWidget(
+      appBar: AppbarWidget(
         text: AppStrings.settings,
         centerTitle: true,
+        leading: IconButtonWidget(
+          onTap: () {
+            final control = Get.find<BottomNavbarController>();
+            control.changeIndex(0);
+          },
+          icon: AppIconsPath.backIcon,
+          color: AppColors.black,
+          size: ResponsiveUtils.width(22),
+        ),
       ),
       body: ListView(
         children: [
