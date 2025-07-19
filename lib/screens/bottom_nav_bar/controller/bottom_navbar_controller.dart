@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/utils/app_enum.dart';
 import 'package:inventory_app/utils/app_logger.dart';

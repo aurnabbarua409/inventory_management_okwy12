@@ -98,7 +98,11 @@ class RetailerSettingsScreen extends StatelessWidget {
             leading: AppIconsPath.invite,
             title: AppStrings.invites,
             onTap: () {
-              Get.toNamed(AppRoutes.invite);
+              Get.snackbar(
+                "Feature Unavailable",
+                "This functionality hasn't been implemented yet.",
+              );
+              // Get.toNamed(AppRoutes.invite);
             },
           ),
           const SpaceWidget(spaceHeight: 10),

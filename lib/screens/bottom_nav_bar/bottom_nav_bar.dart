@@ -37,7 +37,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   ? [
                       const RetailerHomeScreen(),
                       RetailerFindWholeSellerScreen(),
-                      RetailerOrderHistoryScreen(),
+                      const RetailerOrderHistoryScreen(),
                       const RetailerSettingsScreen(),
                     ]
                   : [

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
+import 'package:inventory_app/widgets/international_phone_field_widget/international_phone_field_widget.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_icons_path.dart';
 import '../../../constants/app_strings.dart';
@@ -172,20 +175,29 @@ class SignupScreen extends StatelessWidget {
                       fontColor: AppColors.black,
                     ),
                     const SpaceWidget(spaceHeight: 12),
-                    TextFieldWidget(
-                      controller: controller.phoneNumberController,
-                      hintText: 'Enter your phone number',
-                      maxLines: 1,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        if (value.length != 11) {
-                          return "Phone number should be atleast 11 character";
-                        }
-                        return null;
+                    InternationalPhoneFieldWidget(
+                      onInputChanged: (p0) {
+                        controller.phoneNumber.value = p0.phoneNumber!;
+                      },
+                      onInputValidated: (p0) {
+                        controller.isValidPhonenumber.value = p0;
                       },
                     ),
+                    // const SpaceWidget(spaceHeight: 12),
+                    // TextFieldWidget(
+                    //   controller: controller.phoneNumberController,
+                    //   hintText: 'Enter your phone number',
+                    //   maxLines: 1,
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Please enter your phone number';
+                    //     }
+                    //     if (value.length != 11) {
+                    //       return "Phone number should be atleast 11 character";
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
                     const SpaceWidget(spaceHeight: 24),
                     ButtonWidget(
                       onPressed: () {

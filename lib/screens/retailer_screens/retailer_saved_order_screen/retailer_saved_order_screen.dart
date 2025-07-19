@@ -5,6 +5,7 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -175,7 +176,9 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Obx(() {
                     // Show Delete/Send Buttons when any checkbox is selected, else show Add Item button
-                    bool showButtons = controller.selectedProducts.contains(true) || controller.selectAll.value;
+                    bool showButtons =
+                        controller.selectedProducts.contains(true) ||
+                            controller.selectAll.value;
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,11 +189,15 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                               // Delete Button on the left
                               IconButton(
                                 onPressed: () async {
-                                  if (controller.selectedProducts.contains(true)) {
+                                  if (controller.selectedProducts
+                                      .contains(true)) {
                                     List<String> selectedOrderIds = [];
-                                    for (int i = 0; i < controller.selectedProducts.length; i++) {
+                                    for (int i = 0;
+                                        i < controller.selectedProducts.length;
+                                        i++) {
                                       if (controller.selectedProducts[i]) {
-                                        selectedOrderIds.add(controller.orders[i].id!);
+                                        selectedOrderIds
+                                            .add(controller.orders[i].id!);
                                       }
                                     }
 
@@ -200,7 +207,8 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                                       }
                                     }
                                   } else {
-                                    Get.snackbar('No Selection', 'Please select an order to delete');
+                                    Get.snackbar('No Selection',
+                                        'Please select an order to delete');
                                   }
                                 },
                                 icon: const IconWidget(
@@ -214,6 +222,9 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                               ButtonWidget(
                                 onPressed: () {
                                   controller.shareSelection();
+                                  // final control =
+                                  //     Get.find<BottomNavbarController>();
+                                  // control.changeIndex(2);
                                   Get.toNamed(AppRoutes.retailerFindWholeSellerScreen);
                                 },
                                 label: 'Send',
@@ -230,7 +241,8 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                           Center(
                             child: ButtonWidget(
                               onPressed: () {
-                                Get.toNamed(AppRoutes.retailerCreateNewOrderScreen);
+                                Get.toNamed(
+                                    AppRoutes.retailerCreateNewOrderScreen);
                               },
                               label: 'Add New Item',
                               fontWeight: FontWeight.w500,

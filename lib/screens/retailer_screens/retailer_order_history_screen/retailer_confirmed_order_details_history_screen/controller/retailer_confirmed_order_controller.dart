@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_confirmed_model.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,12 +15,12 @@ import 'package:pdf/widgets.dart' as pw;
 class ConfirmedOrderDetailsHistoryController extends GetxController {
   RxBool isLoading = true.obs;
 
-
   var ordersConfirmed = <Confirmed>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    appLogger("running confirmed order");
     fetchConfirmed();
   }
 
@@ -42,8 +43,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
 
       debugPrint("Response: $response");
 
-      var data =
-          response; 
+      var data = response;
       MConfirmedOrders confirmedResponse = MConfirmedOrders.fromJson(data);
 
       if (confirmedResponse.success == true) {
@@ -99,71 +99,91 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
   }
 
   Future<void> generatePdf() async {
-  final pdf = pw.Document();
+    final pdf = pw.Document();
 
-    final fontRegular = await rootBundle.load("assets/fonts/Poppins-Regular.ttf");
-  final fontBold = await rootBundle.load("assets/fonts/Poppins-Bold.ttf");
+    final fontRegular =
+        await rootBundle.load("assets/fonts/Poppins-Regular.ttf");
+    final fontBold = await rootBundle.load("assets/fonts/Poppins-Bold.ttf");
 
-  final ttfRegular = pw.Font.ttf(fontRegular);
-  final ttfBold = pw.Font.ttf(fontBold);
+    final ttfRegular = pw.Font.ttf(fontRegular);
+    final ttfBold = pw.Font.ttf(fontBold);
 
-  try {
-    // Add a page to the PDF document
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            children: [
-              pw.Text(
-                'Confirmed Orders',
-              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: ttfBold),
-              ),
-              pw.SizedBox(height: 10),
-              // Loop through the orders and create a table
-              pw.ListView.builder(
-                itemCount: ordersConfirmed.length,
-                itemBuilder: (context, index) {
-                  var order = ordersConfirmed[index];
-                  return pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('Order ID: ${order.id}',style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.normal, font: ttfRegular)),
-                      pw.Text('Retailer: ${order.retailer}',style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: ttfBold)),
-                      pw.Text('Status: ${order.status}',style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: ttfBold)),
-                      pw.Text('Created At: ${order.createdAt}',style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: ttfBold)),
-                      pw.SizedBox(height: 5),
-                      pw.Text('Products:'),
-                      pw.ListView.builder(
-                        itemCount: order.product.length,
-                        itemBuilder: (context, productIndex) {
-                          var product = order.product[productIndex];
-                          return pw.Text('Product: ${product.productId.name}, Price: ${product.price}');
-                        },
-                      ),
-                      pw.SizedBox(height: 15),
-                    ],
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      ),
-    );
+    try {
+      // Add a page to the PDF document
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Column(
+              children: [
+                pw.Text(
+                  'Confirmed Orders',
+                  style: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      font: ttfBold),
+                ),
+                pw.SizedBox(height: 10),
+                // Loop through the orders and create a table
+                pw.ListView.builder(
+                  itemCount: ordersConfirmed.length,
+                  itemBuilder: (context, index) {
+                    var order = ordersConfirmed[index];
+                    return pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('Order ID: ${order.id}',
+                            style: pw.TextStyle(
+                                fontSize: 24,
+                                fontWeight: pw.FontWeight.normal,
+                                font: ttfRegular)),
+                        pw.Text('Retailer: ${order.retailer}',
+                            style: pw.TextStyle(
+                                fontSize: 24,
+                                fontWeight: pw.FontWeight.bold,
+                                font: ttfBold)),
+                        pw.Text('Status: ${order.status}',
+                            style: pw.TextStyle(
+                                fontSize: 24,
+                                fontWeight: pw.FontWeight.bold,
+                                font: ttfBold)),
+                        pw.Text('Created At: ${order.createdAt}',
+                            style: pw.TextStyle(
+                                fontSize: 24,
+                                fontWeight: pw.FontWeight.bold,
+                                font: ttfBold)),
+                        pw.SizedBox(height: 5),
+                        pw.Text('Products:'),
+                        pw.ListView.builder(
+                          itemCount: order.product.length,
+                          itemBuilder: (context, productIndex) {
+                            var product = order.product[productIndex];
+                            return pw.Text(
+                                'Product: ${product.productId.name}, Price: ${product.price}');
+                          },
+                        ),
+                        pw.SizedBox(height: 15),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      );
 
-    // Get the directory to save the PDF
-    final output = await getTemporaryDirectory();
-    final file = File('${output.path}/confirmed_orders.pdf');
+      // Get the directory to save the PDF
+      final output = await getTemporaryDirectory();
+      final file = File('${output.path}/confirmed_orders.pdf');
 
-    // Save the PDF to the file
-    await file.writeAsBytes(await pdf.save());
+      // Save the PDF to the file
+      await file.writeAsBytes(await pdf.save());
 
-    // Optionally, open the PDF file
-    await OpenFile.open(file.path);
-  } catch (e) {
-    Get.snackbar('Error', 'Failed to generate PDF: $e');
-    debugPrint("Error generating PDF: $e");
+      // Optionally, open the PDF file
+      await OpenFile.open(file.path);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to generate PDF: $e');
+      debugPrint("Error generating PDF: $e");
+    }
   }
-}
-
 }

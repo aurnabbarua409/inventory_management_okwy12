@@ -16,7 +16,10 @@ class SignupScreenController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final phoneNumberController = TextEditingController();
+  // final phoneNumberController = TextEditingController();
+
+  final RxString phoneNumber = "".obs;
+  final RxBool isValidPhonenumber = true.obs;
 
   UserCreationResponse? signUpData;
 
@@ -34,10 +37,12 @@ class SignupScreenController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
-    final phoneNumber = phoneNumberController.text.trim();
 
     if (password != confirmPassword) {
       Get.snackbar("Error", "Passwords do not match");
+      return;
+    }
+    if (!isValidPhonenumber.value) {
       return;
     }
 
@@ -47,7 +52,7 @@ class SignupScreenController extends GetxController {
       "email": email,
       "password": password,
       "confirmPassword": confirmPassword,
-      "phone": phoneNumber,
+      "phone": phoneNumber.value,
       "verified": false,
       "status": "active",
     };
@@ -95,8 +100,6 @@ class SignupScreenController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    phoneNumberController.dispose();
-
     super.onClose();
   }
 }

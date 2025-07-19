@@ -13,7 +13,7 @@ import '../../../../../utils/app_enum.dart';
 import '../../../../widgets/popup_widget/popup_widget.dart';
 
 class ProfileScreenController extends GetxController {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   var selectedRole = UserRole.retailer.obs;
   final imageFile = Rx<File?>(null);
   var isLoading = false.obs;
@@ -30,6 +30,9 @@ class ProfileScreenController extends GetxController {
   final emailController = TextEditingController();
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
+
+  final RxString phoneNumber = "".obs;
+  final RxBool isValidPhonenumber = true.obs;
 
   /// Get User Profile
   void getProfileRepo() async {
@@ -79,6 +82,7 @@ class ProfileScreenController extends GetxController {
           response["data"]["storeInformation"]["businessName"];
       emailController.text = response["data"]["email"];
       addressController.text = response["data"]["storeInformation"]["location"];
+      phoneController.text = response["data"]["phone"];
       image.value = response["data"]["image"];
     } catch (e) {
       Get.snackbar("Error", "An error occurred: $e");
@@ -93,6 +97,12 @@ class ProfileScreenController extends GetxController {
 
   /// Update User Profile
   Future<void> updateProfileRepo() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+    if (!isValidPhonenumber.value) {
+      return;
+    }
     updateIsLoading.value = true;
     // update();
 
@@ -198,7 +208,7 @@ class ProfileScreenController extends GetxController {
 
   /// Handle Continue Button Press
   void handleContinue() {
-    if (_formKey.currentState?.validate() ?? false) {
+    if (formKey.currentState?.validate() ?? false) {
       final userRole = selectedRole.value;
       navigateToRoleSpecificScreen(userRole);
     } else {

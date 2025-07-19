@@ -84,7 +84,7 @@ class AppStrings {
   static const String wholesalerDetails = "Wholesaler Details";
   static const String invoiceDetails = "Invoice Details";
   static const String newOrder = "New Order";
-  static const String newOrderList = "New Oder List";
+  static const String newOrderList = "New Order List";
   static const String wholesalerName = "PrimeTrade Distributors";
   static const String wholesalerNumber = "+234 800 123 4567";
   static const String wholesalerMail = "primetrade@gmail.com";

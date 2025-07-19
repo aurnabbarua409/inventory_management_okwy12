@@ -24,8 +24,8 @@ class RetailerConfirmedOrderDetailsHistoryScreen extends StatefulWidget {
 
 class _RetailerConfirmedOrderDetailsHistoryScreenState
     extends State<RetailerConfirmedOrderDetailsHistoryScreen> {
-  final ConfirmedOrderDetailsHistoryController confirmedController =
-      Get.put(ConfirmedOrderDetailsHistoryController());
+  // final ConfirmedOrderDetailsHistoryController confirmedController =
+  //     Get.put(ConfirmedOrderDetailsHistoryController());
 
   double totalAmount = 0; // Class-level totalAmount
 
@@ -36,99 +36,102 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
 
     return Scaffold(
         backgroundColor: AppColors.whiteLight,
-        body: Column(
-          children: [
-            MainAppbarWidget(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButtonWidget(
-                    onTap: () {
-                      Get.back();
-                    },
-                    icon: AppIconsPath.backIcon,
-                    color: AppColors.white,
-                    size: 22,
-                  ),
-                  const TextWidget(
-                    text: AppStrings.orderDetails,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontColor: AppColors.white,
-                  ),
-                  const SpaceWidget(spaceWidth: 28),
-                ],
-              ),
-            ),
-            SingleChildScrollView(
-              child: Obx(() {
-                debugPrint(
-                    'isLoading value: ${confirmedController.isLoading.value}');
-                if (confirmedController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    child: Column(
-                      children: [
-                        if (confirmedController.ordersConfirmed.isNotEmpty)
-                          // Order Details Section
-                          _buildDetailsList(
-                            title: AppStrings.retailerDetails,
-                            details: [
-                              {
-                                AppStrings.name: confirmedController
-                                    .ordersConfirmed.first.retailer?.name ?? '',
-                              },
-                              {
-                                AppStrings.email: confirmedController
-                                    .ordersConfirmed.first.retailer?. email ?? '',
-                              },
-                              {
-                                AppStrings.orderDate: confirmedController
-                                    .ordersConfirmed.first.createdAt
-                                    .toString(),
-                              },
-                            ],
-                          ),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
-
-                        // Wholesaler Details Section
-                         _buildDetailsList(
-                            title: AppStrings.wholesalerDetails,
-                            details: [
-                              {
-                                AppStrings.name: confirmedController
-                                    .ordersConfirmed.first.wholeSeller?.name ?? '',
-                              },
-                              {
-                                AppStrings.email: confirmedController
-                                    .ordersConfirmed.first.wholeSeller?. email ?? '',
-                              },
-                              {
-                                AppStrings.orderDate: confirmedController
-                                    .ordersConfirmed.first.createdAt
-                                    .toString(),
-                              },
-                            ],
-                          ),
-                      ],
+        body: GetBuilder(
+          init: ConfirmedOrderDetailsHistoryController(),
+          builder: (confirmedController) => Column(
+            children: [
+              MainAppbarWidget(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButtonWidget(
+                      onTap: () {
+                        Get.back();
+                      },
+                      icon: AppIconsPath.backIcon,
+                      color: AppColors.white,
+                      size: 22,
                     ),
-                  );
-                }
-              }),
-            ),
-
-            SizedBox(height: ResponsiveUtils.height(16.0)),
-
-            // Invoice Table
-            _buildInvoiceTable(),
-            SizedBox(height: ResponsiveUtils.height(16.0)),
-
-            // Summary and Download Button
-            _buildSummarySection(),
-          ],
+                    const TextWidget(
+                      text: AppStrings.orderDetails,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontColor: AppColors.white,
+                    ),
+                    const SpaceWidget(spaceWidth: 28),
+                  ],
+                ),
+              ),
+              SingleChildScrollView(
+                child: Obx(() {
+                  debugPrint(
+                      'isLoading value: ${confirmedController.isLoading.value}');
+                  if (confirmedController.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Column(
+                        children: [
+                          if (confirmedController.ordersConfirmed.isNotEmpty)
+                            // Order Details Section
+                            _buildDetailsList(
+                              title: AppStrings.retailerDetails,
+                              details: [
+                                {
+                                  AppStrings.name: confirmedController
+                                      .ordersConfirmed.first.retailer?.name ?? '',
+                                },
+                                {
+                                  AppStrings.email: confirmedController
+                                      .ordersConfirmed.first.retailer?. email ?? '',
+                                },
+                                {
+                                  AppStrings.orderDate: confirmedController
+                                      .ordersConfirmed.first.createdAt
+                                      .toString(),
+                                },
+                              ],
+                            ),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
+          
+                          // Wholesaler Details Section
+                           _buildDetailsList(
+                              title: AppStrings.wholesalerDetails,
+                              details: [
+                                {
+                                  AppStrings.name: confirmedController
+                                      .ordersConfirmed.first.wholeSeller?.name ?? '',
+                                },
+                                {
+                                  AppStrings.email: confirmedController
+                                      .ordersConfirmed.first.wholeSeller?. email ?? '',
+                                },
+                                {
+                                  AppStrings.orderDate: confirmedController
+                                      .ordersConfirmed.first.createdAt
+                                      .toString(),
+                                },
+                              ],
+                            ),
+                        ],
+                      ),
+                    );
+                  }
+                }),
+              ),
+          
+              SizedBox(height: ResponsiveUtils.height(16.0)),
+          
+              // Invoice Table
+              _buildInvoiceTable(confirmedController),
+              SizedBox(height: ResponsiveUtils.height(16.0)),
+          
+              // Summary and Download Button
+              _buildSummarySection(confirmedController),
+            ],
+          ),
         ));
   }
 
@@ -171,7 +174,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
     );
   }
 
-  Widget _buildInvoiceTable() {
+  Widget _buildInvoiceTable(ConfirmedOrderDetailsHistoryController confirmedController) {
     final invoiceItems = confirmedController.ordersConfirmed.isNotEmpty
         ? confirmedController.ordersConfirmed.first.product
             .map((product) => {
@@ -232,7 +235,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
     );
   }
 
-  Widget _buildSummarySection() {
+  Widget _buildSummarySection(ConfirmedOrderDetailsHistoryController confirmedController) {
     final double grandTotal = totalAmount;
 
     return Column(

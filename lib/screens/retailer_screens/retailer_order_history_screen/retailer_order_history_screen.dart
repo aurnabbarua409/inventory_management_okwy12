@@ -13,107 +13,110 @@ import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
 
 class RetailerOrderHistoryScreen extends StatelessWidget {
-  RetailerOrderHistoryScreen({super.key});
-  final RetailerOrderHistoryController controller =
-      Get.put(RetailerOrderHistoryController());
+  const RetailerOrderHistoryScreen({super.key});
+  // final controller =
+  //     Get.put(RetailerOrderHistoryController());
 
   @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context); // Initialize the screen dimensions
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: AppColors.whiteLight,
-        body: Column(
-          children: [
-            MainAppbarWidget(
-              child: Stack(children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButtonWidget(
-                    onTap: () {
-                      final control = Get.find<BottomNavbarController>();
-                      control.changeIndex(0);
-                    },
-                    icon: AppIconsPath.backIcon,
-                    color: AppColors.white,
-                    size: ResponsiveUtils.width(22),
+    return GetBuilder(
+      init: RetailerOrderHistoryController(),
+      builder: (controller) =>  DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: AppColors.whiteLight,
+          body: Column(
+            children: [
+              MainAppbarWidget(
+                child: Stack(children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButtonWidget(
+                      onTap: () {
+                        final control = Get.find<BottomNavbarController>();
+                        control.changeIndex(0);
+                      },
+                      icon: AppIconsPath.backIcon,
+                      color: AppColors.white,
+                      size: ResponsiveUtils.width(22),
+                    ),
                   ),
-                ),
-                const Center(
-                  child: TextWidget(
-                    text: AppStrings.orderHistory,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    fontColor: AppColors.white,
+                  const Center(
+                    child: TextWidget(
+                      text: AppStrings.orderHistory,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      fontColor: AppColors.white,
+                    ),
                   ),
-                ),
-              ]),
-            ),
-            SizedBox(height: ResponsiveUtils.height(16)),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: controller.fetchPendingOrders,
-                child: Obx(() {
-                  if (controller.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
-                    return OrdersTabView(
-                      pendingInvoices: controller.pendingOrders.map((pending) {
-                        return {
-                          "company": pending.wholeSeller.name,
-                          "date": pending.createdAt.toIso8601String(),
-                          "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(2)),
-                            child: Icon(
-                              Icons.business,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(30),
-                            ),
-                          ),
-                        };
-                      }).toList(),
-                      receivedInvoices:
-                          controller.receivedOrders.map((received) {
-                        return {
-                          "company": received.wholeSeller.name,
-                          "date": received.createdAt.toIso8601String(),
-                          "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(4)),
-                            child: Icon(
-                              Icons.business_center,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(38),
-                            ),
-                          ),
-                        };
-                      }).toList(),
-                      confirmedInvoices:
-                          controller.confirmedOrders.map((confirmed) {
-                        return {
-                          "company": confirmed.wholeSeller?.name ?? "No Name",
-                          "date": confirmed.createdAt?.toIso8601String() ??
-                              "No Date",
-                          "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(4)),
-                            child: Icon(
-                              Icons.verified,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(38),
-                            ),
-                          ),
-                        };
-                      }).toList(),
-                    );
-                  }
-                }),
+                ]),
               ),
-            )
-          ],
+              SizedBox(height: ResponsiveUtils.height(16)),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: controller.fetchPendingOrders,
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return OrdersTabView(
+                        pendingInvoices: controller.pendingOrders.map((pending) {
+                          return {
+                            "company": pending.wholeSeller.name,
+                            "date": pending.createdAt.toIso8601String(),
+                            "logo": ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(ResponsiveUtils.width(2)),
+                              child: Icon(
+                                Icons.business,
+                                color: AppColors.primaryBlue,
+                                size: ResponsiveUtils.width(30),
+                              ),
+                            ),
+                          };
+                        }).toList(),
+                        receivedInvoices:
+                            controller.receivedOrders.map((received) {
+                          return {
+                            "company": received.wholeSeller.name,
+                            "date": received.createdAt.toIso8601String(),
+                            "logo": ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(ResponsiveUtils.width(4)),
+                              child: Icon(
+                                Icons.business_center,
+                                color: AppColors.primaryBlue,
+                                size: ResponsiveUtils.width(38),
+                              ),
+                            ),
+                          };
+                        }).toList(),
+                        confirmedInvoices:
+                            controller.confirmedOrders.map((confirmed) {
+                          return {
+                            "company": confirmed.wholeSeller?.name ?? "No Name",
+                            "date": confirmed.createdAt?.toIso8601String() ??
+                                "No Date",
+                            "logo": ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(ResponsiveUtils.width(4)),
+                              child: Icon(
+                                Icons.verified,
+                                color: AppColors.primaryBlue,
+                                size: ResponsiveUtils.width(38),
+                              ),
+                            ),
+                          };
+                        }).toList(),
+                      );
+                    }
+                  }),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

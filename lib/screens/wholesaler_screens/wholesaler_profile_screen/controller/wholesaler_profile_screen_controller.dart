@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
-import 'package:inventory_app/models/retailer/retailer_settings/retailer_profile/retailer_get_profile_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
-import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 import '../../../../../utils/app_enum.dart';
@@ -24,15 +22,87 @@ class WholesalerProfileScreenController extends GetxController {
   final fullNameController = TextEditingController();
   final businessNameController = TextEditingController();
   final emailController = TextEditingController();
-  final phoneController = TextEditingController();
   final addressController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  final RxString phoneNumber = "".obs;
+  final RxBool isValidPhonenumber = true.obs;
 
   final RxString userName = ''.obs;
+
+  Future<void> updateProfileRepo() async {
+    if (!isValidPhonenumber.value) {
+      return;
+    }
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+    // updateIsLoading.value = true;
+    // update();
+
+    // Prepare the body for the PATCH request
+    Map<String, dynamic> body = {
+      "name": fullNameController.text,
+      "email": emailController.text,
+      "businessName": businessNameController.text,
+      "location": addressController.text,
+      "image":
+          imageFile.value, // You can update this to dynamically pass image URL
+      "phone": phoneNumber.value,
+    };
+
+    try {
+      // Call the patchApi function with the body data
+      var response = await ApiService.patchApi(Urls.userProfile, body);
+
+      if (response != null) {
+        // Check the response and handle accordingly
+        if (response["success"]) {
+          Get.snackbar(
+            "Success",
+            "Profile updated successfully!",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+
+          // Optionally, refresh the profile data after a successful update
+        } else {
+          Get.snackbar(
+            "Error",
+            "Failed to update profile. Please try again.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to update profile. Please check your connection.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "An error occurred: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+
+    // updateIsLoading.value = false;
+    // update();
+  }
 
   /// Show image source selection dialog
   void showImageSourceDialog(BuildContext context) {
     showCustomPopup(context, [
-      Text('Select Image Source'),
+      const Text('Select Image Source'),
       ListTile(
         leading: const Icon(Icons.photo_library),
         title: const Text('Gallery'),
@@ -94,8 +164,12 @@ class WholesalerProfileScreenController extends GetxController {
 
   /// Handle Continue Button Press
   void handleContinue() {
+    if (!isValidPhonenumber.value) {
+      return;
+    }
     if (formKey.currentState?.validate() ?? false) {
       final userRole = selectedRole.value;
+      updateProfileRepo();
       navigateToRoleSpecificScreen(userRole);
     } else {
       Get.snackbar(
@@ -106,6 +180,7 @@ class WholesalerProfileScreenController extends GetxController {
         colorText: Colors.white,
       );
     }
+    return;
   }
 
   /// Navigate based on user role
@@ -133,6 +208,7 @@ class WholesalerProfileScreenController extends GetxController {
           response["data"]["storeInformation"]["businessName"];
       emailController.text = response["data"]["email"];
       addressController.text = response["data"]["storeInformation"]["location"];
+      phoneController.text = response["data"]["phone"];
       image.value = response["data"]["image"];
     } else {
       Get.snackbar("Error", response["message"]);
@@ -152,8 +228,8 @@ class WholesalerProfileScreenController extends GetxController {
     fullNameController.dispose();
     businessNameController.dispose();
     emailController.dispose();
-    phoneController.dispose();
     addressController.dispose();
+    phoneController.dispose();
     super.onClose();
   }
 }

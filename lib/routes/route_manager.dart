@@ -238,7 +238,7 @@ class RouteManager {
       ),
       GetPage(
         name: AppRoutes.wholesalerProfileScreen,
-        page: () => WholesalerProfileScreen(),
+        page: () => const WholesalerProfileScreen(),
         // binding: GeneralBindings(),
       ),
       GetPage(

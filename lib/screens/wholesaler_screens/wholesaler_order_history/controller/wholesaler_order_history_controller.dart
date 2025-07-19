@@ -17,7 +17,7 @@ class WholesalerOrderHistoryController extends GetxController {
     isLoading.value = true; // Show loading indicator
     try {
       var data = await retailerRepo.getRetailers();
-      appLogger(data);
+      appLogger("fetching pending order: $data");
       pendingOrders.value = data;
     } catch (e) {
       appLogger(e);
@@ -31,7 +31,7 @@ class WholesalerOrderHistoryController extends GetxController {
     isLoading.value = true; // Show loading indicator
     try {
       var recievedData = await retailerRepo.getRecieved();
-      //appLogger(recievedData);
+      appLogger("fetching received order: $recievedData");
       receivedOrders.value = recievedData;
     } catch (e) {
       appLogger(e);
@@ -45,7 +45,7 @@ class WholesalerOrderHistoryController extends GetxController {
     isLoading.value = true; // Show loading indicator
     try {
       var confirmedData = await retailerRepo.getConfirmed();
-      appLogger(confirmedData);
+      appLogger("fetching confirmed order: $confirmedData");
       confirmedOrders.value = confirmedData;
     } catch (e) {
       appLogger(e);

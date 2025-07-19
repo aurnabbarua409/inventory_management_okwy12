@@ -257,6 +257,11 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
               child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
               if (controller.filteredWholesalers.isEmpty) {
                 return const Center(
                     child: Text("There is no wholesaler found"));

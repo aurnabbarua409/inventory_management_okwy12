@@ -9,7 +9,7 @@ import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import '../../widgets/space_widget/space_widget.dart';
 
 class WholesalerTabView extends StatefulWidget {
-    final List<Map<String, dynamic>>? pendingInvoices;
+  final List<Map<String, dynamic>>? pendingInvoices;
   final List<Map<String, dynamic>>? receivedInvoices;
   final List<Map<String, dynamic>>? confirmedInvoices;
   final int initialIndex;
@@ -131,6 +131,14 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
 
   Widget buildInvoiceList(List<Map<String, dynamic>> invoices) {
     int currentIndex = DefaultTabController.of(context)!.index;
+    if (invoices.isEmpty) {
+      return const Center(
+        child: TextWidget(
+          text: "No orders available",
+          fontColor: AppColors.black,
+        ),
+      );
+    }
     return ListView.builder(
       itemCount: invoices.length,
       itemBuilder: (context, index) {

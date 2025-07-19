@@ -93,7 +93,11 @@ class WholesalerSettings extends StatelessWidget {
                 SvgPicture.asset(AppIconsPath.invite, width: 24, height: 24),
             title: AppStrings.invites,
             onTap: () {
-              Get.toNamed(AppRoutes.invite);
+              Get.snackbar(
+                "Feature Unavailable",
+                "This functionality hasn't been implemented yet.",
+              );
+              // Get.toNamed(AppRoutes.invite);
             },
           ),
           _buildSettingsItem(

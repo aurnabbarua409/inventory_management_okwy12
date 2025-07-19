@@ -69,7 +69,14 @@ class WholeSalerDetails {
 
   factory WholeSalerDetails.fromJson(Map<String, dynamic> json) =>
       WholeSalerDetails(
-        storeInformation: StoreInformation.fromJson(json["storeInformation"]),
+        storeInformation: json["storeInformation"] != null
+            ? StoreInformation.fromJson(json["storeInformation"])
+            : StoreInformation(
+                businessName: "",
+                businessCategory: "",
+                location: "",
+                verified: false,
+              ),
         authentication: Authentication.fromJson(json["authentication"]),
         id: json["_id"] ?? "",
         name: json["name"] ?? "",

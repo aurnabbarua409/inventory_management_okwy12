@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
@@ -7,6 +8,7 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/find_wholesaler/get_wholesaler_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
@@ -26,8 +28,7 @@ class FindWholesalerController extends GetxController {
   var pendingOrders = <Map<String, String>>[].obs;
 
   final searchController = TextEditingController();
-
-  
+  final RxBool isLoading = true.obs;
 
   @override
   void onInit() {
@@ -48,13 +49,20 @@ class FindWholesalerController extends GetxController {
         Get.snackbar("Error", "User is not authenticated.");
         return;
       }
-
+      isLoading.value = true;
       var response = await ApiService.getApi(Urls.getWholesaler);
-
+      isLoading.value = false;
+      appLogger(response);
       if (response != null) {
-        MGetWholesalers mGetWholesalers = MGetWholesalers.fromJson(response);
+        final mGetWholesalers = MGetWholesalers.fromJson(response);
+        if (kDebugMode) {
+          print(response);
+          appLogger(mGetWholesalers.success);
+          appLogger(mGetWholesalers.data);
+        }
 
         if (mGetWholesalers.success) {
+          appLogger("data is coming from wholesaler");
           wholesalers.assignAll(mGetWholesalers.data);
           filteredWholesalers.assignAll(
               mGetWholesalers.data); // Assign all to filtered list initially
@@ -67,7 +75,8 @@ class FindWholesalerController extends GetxController {
         Get.snackbar('Error', 'Failed to load wholesalers');
       }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred while fetching wholesalers');
+      appLogger("error in fetching wholesaler: $e");
+      // Get.snackbar('Error', 'An error occurred while fetching wholesalers');
     }
   }
 
@@ -78,7 +87,7 @@ class FindWholesalerController extends GetxController {
       return;
     }
 
-     print("This function call so far =-=-==-===-=-=-=--=-==-");
+    print("This function call so far =-=-==-===-=-=-=--=-==-");
 
     // Check if query is numeric (to search by phone number)
     bool isPhoneNumber = _isPhoneNumber(query);
@@ -90,7 +99,7 @@ class FindWholesalerController extends GetxController {
 
         _handleResponse(response);
 
-        if (filteredWholesalers.isEmpty){
+        if (filteredWholesalers.isEmpty) {
           _showShareAppDialog(query);
         }
       } else if (_isValidEmail(query)) {
@@ -108,7 +117,7 @@ class FindWholesalerController extends GetxController {
   }
 
 // Handle API response and update filtered wholesalers
-  void _handleResponse(dynamic response){
+  void _handleResponse(dynamic response) {
     if (response != null) {
       MGetWholesalers mGetWholesalers = MGetWholesalers.fromJson(response);
       if (mGetWholesalers.success) {
@@ -181,9 +190,8 @@ class FindWholesalerController extends GetxController {
                 child: OutlinedButtonWidget(
                   onPressed: () {
                     Share.share(
-                      AppStrings.share, 
-                      subject:
-                          AppStrings.fluttershare, 
+                      AppStrings.share,
+                      subject: AppStrings.fluttershare,
                     );
                   },
                   label: AppStrings.no,
@@ -199,14 +207,13 @@ class FindWholesalerController extends GetxController {
               Expanded(
                 flex: 1,
                 child: ButtonWidget(
-                   onPressed: () {
-                          Share.share(
-                            AppStrings
-                                .share, //'Check out this amazing content!',
-                            subject: AppStrings
-                                .fluttershare, // 'Flutter Share Example',
-                          );
-                        },
+                  onPressed: () {
+                    Share.share(
+                      AppStrings.share, //'Check out this amazing content!',
+                      subject:
+                          AppStrings.fluttershare, // 'Flutter Share Example',
+                    );
+                  },
                   label: AppStrings.yes,
                   backgroundColor: AppColors.primaryBlue,
                   buttonWidth: 120,
@@ -216,7 +223,6 @@ class FindWholesalerController extends GetxController {
               ),
             ],
           ),
-          
         ),
         const SpaceWidget(spaceHeight: 20),
       ],
@@ -391,7 +397,7 @@ class FindWholesalerController extends GetxController {
   }
 
   void addOffer(Map<String, dynamic> newOffer) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       pendingOrders.insert(
           0, newOffer.map((key, value) => MapEntry(key, value.toString())));
       update();
