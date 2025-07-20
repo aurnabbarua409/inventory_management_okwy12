@@ -10,9 +10,10 @@ class MPendingOrders {
   });
 
   factory MPendingOrders.fromJson(dynamic json) => MPendingOrders(
-        success: json["success"],
-        total: json["Total"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        success: json["success"] ?? false,
+        total: json["Total"] ?? 0,
+        data:
+            List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)) ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -188,7 +189,8 @@ class Product {
         "availability": availability,
         "price": price,
         "_id": id,
-        "total": total, // Optionally, include total if required to return in JSON
+        "total":
+            total, // Optionally, include total if required to return in JSON
       };
 }
 

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
@@ -187,8 +188,9 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const TextWidget(
-                          text: '',
+                        TextWidget(
+                          text:
+                              "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}",
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           fontColor: AppColors.onyxBlack,
@@ -197,7 +199,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                         GestureDetector(
                           onTap: () {
                             int currentIndex =
-                                DefaultTabController.of(context)!.index;
+                                DefaultTabController.of(context).index;
                             if (currentIndex == 0) {
                               Get.toNamed(AppRoutes
                                   .retailerPendingOrderDetailsHistoryScreen);
@@ -249,4 +251,23 @@ class _OrdersTabViewState extends State<OrdersTabView> {
       },
     );
   }
+}
+
+String formatDate(String isoDate) {
+  final dateTime = DateTime.parse(isoDate).toLocal();
+  return DateFormat.jm().format(dateTime);
+}
+
+String formatDay(String isoDate) {
+  final dateTime = DateTime.parse(isoDate).toLocal();
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final dateOnly = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  final difference = today.difference(dateOnly).inDays;
+
+  if (difference == 0) return 'Today';
+  if (difference == 1) return 'Yesterday';
+
+  return DateFormat('d MMM yyyy').format(dateTime);
 }

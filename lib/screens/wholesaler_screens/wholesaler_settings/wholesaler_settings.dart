@@ -6,6 +6,7 @@ import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
+import 'package:share_plus/share_plus.dart';
 
 class WholesalerSettings extends StatelessWidget {
   const WholesalerSettings({super.key});
@@ -93,10 +94,7 @@ class WholesalerSettings extends StatelessWidget {
                 SvgPicture.asset(AppIconsPath.invite, width: 24, height: 24),
             title: AppStrings.invites,
             onTap: () {
-              Get.snackbar(
-                "Feature Unavailable",
-                "This functionality hasn't been implemented yet.",
-              );
+              Share.share(AppStrings.shareApp);
               // Get.toNamed(AppRoutes.invite);
             },
           ),

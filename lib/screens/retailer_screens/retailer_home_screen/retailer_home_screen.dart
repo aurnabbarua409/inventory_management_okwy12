@@ -82,7 +82,7 @@ class RetailerHomeScreen extends StatelessWidget {
                   ),
                   const SpaceWidget(spaceHeight: 6),
                   Obx(
-                    () =>  TextWidget(
+                    () => TextWidget(
                       text: "Hi, ${profileController.userName.value}",
                       fontSize: 20,
                       fontWeight: FontWeight.w600,

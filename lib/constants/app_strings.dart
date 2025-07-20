@@ -175,4 +175,5 @@ class AppStrings {
   static var orderId;
 
   static const somethingWentWrong = "Something went wrong";
+  static const shareApp = "Hey! Check out this app";
 }

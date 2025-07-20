@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 class RetailerPendingOrderDetailsHistoryController extends GetxController {
@@ -20,7 +22,8 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   final productNameController = TextEditingController();
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
-
+  final RxInt quantity = 0.obs;
+  final RxList<Product> productList = <Product>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -90,7 +93,7 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while fetching orders');
-      print("Error fetching orders: $e");
+      appLogger("Error fetching orders: $e");
     } finally {
       isLoading(false);
     }
@@ -103,9 +106,6 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
     additionalInfoController.dispose();
     super.onClose();
   }
-
-  // Observable quantity for increment and decrement
-  var quantity = 1.obs;
 
   // Increment the quantity
   void incrementQuantity() {
@@ -173,4 +173,18 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   void setSelectedUnit(String? value) {
     selectedUnit.value = value ?? 'Kg';
   }
+
+  void updateProduct(String id) {
+    final index = productList.indexWhere((element) => element.id == id);
+    productList[index].productId.name = productNameController.text;
+    productList[index].productId.unit = unitController.text;
+    productList[index].productId.quantity = quantity.value;
+    productList[index].productId.additionalInfo = additionalInfoController.text;
+
+    productNameController.clear();
+    unitController.clear();
+    additionalInfoController.clear();
+  }
+
+  
 }

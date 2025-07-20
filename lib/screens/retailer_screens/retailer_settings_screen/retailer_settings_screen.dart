@@ -12,6 +12,7 @@ import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../widgets/appbar_widget/appbar_widget.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
@@ -98,10 +99,7 @@ class RetailerSettingsScreen extends StatelessWidget {
             leading: AppIconsPath.invite,
             title: AppStrings.invites,
             onTap: () {
-              Get.snackbar(
-                "Feature Unavailable",
-                "This functionality hasn't been implemented yet.",
-              );
+              Share.share(AppStrings.shareApp);
               // Get.toNamed(AppRoutes.invite);
             },
           ),

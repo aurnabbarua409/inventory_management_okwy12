@@ -41,7 +41,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
 
   bool isEditing = false;
 
-  void showProductDetailsDialog(BuildContext context) {
+  void showProductDetailsDialog(BuildContext context, Product item) {
     showCustomPopup(
       context,
       [
@@ -74,23 +74,23 @@ class _RetailerPendingOrderDetailsHistoryScreenState
         ),
         const SpaceWidget(spaceHeight: 16),
         TextWidget(
-          text: pendingController.productNameController.text.isEmpty
-              ? 'N/A'
-              : pendingController.productNameController.text,
+          text: item.productId.name.isEmpty ? "N/A" : item.productId.name,
           fontSize: 14,
+          fontColor: AppColors.black,
         ),
         const SpaceWidget(spaceHeight: 6),
         TextWidget(
-          text: pendingController.additionalInfoController.text.isEmpty
-              ? 'N/A'
-              : pendingController.additionalInfoController.text,
+          text: item.productId.additionalInfo.isEmpty
+              ? "N/A"
+              : item.productId.additionalInfo,
           fontSize: 14,
+          fontColor: AppColors.black,
         ),
       ],
     );
   }
 
-  void showProductEditDialog(BuildContext context) {
+  void showProductEditDialog(BuildContext context, String id) {
     showCustomPopup(
       context,
       [
@@ -181,6 +181,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               minValue: 0,
               onChanged: (value) {
                 // Handle value change
+                pendingController.quantity.value = value;
               },
             ),
           ],
@@ -205,6 +206,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
           children: [
             OutlinedButtonWidget(
               onPressed: () {
+                pendingController.updateProduct(id);
                 Get.back();
               },
               label: AppStrings.update,
@@ -338,6 +340,9 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Obx(() {
+                  pendingController.productList.value = pendingController.orders
+                      .expand((datum) => datum.product)
+                      .toList();
                   return pendingController.isLoading.value
                       ? const Center(child: CircularProgressIndicator())
                       : ListView(
@@ -356,11 +361,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                               ),
                             ),
                             // Data Rows (Flatten orders list and pass products only)
-                            ..._buildDataRows(
-                              pendingController.orders
-                                  .expand((datum) => datum.product)
-                                  .toList(),
-                            ),
+                            ..._buildDataRows(),
                           ],
                         );
                 }),
@@ -372,11 +373,12 @@ class _RetailerPendingOrderDetailsHistoryScreenState
     );
   }
 
-  Widget _buildHeaderCell(String text, {int flex = 1}) {
+  Widget _buildHeaderCell(String text,
+      {int flex = 1, double horizontal = 8.0}) {
     return Expanded(
       flex: flex,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: horizontal),
         child: Text(
           text,
           style: const TextStyle(
@@ -389,7 +391,8 @@ class _RetailerPendingOrderDetailsHistoryScreenState
     );
   }
 
-  List<Widget> _buildDataRows(List<Product> products) {
+  List<Widget> _buildDataRows() {
+    final products = pendingController.productList;
     if (products.isEmpty) {
       return [
         const Center(
@@ -410,7 +413,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
 
       return InkWell(
           onTap: () {
-            showProductDetailsDialog(context);
+            showProductDetailsDialog(context, item);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -498,9 +501,14 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                       }
                     },
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 1,
-                        child: Text(AppStrings.edit),
+                        child: const Text(AppStrings.edit),
+                        onTap: () {
+                          pendingController.productNameController.text =
+                              item.productId.name;
+                          showProductEditDialog(context, item.id);
+                        },
                       ),
                     ],
                   ),
