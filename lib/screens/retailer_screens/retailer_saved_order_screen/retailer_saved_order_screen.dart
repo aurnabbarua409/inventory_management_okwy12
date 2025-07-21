@@ -5,6 +5,7 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
@@ -225,7 +226,8 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                                   // final control =
                                   //     Get.find<BottomNavbarController>();
                                   // control.changeIndex(2);
-                                  Get.toNamed(AppRoutes.retailerFindWholeSellerScreen);
+                                  Get.toNamed(
+                                      AppRoutes.retailerFindWholeSellerScreen);
                                 },
                                 label: 'Send',
                                 fontWeight: FontWeight.w500,
@@ -292,6 +294,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                // const BottomNavBar()
               ],
             ),
           );

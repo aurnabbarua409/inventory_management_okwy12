@@ -231,11 +231,11 @@ class RouteManager {
         page: () => const WholesalerPendingOrderDetailsScreen(),
         // binding: GeneralBindings(),
       ),
-      GetPage(
-        name: AppRoutes.wholesalerNewOrderDetailsScreen,
-        page: () => const WholesalerNewOrderDetailsScreen(),
-        // binding: GeneralBindings(),
-      ),
+      // GetPage(
+      //   name: AppRoutes.wholesalerNewOrderDetailsScreen,
+      //   page: () => const WholesalerNewOrderDetailsScreen(),
+      //   // binding: GeneralBindings(),
+      // ),
       GetPage(
         name: AppRoutes.wholesalerProfileScreen,
         page: () => const WholesalerProfileScreen(),

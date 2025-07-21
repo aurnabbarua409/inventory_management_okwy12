@@ -17,8 +17,9 @@ import '../../../../widgets/text_widget/text_widgets.dart';
 import 'controller/Wholesaler_new_order_details_controller.dart';
 
 class WholesalerNewOrderDetailsScreen extends StatefulWidget {
-  const WholesalerNewOrderDetailsScreen({super.key});
-
+  const WholesalerNewOrderDetailsScreen({super.key, required this.id, required this.product});
+  final String id;
+  final List product;
   @override
   State<WholesalerNewOrderDetailsScreen> createState() =>
       _WholesalerNewOrderDetailsScreenState();
@@ -29,6 +30,13 @@ class _WholesalerNewOrderDetailsScreenState
   final WholesalerNewOrderDetailsController pendingController =
       Get.put(WholesalerNewOrderDetailsController());
   bool isEditing = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pendingController.fetchOrderDatails(widget.id);
+  }
 
   void showSendOrderDialog(BuildContext context) {
     showCustomPopup(

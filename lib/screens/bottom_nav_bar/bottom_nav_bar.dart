@@ -46,13 +46,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
                       // RetailerOrderHistoryScreen(),
                       // WholesalerOrderHistoryScreen(),
                       // WholesalerOrderHistoryScreen(),
-                      WholesalerOrderHistoryScreen(
+                      const WholesalerOrderHistoryScreen(
                         initialTabIndex: 0,
-                        key: const ValueKey("tab1"),
+                        key: ValueKey("tab1"),
                       ),
-                      WholesalerOrderHistoryScreen(
+                      const WholesalerOrderHistoryScreen(
                         initialTabIndex: 1,
-                        key: const ValueKey("tab2"),
+                        key: ValueKey("tab2"),
                       ),
                       const WholesalerSettings(),
                     ];

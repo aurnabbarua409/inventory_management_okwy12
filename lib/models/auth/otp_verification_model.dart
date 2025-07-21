@@ -3,7 +3,7 @@ import 'dart:convert';
 class OTPVerificationModel {
   bool success;
   String message;
-  bool data;
+  OtpData data;
 
   OTPVerificationModel({
     required this.success,
@@ -15,13 +15,13 @@ class OTPVerificationModel {
       OTPVerificationModel(
         success: json["success"] ?? false,
         message: json["message"] ?? "",
-        data: json["data"] ?? false,
+        data: OtpData.fromJson(json["data"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
-        "data": data,
+        "data": data.toJson(),
       };
 
   static OTPVerificationModel fromJsonString(String str) {
@@ -31,4 +31,15 @@ class OTPVerificationModel {
   String toJsonString() {
     return jsonEncode(toJson());
   }
+}
+
+class OtpData {
+  final String data;
+  final String message;
+  OtpData({required this.data, required this.message});
+
+  factory OtpData.fromJson(Map<String, dynamic> json) {
+    return OtpData(data: json["data"] ?? "", message: json["message"] ?? "");
+  }
+  Map<String, dynamic> toJson() => {"data": data, "message": message};
 }

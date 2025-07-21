@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/auth/otp_verification_model.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 import '../../../../routes/app_routes.dart';
@@ -94,8 +96,8 @@ class ForgotPasswordVerifyCodeScreenController extends GetxController {
     }
 
     Map<String, dynamic> body = {
-      "otp": otp,
       "email": email,
+      "otp": int.parse(otp),
     };
 
     try {
@@ -106,6 +108,10 @@ class ForgotPasswordVerifyCodeScreenController extends GetxController {
             OTPVerificationModel.fromJson(response);
 
         if (otpVerificationModel.success) {
+          PrefsHelper.setString("token", otpVerificationModel.data.data);
+
+          appLogger(otpVerificationModel.data.data);
+          appLogger(PrefsHelper.token);
           Get.snackbar("Success", "OTP verified successfully");
           Get.toNamed(AppRoutes.resetPasswordScreen);
         } else {

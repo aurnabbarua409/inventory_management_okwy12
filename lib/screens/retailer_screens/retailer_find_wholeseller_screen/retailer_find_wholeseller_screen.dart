@@ -188,8 +188,7 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                 child: IconButtonWidget(
                   onTap: () {
                     final control = Get.find<BottomNavbarController>();
-                    final destination = control.selectedIndex.value - 1;
-                    control.changeIndex(destination);
+                    control.changeIndex(0);
                   },
                   icon: AppIconsPath.backIcon,
                   color: AppColors.white,

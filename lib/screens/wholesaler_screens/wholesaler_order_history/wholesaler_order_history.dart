@@ -4,6 +4,7 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/controller/wholesaler_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/wholesaler_tabbar_view.dart';
 import 'package:inventory_app/utils/app_size.dart';
@@ -84,6 +85,7 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
                   }
 
                   return WholesalerTabView(
+                    showDeleteOrderDialog: controller.showDeleteOrderDialog,
                     pendingInvoices: controller.pendingOrders.map((order) {
                       return {
                         "company": order.retailer.name,
@@ -98,6 +100,8 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
                                 30), // Use responsive width for icon size
                           ),
                         ),
+                        "id": order.id,
+                        "product": order.product
                       };
                     }).toList(),
                     receivedInvoices: controller.pendingOrders.map((order) {
@@ -113,6 +117,8 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
                             size: ResponsiveUtils.width(38), // Responsive size
                           ),
                         ),
+                        "id": order.id,
+                        "product": order.product
                       };
                     }).toList(),
                     confirmedInvoices: controller.confirmedOrders.map((order) {
@@ -128,6 +134,8 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
                             size: ResponsiveUtils.width(38), // Responsive size
                           ),
                         ),
+                        "id": order.id,
+                        "product": order.product
                       };
                     }).toList(),
                     initialIndex:

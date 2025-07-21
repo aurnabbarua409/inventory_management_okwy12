@@ -117,9 +117,11 @@ class RetailerHomeScreen extends StatelessWidget {
                     CustomContainerWidget(
                       onTap: () {
                         // Register the controller before navigating to the screen
+
                         Get.put(RetailerSavedOrderScreenController());
                         // Register the controller
                         Get.toNamed(AppRoutes.retailerSavedOrderScreen);
+
                         // Navigate to the screen
                       },
                       containerColor: AppColors.lightYellow,

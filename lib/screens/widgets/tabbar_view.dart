@@ -1,7 +1,7 @@
 // OrdersTabView.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
@@ -15,13 +15,14 @@ class OrdersTabView extends StatefulWidget {
   final List<Map<String, dynamic>> pendingInvoices;
   final List<Map<String, dynamic>> receivedInvoices;
   final List<Map<String, dynamic>> confirmedInvoices;
+  final void Function(BuildContext, String) showDeleteOrderDialog;
 
-  const OrdersTabView({
-    super.key,
-    required this.pendingInvoices,
-    required this.receivedInvoices,
-    required this.confirmedInvoices,
-  });
+  const OrdersTabView(
+      {super.key,
+      required this.pendingInvoices,
+      required this.receivedInvoices,
+      required this.confirmedInvoices,
+      required this.showDeleteOrderDialog});
 
   @override
   State<OrdersTabView> createState() => _OrdersTabViewState();
@@ -194,6 +195,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           fontColor: AppColors.onyxBlack,
+                          textAlignment: TextAlign.end,
                         ),
                         const SpaceWidget(spaceHeight: 4),
                         GestureDetector(
@@ -233,6 +235,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                       onSelected: (value) {
                         if (value == 1) {
                           // Handle the delete functionality
+                          widget.showDeleteOrderDialog(context, invoice["id"]);
                         }
                       },
                       itemBuilder: (context) => [

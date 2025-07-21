@@ -356,7 +356,8 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                                   _buildHeaderCell("Sl", flex: 1),
                                   _buildHeaderCell("Name", flex: 4),
                                   _buildHeaderCell("Qty", flex: 1),
-                                  _buildHeaderCell("Unit", flex: 2),
+                                  _buildHeaderCell("Unit", flex: 1),
+                                  _buildHeaderCell("", flex: 0)
                                 ],
                               ),
                             ),

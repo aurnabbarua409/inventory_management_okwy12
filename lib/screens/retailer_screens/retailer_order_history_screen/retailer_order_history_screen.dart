@@ -14,7 +14,7 @@ import '../../../widgets/icon_button_widget/icon_button_widget.dart';
 
 class RetailerOrderHistoryScreen extends StatelessWidget {
   const RetailerOrderHistoryScreen({super.key});
-  // final controller =
+  // final retailerController =
   //     Get.put(RetailerOrderHistoryController());
 
   @override
@@ -23,7 +23,7 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
 
     return GetBuilder(
       init: RetailerOrderHistoryController(),
-      builder: (controller) =>  DefaultTabController(
+      builder: (controller) => DefaultTabController(
         length: 3,
         child: Scaffold(
           backgroundColor: AppColors.whiteLight,
@@ -62,19 +62,22 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator());
                     } else {
                       return OrdersTabView(
-                        pendingInvoices: controller.pendingOrders.map((pending) {
+                        showDeleteOrderDialog: controller.showDeleteOrderDialog,
+                        pendingInvoices:
+                            controller.pendingOrders.map((pending) {
                           return {
                             "company": pending.wholeSeller.name,
                             "date": pending.createdAt.toIso8601String(),
                             "logo": ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(ResponsiveUtils.width(2)),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(2)),
                               child: Icon(
                                 Icons.business,
                                 color: AppColors.primaryBlue,
                                 size: ResponsiveUtils.width(30),
                               ),
                             ),
+                            "id": pending.id
                           };
                         }).toList(),
                         receivedInvoices:
@@ -83,14 +86,15 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
                             "company": received.wholeSeller.name,
                             "date": received.createdAt.toIso8601String(),
                             "logo": ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(ResponsiveUtils.width(4)),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(4)),
                               child: Icon(
                                 Icons.business_center,
                                 color: AppColors.primaryBlue,
                                 size: ResponsiveUtils.width(38),
                               ),
                             ),
+                            "id": received.id
                           };
                         }).toList(),
                         confirmedInvoices:
@@ -100,14 +104,15 @@ class RetailerOrderHistoryScreen extends StatelessWidget {
                             "date": confirmed.createdAt?.toIso8601String() ??
                                 "No Date",
                             "logo": ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(ResponsiveUtils.width(4)),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(4)),
                               child: Icon(
                                 Icons.verified,
                                 color: AppColors.primaryBlue,
                                 size: ResponsiveUtils.width(38),
                               ),
                             ),
+                            "id": confirmed.id
                           };
                         }).toList(),
                       );

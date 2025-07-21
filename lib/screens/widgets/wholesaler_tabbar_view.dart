@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_new_order_details_screen/wholesaler_new_order_details_screen.dart';
+import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
@@ -13,14 +15,15 @@ class WholesalerTabView extends StatefulWidget {
   final List<Map<String, dynamic>>? receivedInvoices;
   final List<Map<String, dynamic>>? confirmedInvoices;
   final int initialIndex;
-
-  const WholesalerTabView({
-    super.key,
-    this.pendingInvoices = const [], // Default empty list
-    this.receivedInvoices = const [], // Default empty list
-    this.confirmedInvoices = const [], // Default empty list
-    this.initialIndex = 0, // Default to first tab
-  });
+  final void Function(BuildContext, String) showDeleteOrderDialog;
+  const WholesalerTabView(
+      {super.key,
+      this.pendingInvoices = const [], // Default empty list
+      this.receivedInvoices = const [], // Default empty list
+      this.confirmedInvoices = const [], // Default empty list
+      this.initialIndex = 0,
+      required this.showDeleteOrderDialog // Default to first tab
+      });
 
   @override
   State<WholesalerTabView> createState() => _WholesalerTabViewState();
@@ -216,7 +219,8 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                         SizedBox(
                           width: ResponsiveUtils.width(70),
                           child: TextWidget(
-                            text: invoice['date'],
+                            text:
+                                "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}",
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.onyxBlack,
@@ -231,8 +235,8 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                             int currentIndex =
                                 DefaultTabController.of(context)!.index;
                             if (currentIndex == 0) {
-                              Get.toNamed(
-                                  AppRoutes.wholesalerNewOrderDetailsScreen);
+                              Get.to(WholesalerNewOrderDetailsScreen(
+                                  id: invoice["id"], product: invoice["product"],));
                             } else if (currentIndex == 1) {
                               Get.toNamed(AppRoutes
                                   .wholesalerPendingOrderDetailsScreen);
@@ -265,7 +269,9 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                       ),
                       color: AppColors.white,
                       onSelected: (value) {
-                        if (value == 1) {}
+                        if (value == 1) {
+                          widget.showDeleteOrderDialog(context, invoice["id"]);
+                        }
                       },
                       itemBuilder: (context) => [
                         const PopupMenuItem(

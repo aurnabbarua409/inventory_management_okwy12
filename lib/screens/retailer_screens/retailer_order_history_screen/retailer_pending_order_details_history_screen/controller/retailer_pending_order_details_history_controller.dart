@@ -1,13 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
+import 'package:inventory_app/widgets/button_widget/button_widget.dart';
+import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
+import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 class RetailerPendingOrderDetailsHistoryController extends GetxController {
   var token = ''.obs;
@@ -186,5 +196,90 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
     additionalInfoController.clear();
   }
 
-  
+  // void showDeleteOrderDialog(BuildContext context, String orderId) {
+  //   showCustomPopup(
+  //     context,
+  //     [
+  //       Align(
+  //         alignment: Alignment.centerRight,
+  //         child: IconButtonWidget(
+  //           onTap: () => Get.back(),
+  //           icon: AppIconsPath.closeIcon,
+  //           size: 20,
+  //           color: AppColors.black,
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 16),
+  //       const Center(
+  //         child: TextWidget(
+  //           text: AppStrings.areYouSure,
+  //           fontSize: 16,
+  //           fontWeight: FontWeight.w600,
+  //           fontColor: AppColors.primaryBlue,
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 2),
+  //       const Center(
+  //         child: TextWidget(
+  //           text: AppStrings.deleteDesc,
+  //           fontSize: 15,
+  //           fontWeight: FontWeight.w500,
+  //           fontColor: AppColors.onyxBlack,
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 20),
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 32),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Expanded(
+  //               flex: 1,
+  //               child: OutlinedButtonWidget(
+  //                 onPressed: () => Get.back(),
+  //                 label: AppStrings.no,
+  //                 backgroundColor: AppColors.white,
+  //                 buttonWidth: 120,
+  //                 buttonHeight: 36,
+  //                 textColor: AppColors.primaryBlue,
+  //                 borderColor: AppColors.primaryBlue,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //             const SpaceWidget(spaceWidth: 16),
+  //             Expanded(
+  //               flex: 1,
+  //               child: ButtonWidget(
+  //                 onPressed: () async {
+  //                   final url = "${Urls.deletePending}$orderId";
+  //                   try {
+  //                     final response = await ApiService.deleteApi(url, {});
+  //                     appLogger(response.body);
+  //                     final body = jsonDecode(response.body);
+  //                     if (response.statusCode == 200) {
+  //                       fetchPending();
+  //                       Get.snackbar("Success", "Deleted Succesfully");
+  //                       Get.back();
+  //                     } else {
+  //                       Get.snackbar("Error", body["message"]);
+  //                     }
+  //                   } catch (e) {
+  //                     appLogger(e);
+  //                     Get.snackbar("Error", e.toString());
+  //                   }
+  //                 },
+  //                 label: AppStrings.yes,
+  //                 backgroundColor: AppColors.primaryBlue,
+  //                 buttonWidth: 120,
+  //                 buttonHeight: 36,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 20),
+  //     ],
+  //   );
+  // }
 }

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
+import 'package:inventory_app/models/wholeSaler_order_details.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 
 import '../../../../../constants/app_colors.dart';
 
@@ -10,6 +15,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
 
+  final RxList data = [].obs;
   // Observable quantity for increment and decrement
   var quantity = 1.obs;
 
@@ -75,6 +81,18 @@ class WholesalerNewOrderDetailsController extends GetxController {
 
       // Navigate to another screen
       Get.offAllNamed(AppRoutes.retailerFindWholeSellerScreen);
+    }
+  }
+
+  void fetchOrderDatails(String id) async {
+    try {
+      final url = "${Urls.wholesalerProductDetailsFromRetailer}$id";
+      final response = await ApiService.getApi(url);
+      appLogger(response);
+      final data = Order.fromJson(response["data"]);
+      appLogger(data.product);
+    } catch (e) {
+      appLogger(e);
     }
   }
 
