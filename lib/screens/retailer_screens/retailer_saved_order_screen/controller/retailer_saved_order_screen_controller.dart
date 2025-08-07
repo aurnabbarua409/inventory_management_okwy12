@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
+import 'package:inventory_app/models/new_version/get_all_order_model.dart';
 import 'package:inventory_app/models/retailer/retailer_home/delete_order_model.dart';
 import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 class RetailerSavedOrderScreenController extends GetxController {
@@ -15,7 +17,7 @@ class RetailerSavedOrderScreenController extends GetxController {
   var selectAll = false.obs;
   var isLoading = true.obs;
   var deleteIsLoading = false.obs;
-  var orders = <Product>[].obs;
+  var orders = <GetAllOrderModel>[].obs;
   var selectedOrderProducts = <Map<String, String>>[].obs;
 
   @override
@@ -41,15 +43,20 @@ class RetailerSavedOrderScreenController extends GetxController {
       var response = await ApiService.getApi(Urls.getAllOrders);
 
       if (response != null) {
-        ProductResponse orderResponse = ProductResponse.fromJson(response);
+        final List<dynamic> data = response["data"];
 
-        if (orderResponse.success) {
-          orders.assignAll(orderResponse.data);
+        // GetAllOrderModel orderResponse = GetAllOrderModel.fromJson(response);
 
+        if (response['success'] ?? false) {
+          // orders.assignAll(data);
+          orders.value = data
+              .map((e) => GetAllOrderModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+          appLogger("fetching saved order: $orders");
           selectedProducts
               .assignAll(List<bool>.generate(orders.length, (index) => false));
         } else {
-          Get.snackbar('Error', orderResponse.message);
+          Get.snackbar('Error', response['message']);
         }
       } else {
         Get.snackbar('Error', 'Failed to load orders');
@@ -99,14 +106,13 @@ class RetailerSavedOrderScreenController extends GetxController {
   }
 
   // Function to add an order to the list
-  void addOrder(Product order) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      orders.insert(0, order); 
-      selectedProducts.insert(
-          0, false); 
-      update(); 
-    });
-  }
+  // void addOrder(CreateOrderResponseModel order) {
+  //   WidgetsBinding.instance!.addPostFrameCallback((_) {
+  //     orders.insert(0, order);
+  //     selectedProducts.insert(0, false);
+  //     update();
+  //   });
+  // }
 
   // Function to toggle the checkbox state for an order
   void toggleCheckbox(int index) {
@@ -132,8 +138,7 @@ class RetailerSavedOrderScreenController extends GetxController {
     selectAll.value = value;
     selectedProducts.assignAll(List.generate(orders.length, (index) => value));
 
-    selectedOrderProducts
-        .clear(); 
+    selectedOrderProducts.clear();
     if (value) {
       for (var order in orders) {
         if (order.id != null) {
@@ -158,9 +163,10 @@ class RetailerSavedOrderScreenController extends GetxController {
         .toList();
 
     debugPrint("Selected product IDs: $selectedProductIds");
-
-    Get.find<FindWholesalerController>()
+    Get.put(FindWholesalerController())
         .setSelectedProductIds(selectedProductIds);
+    // Get.find<FindWholesalerController>()
+    //     .setSelectedProductIds(selectedProductIds);
 
     Get.toNamed(AppRoutes.retailerFindWholeSellerScreen,
         arguments: {'selectedProductIds': selectedProductIds});

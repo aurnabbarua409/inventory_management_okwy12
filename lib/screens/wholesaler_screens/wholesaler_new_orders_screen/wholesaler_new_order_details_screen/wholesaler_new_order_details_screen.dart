@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
+import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
+import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 
@@ -17,9 +24,8 @@ import '../../../../widgets/text_widget/text_widgets.dart';
 import 'controller/Wholesaler_new_order_details_controller.dart';
 
 class WholesalerNewOrderDetailsScreen extends StatefulWidget {
-  const WholesalerNewOrderDetailsScreen({super.key, required this.id, required this.product});
-  final String id;
-  final List product;
+  const WholesalerNewOrderDetailsScreen({super.key});
+
   @override
   State<WholesalerNewOrderDetailsScreen> createState() =>
       _WholesalerNewOrderDetailsScreenState();
@@ -29,168 +35,6 @@ class _WholesalerNewOrderDetailsScreenState
     extends State<WholesalerNewOrderDetailsScreen> {
   final WholesalerNewOrderDetailsController pendingController =
       Get.put(WholesalerNewOrderDetailsController());
-  bool isEditing = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    pendingController.fetchOrderDatails(widget.id);
-  }
-
-  void showSendOrderDialog(BuildContext context) {
-    showCustomPopup(
-      context,
-      [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButtonWidget(
-            onTap: () {
-              Get.back();
-            },
-            icon: AppIconsPath.closeIcon,
-            size: 20,
-            color: AppColors.black,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 16),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.areYouSure,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            fontColor: AppColors.primaryBlue,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 2),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.wholesalerAreYouSureDesc,
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            fontColor: AppColors.onyxBlack,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: OutlinedButtonWidget(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  label: AppStrings.no,
-                  backgroundColor: AppColors.white,
-                  buttonWidth: 120,
-                  buttonHeight: 36,
-                  textColor: AppColors.primaryBlue,
-                  borderColor: AppColors.primaryBlue,
-                  fontSize: 14,
-                ),
-              ),
-              const SpaceWidget(spaceWidth: 16),
-              Expanded(
-                flex: 1,
-                child: ButtonWidget(
-                  onPressed: () {
-                    Get.back();
-                    showSendOrderSuccessfulDialog(context);
-                  },
-                  label: AppStrings.yes,
-                  backgroundColor: AppColors.primaryBlue,
-                  buttonWidth: 120,
-                  buttonHeight: 36,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-      ],
-    );
-  }
-
-  void showSendOrderSuccessfulDialog(BuildContext context) {
-    showCustomPopup(
-      context,
-      [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButtonWidget(
-            onTap: () {
-              Get.back();
-            },
-            icon: AppIconsPath.closeIcon,
-            size: 20,
-            color: AppColors.black,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 16),
-        const Center(
-          child: ImageWidget(
-            height: 64,
-            width: 64,
-            imagePath: AppImagesPath.checkImage,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.wholesalerOrderSentSuccessfully,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            fontColor: AppColors.primaryBlue,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 2),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.wholesalerOrderSentSuccessfullyDesc,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            fontColor: AppColors.onyxBlack,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-      ],
-    );
-  }
-
-  // Data moved to class level
-  final List<Map<String, dynamic>> data = [
-    {
-      "sl": "01",
-      "name": "Rice",
-      "qty": "3",
-      "unit": "Kg",
-      "available": false,
-      "price": "100",
-      "total": "300",
-    },
-    {
-      "sl": "02",
-      "name": "Samsung Galaxy S22",
-      "qty": "15",
-      "unit": "Pcs",
-      "available": false,
-      "price": "100",
-      "total": "1500",
-    },
-    {
-      "sl": "03",
-      "name": "Coca Cola 300ml",
-      "qty": "5",
-      "unit": "Bottle",
-      "available": false,
-      "price": "0",
-      "total": "0",
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -254,7 +98,7 @@ class _WholesalerNewOrderDetailsScreenState
                     const SpaceWidget(spaceHeight: 16),
                     ButtonWidget(
                       onPressed: () {
-                        showSendOrderDialog(context);
+                        pendingController.showSendOrderDialog(context);
                       },
                       label: AppStrings.send,
                       backgroundColor: AppColors.primaryBlue,
@@ -291,10 +135,14 @@ class _WholesalerNewOrderDetailsScreenState
   }
 
   List<Widget> _buildDataRows() {
-    return data.asMap().entries.map((entry) {
+    return pendingController.products.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
-      bool isPriceNotZero = item["price"] != "0";
+      // bool isPriceNotZero = item. != 0;
+      double price = pendingController.availableList[index].values.first;
+      int quantity = item.quantity ?? 1;
+      double totalPrice = price * quantity;
+      bool available = pendingController.availableList[index].keys.first;
 
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -309,7 +157,8 @@ class _WholesalerNewOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item["sl"]?.toString() ?? "",
+                  "${index + 1}",
+                  // item["sl"]?.toString() ?? "",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -323,7 +172,8 @@ class _WholesalerNewOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Text(
-                  item["name"]?.toString() ?? "",
+                  item.productName ?? "N/A",
+                  // item["name"]?.toString() ?? "",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -337,7 +187,8 @@ class _WholesalerNewOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item["qty"]?.toString() ?? "",
+                  quantity.toString(),
+                  // item["qty"]?.toString() ?? "",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -351,7 +202,8 @@ class _WholesalerNewOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item["unit"]?.toString() ?? "",
+                  item.unit ?? "Kg",
+                  // item["unit"]?.toString() ?? "",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -371,15 +223,14 @@ class _WholesalerNewOrderDetailsScreenState
                   toggleSize: 15,
                   borderRadius: 30,
                   padding: 2,
-                  value: item["available"] as bool,
+                  value: pendingController.availableList[index].keys.first,
                   onToggle: (bool newValue) {
-                    setState(() {
-                      data[index]["available"] = newValue;
-                      if (!newValue) {
-                        data[index]["price"] = "0";
-                        data[index]["total"] = "0";
-                      }
-                    });
+                    appLogger(
+                        "after toggling, isAvailable: $newValue, index: $index");
+                    available = newValue;
+                    pendingController.availableList
+                        .insert(index, {available: price});
+                    setState(() {});
                   },
                   activeColor: Colors.green,
                   inactiveColor: AppColors.red,
@@ -398,12 +249,12 @@ class _WholesalerNewOrderDetailsScreenState
             const SizedBox(width: 15),
             Expanded(
               flex: 1,
-              child: item["available"] as bool
+              child: pendingController.availableList[index].keys.first
                   ? SizedBox(
                       height: 30,
                       width: 10,
                       child: TextFormField(
-                        initialValue: item["price"]?.toString() ?? "",
+                        initialValue: price.toString(),
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.all(8),
@@ -416,11 +267,11 @@ class _WholesalerNewOrderDetailsScreenState
                         ),
                         onChanged: (value) {
                           setState(() {
-                            data[index]["price"] = value;
-                            int qty =
-                                int.tryParse(data[index]["qty"] as String) ?? 0;
-                            int price = int.tryParse(value) ?? 0;
-                            data[index]["total"] = (qty * price).toString();
+                            price = double.parse(value);
+                            pendingController.availableList
+                                .insert(index, {available: price});
+
+                            totalPrice = (quantity * price).toDouble();
                           });
                         },
                       ),
@@ -428,7 +279,7 @@ class _WholesalerNewOrderDetailsScreenState
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: Text(
-                        item["price"]?.toString() ?? "",
+                        price.toString(),
                         style: const TextStyle(
                           fontSize: 10,
                           color: AppColors.onyxBlack,
@@ -441,7 +292,7 @@ class _WholesalerNewOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item["total"]?.toString() ?? "",
+                  totalPrice.toString(),
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,

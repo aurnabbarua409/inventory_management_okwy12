@@ -9,7 +9,7 @@ class AppImagesPath {
   static const String currencyIcon = "assets/images/currencyIcon.png";
 
   // Dev Images
-  static const String profileImage = "assets/dev_images/profileImage.png";
+  static const String profileImage = "assets/images/user.png";
   static const String wholesalerProfileImage =
       "assets/dev_images/wholesalerProfileImage.jpg";
 

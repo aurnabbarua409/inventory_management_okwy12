@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
 
 import '../../../routes/app_routes.dart';
 
@@ -8,7 +9,15 @@ class SplashController extends GetxController {
     super.onInit();
     // Wait for 3 seconds before navigating to the HomeScreen
     Future.delayed(const Duration(seconds: 3)).then((_) {
-      Get.offAllNamed(AppRoutes.onboardingScreen);
+      final islogin = PrefsHelper.isLogIn;
+      if (islogin) {
+        final role = PrefsHelper.userRole;
+        final userId = PrefsHelper.userId;
+        Get.offAllNamed(AppRoutes.bottomNavBar,
+            arguments: {'userRole': role, 'userId': userId});
+      } else {
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+      }
       //Get.to(() => BottomNavBar());
     });
   }

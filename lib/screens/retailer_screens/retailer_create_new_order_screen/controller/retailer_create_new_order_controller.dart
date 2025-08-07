@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/models/new_version/create_order_model.dart';
 import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/models/retailer/retailer_home/order_creation_model.dart';
+import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/retailer_saved_order_screen.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -67,8 +68,12 @@ class RetailerCreateNewOrderScreenController extends GetxController {
     selectedUnit.value = value ?? '';
   }
 
-  Future<void> startVoiceRecognition() async {
+  Future<void> startVoiceRecognition(bool isProduct) async {
     var status = await Permission.microphone.request();
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+      return;
+    }
 
     if (status.isGranted) {
       stt.SpeechToText speechToText = stt.SpeechToText();
@@ -89,8 +94,9 @@ class RetailerCreateNewOrderScreenController extends GetxController {
         speechToText.listen(
           onResult: (result) {
             lastWords.value = result.recognizedWords;
-            productNameController.text = lastWords.value;
-            additionalInfoController.text = lastWords.value;
+            isProduct
+                ? productNameController.text = lastWords.value
+                : additionalInfoController.text = lastWords.value;
           },
           listenFor:
               const Duration(seconds: 60), // ⬅ Increase the duration here
@@ -113,44 +119,50 @@ class RetailerCreateNewOrderScreenController extends GetxController {
   }
 
   /// Validate input and handle product creation API call
-  Future<MCreateOffer?> createItem() async {
+  Future<void> createItem() async {
     isLoading.value = true;
     update();
+    final createOrder = CreateOrderModel(
+        productName: productNameController.text.trim(),
+        quantity: quantity.value,
+        additionalInfo: additionalInfoController.text,
+        unit: selectedUnit.value);
+    // Map<String, dynamic> body = {
+    //   "name": productNameController.text.trim(),
+    //   "unit": selectedUnit.value,
+    //   "quantity": quantity.value,
+    //   "additionalinfo": additionalInfoController.text
+    // };
 
-    Map<String, dynamic> body = {
-      "name": productNameController.text.trim(),
-      "unit": selectedUnit.value,
-      "quantity": quantity.value,
-    };
-
-    if (additionalInfoController.text.trim().isNotEmpty) {
-      body["additionalinfo"] = additionalInfoController.text.trim();
-    }
+    // if (additionalInfoController.text.trim().isNotEmpty) {
+    //   body["additionalinfo"] = additionalInfoController.text.trim();
+    // }
 
     try {
-      var response = await ApiService.postApi(Urls.createOrders, body)
-          .timeout(const Duration(seconds: 30));
+      var response =
+          await ApiService.postApi(Urls.createOrders, createOrder.toJson())
+              .timeout(const Duration(seconds: 30));
 
       if (response != null) {
-        MCreateOffer orderResponse = MCreateOffer.fromJson(response);
-
-        if (orderResponse.success) {
+        if (response['success'] ?? false) {
           // Access the productId for the single product in the data field
-          debugPrint(orderResponse.data.id); // This prints the productId
 
+          // Get.snackbar("Success", response["message"]);
           // Add the created order details
-          controller.addOrder(Product(
-            name: productNameController.text.trim(),
-            unit: selectedUnit.value,
-            quantity: quantity.value,
-            additionalInfo: additionalInfoController.text.trim(),
-            delivery: true,
-            availability: true,
-            id: orderResponse.data.id,
-            v: orderResponse.data.v,
-            createdAt: orderResponse.data.createdAt,
-            updatedAt: orderResponse.data.updatedAt,
-          ));
+          // controller.addOrder(CreateOrderResponseModel(
+          //   retailer: orderResponse.retailer,
+          //   status: orderResponse.status,
+          //   productName: productNameController.text.trim(),
+          //   unit: selectedUnit.value,
+          //   quantity: quantity.value,
+          //   additinalInfo: additionalInfoController.text.trim(),
+          //   // delivery: true,
+          //   // availability: true,
+          //   id: orderResponse.id,
+          //   v: orderResponse.v,
+          //   createAt: orderResponse.createAt,
+          //   updatedAt: orderResponse.updatedAt,
+          // ));
 
           // Clear fields
           productNameController.clear();
@@ -161,11 +173,12 @@ class RetailerCreateNewOrderScreenController extends GetxController {
           Get.snackbar('Success', 'Product created successfully.');
 
           // Navigate to Saved Order Screen
-          Get.to(() => RetailerSavedOrderScreen(), arguments: orderResponse);
+          Get.toNamed(AppRoutes.retailerSavedOrderScreen);
+          // Get.to(() => RetailerSavedOrderScreen());
 
-          return orderResponse;
+          return;
         } else {
-          Get.snackbar('Error', orderResponse.message);
+          Get.snackbar('Error', response["message"]);
         }
       } else {
         Get.snackbar('Error', 'Invalid response from server.');
@@ -178,7 +191,7 @@ class RetailerCreateNewOrderScreenController extends GetxController {
       update();
     }
 
-    return null;
+    return;
   }
 
   @override

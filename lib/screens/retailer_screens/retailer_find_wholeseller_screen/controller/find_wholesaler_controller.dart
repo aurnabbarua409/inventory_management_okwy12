@@ -6,6 +6,7 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/find_wholesaler/get_wholesaler_model.dart';
+import 'package:inventory_app/models/retailer/send_product_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -267,7 +268,7 @@ class FindWholesalerController extends GetxController {
   void showSendOrderDialog(BuildContext context) {
     int selectedCount = selectedItems.where((item) => item).length;
     if (selectedCount == 0) {
-      Get.snackbar("No Selection", "Please select at least one wholesaler.");
+      Get.snackbar("No Selection", "Hold the button to select wholesaler");
       return;
     }
 
@@ -355,33 +356,38 @@ class FindWholesalerController extends GetxController {
       String status = "Pending";
 
       // Create the list of order objects.
-      List<Map<String, dynamic>> orderList =
-          selectedWholesalerIds.map((wholesalerId) {
-        return {
-          "retailer": retailerId,
-          "wholeSeller": wholesalerId,
-          "products": selectedProductIds,
-          "status": status,
-        };
-      }).toList();
-
+      // List<Map<String, dynamic>> orderList =
+      //     selectedWholesalerIds.map((wholesalerId) {
+      //   return {
+      //     "retailer": retailerId,
+      //     "wholeSeller": wholesalerId,
+      //     "products": selectedProductIds,
+      //     "status": status,
+      //   };
+      // }).toList();
+      final wholesalerIds = <String>[];
+      for (int i = 0; i < wholesalers.length; i++) {
+        wholesalerIds.add(wholesalers[i].id);
+      }
+      final orderList = SendProductModel(selectedProductIds, wholesalerIds);
       debugPrint("Request Body: $orderList");
 
       // Send a single request with the list of order objects.
-      var response = await ApiService.postApiList(Urls.sendOrder, orderList)
-          .timeout(const Duration(seconds: 30));
+      var response =
+          await ApiService.postApi(Urls.sendOrder, orderList.toJson())
+              .timeout(const Duration(seconds: 30));
 
       if (response != null && response['success'] == true) {
-        debugPrint("API Response: $response");
+        appLogger("response after sending product to wholesaler: $response");
 
         selectedItems
             .assignAll(List.generate(wholesalers.length, (index) => false));
 
-        var newOffer = response['data'];
+        // var newOffer = response['data'];
 
-        for (var offer in newOffer) {
-          addOffer(offer);
-        }
+        // for (var offer in newOffer) {
+        //   addOffer(offer);
+        // }
         update();
       } else {
         String errorMessage = response != null && response['message'] != null

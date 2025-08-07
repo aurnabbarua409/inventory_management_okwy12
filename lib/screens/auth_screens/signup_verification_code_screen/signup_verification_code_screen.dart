@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/auth_screens/forgot_password_verification_code_screen/widgets/otp_field_widget.dart';
+import 'package:inventory_app/widgets/appbar_widget/auth_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
-
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_strings.dart';
-import '../../../widgets/appbar_widget/auth_appbar_widget.dart';
-import '../../../widgets/space_widget/space_widget.dart';
-import '../../../widgets/text_button_widget/text_button_widget.dart';
-import '../../../widgets/text_widget/text_widgets.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'controller/signup_verification_code_screen_controller.dart';
 
 class SignupVerificationCodeScreen extends StatelessWidget {
@@ -16,7 +15,7 @@ class SignupVerificationCodeScreen extends StatelessWidget {
 
   final SignupVerifyCodeScreenController controller =
       Get.put(SignupVerifyCodeScreenController());
- final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -103,8 +102,7 @@ class SignupVerificationCodeScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 32),
                     ButtonWidget(
                       onPressed: () {
-                        if (_formKey.currentState?.validate() ??
-                            false) {
+                        if (_formKey.currentState?.validate() ?? false) {
                           controller.verifyOTP();
                         } else {
                           Get.snackbar(

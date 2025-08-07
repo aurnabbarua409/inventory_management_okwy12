@@ -4,7 +4,6 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/controller/wholesaler_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/wholesaler_tabbar_view.dart';
 import 'package:inventory_app/utils/app_size.dart';
@@ -29,102 +28,108 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
 
     return GetBuilder(
       init: WholesalerOrderHistoryController(),
-      builder: (controller) => DefaultTabController(
-        length: 3,
-        initialIndex: initialTabIndex, // Use initialTabIndex
-        child: Scaffold(
-          backgroundColor: AppColors.whiteLight,
-          body: Column(
-            children: [
-              MainAppbarWidget(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    if (initialTabIndex == 2)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButtonWidget(
-                          onTap: () {
-                            Get.back();
-                          },
-                          icon: AppIconsPath.backIcon,
-                          color: AppColors.white,
-                          size: ResponsiveUtils.width(22),
+      builder: (controller) => RefreshIndicator.adaptive(
+        onRefresh: controller.initialize,
+        child: DefaultTabController(
+          length: 3,
+          initialIndex: initialTabIndex, // Use initialTabIndex
+          child: Scaffold(
+            backgroundColor: AppColors.whiteLight,
+            body: Column(
+              children: [
+                MainAppbarWidget(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (initialTabIndex == 2)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButtonWidget(
+                            onTap: () {
+                              Get.back();
+                            },
+                            icon: AppIconsPath.backIcon,
+                            color: AppColors.white,
+                            size: ResponsiveUtils.width(22),
+                          ),
+                        ),
+                      if (initialTabIndex != 2)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButtonWidget(
+                            onTap: () {
+                              final control =
+                                  Get.find<BottomNavbarController>();
+                              control.changeIndex(0);
+                            },
+                            icon: AppIconsPath.backIcon,
+                            color: AppColors.white,
+                            size: ResponsiveUtils.width(22),
+                          ),
+                        ),
+                      const Center(
+                        child: TextWidget(
+                          text: AppStrings.orderHistory,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          fontColor: AppColors.white,
                         ),
                       ),
-                    if (initialTabIndex != 2)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButtonWidget(
-                          onTap: () {
-                            final control = Get.find<BottomNavbarController>();
-                            control.changeIndex(0);
-                          },
-                          icon: AppIconsPath.backIcon,
-                          color: AppColors.white,
-                          size: ResponsiveUtils.width(22),
-                        ),
-                      ),
-                    const Center(
-                      child: TextWidget(
-                        text: AppStrings.orderHistory,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        fontColor: AppColors.white,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                  height: ResponsiveUtils.height(16)), // Responsive spacing
-              Expanded(
-                child: Obx(() {
-                  if (controller.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                SizedBox(
+                    height: ResponsiveUtils.height(16)), // Responsive spacing
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  return WholesalerTabView(
-                    showDeleteOrderDialog: controller.showDeleteOrderDialog,
-                    pendingInvoices: controller.pendingOrders.map((order) {
-                      return {
-                        "company": order.retailer.name,
-                        "date": order.createdAt.toString(),
-                        "logo": ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              ResponsiveUtils.width(2)), // Responsive radius
-                          child: Icon(
-                            Icons.business,
-                            color: AppColors.primaryBlue,
-                            size: ResponsiveUtils.width(
-                                30), // Use responsive width for icon size
+                    return WholesalerTabView(
+                      showDeleteOrderDialog: controller.showDeleteOrderDialog,
+                      pendingInvoices: controller.pendingOrders.map((order) {
+                        return {
+                          "company": order.retailer?.name ?? "N/A",
+                          "date": order.createAt,
+                          "logo": ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                ResponsiveUtils.width(2)), // Responsive radius
+                            child: Icon(
+                              Icons.business,
+                              color: AppColors.primaryBlue,
+                              size: ResponsiveUtils.width(
+                                  30), // Use responsive width for icon size
+                            ),
                           ),
-                        ),
-                        "id": order.id,
-                        "product": order.product
-                      };
-                    }).toList(),
-                    receivedInvoices: controller.pendingOrders.map((order) {
-                      return {
-                        "company": order.retailer.name,
-                        "date": order.createdAt.toString(),
-                        "logo": ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              ResponsiveUtils.width(4)), // Responsive radius
-                          child: Icon(
-                            Icons.business_center,
-                            color: AppColors.primaryBlue,
-                            size: ResponsiveUtils.width(38), // Responsive size
+                          "id": order.id,
+                          "product": order.product
+                        };
+                      }).toList(),
+                      receivedInvoices: controller.receivedOrders.map((order) {
+                        return {
+                          "company": order.wholeSaler?.name ?? "N/A",
+                          "date": order.wholeSaler?.createAt ?? "N/A",
+                          "logo": ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                ResponsiveUtils.width(4)), // Responsive radius
+                            child: Icon(
+                              Icons.business_center,
+                              color: AppColors.primaryBlue,
+                              size:
+                                  ResponsiveUtils.width(38), // Responsive size
+                            ),
                           ),
-                        ),
-                        "id": order.id,
-                        "product": order.product
-                      };
-                    }).toList(),
-                    confirmedInvoices: controller.confirmedOrders.map((order) {
-                      return {
-                        "company": order.retailer?.name ?? "",
-                        "date": order.createdAt.toString(),
+                          "id": order.wholeSaler!.id,
+                          "product": order.orders
+                        };
+                      }).toList(),
+                      confirmedInvoices: {
+                        "company": controller.confirmedOrders.value?.wholesaler
+                                ?.first.name ??
+                            "N/A",
+                        "date": controller
+                            .confirmedOrders.value?.product!.first.createAt,
                         "logo": ClipRRect(
                           borderRadius: BorderRadius.circular(
                               ResponsiveUtils.width(4)), // Responsive radius
@@ -134,16 +139,18 @@ class WholesalerOrderHistoryScreen extends StatelessWidget {
                             size: ResponsiveUtils.width(38), // Responsive size
                           ),
                         ),
-                        "id": order.id,
-                        "product": order.product
-                      };
-                    }).toList(),
-                    initialIndex:
-                        initialTabIndex, // Passing initialTabIndex here
-                  );
-                }),
-              ),
-            ],
+                        "id":
+                            controller.confirmedOrders.value?.product!.first.id,
+                        "product": controller.confirmedOrders.value
+                      },
+
+                      initialIndex:
+                          initialTabIndex, // Passing initialTabIndex here
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
       ),

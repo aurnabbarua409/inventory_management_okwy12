@@ -11,10 +11,10 @@ import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_scre
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:inventory_app/widgets/normal_text_field_widget/normal_text_field_widget.dart';
 import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
-import '../../../widgets/normal_text_field_widget/normal_text_field_widget.dart';
 
 class RetailerCreateNewOrderScreen extends StatelessWidget {
   RetailerCreateNewOrderScreen({super.key});
@@ -82,11 +82,11 @@ class RetailerCreateNewOrderScreen extends StatelessWidget {
                               const SpaceWidget(spaceHeight: 10),
                               NormalTextFieldWidget(
                                 controller: controller.productNameController,
-                                hintText: 'Enter product name',
+                                hintText: AppStrings.enterProductname,
                                 maxLines: 1,
                                 suffixIcon: AppIconsPath.voiceIcon,
                                 onTapSuffix: () {
-                                  controller.startVoiceRecognition();
+                                  controller.startVoiceRecognition(true);
                                 },
                               ),
                               const SpaceWidget(spaceHeight: 14),
@@ -184,7 +184,7 @@ class RetailerCreateNewOrderScreen extends StatelessWidget {
                                 maxLines: 4,
                                 suffixIcon: AppIconsPath.voiceIcon,
                                 onTapSuffix: () {
-                                  controller.startVoiceRecognition();
+                                  controller.startVoiceRecognition(false);
                                 },
                               ),
                               const SpaceWidget(spaceHeight: 16),
@@ -195,22 +195,16 @@ class RetailerCreateNewOrderScreen extends StatelessWidget {
                                     flex: 1,
                                     child: OutlinedButtonWidget(
                                       onPressed: () async {
-                                        MCreateOffer? order =
-                                            await controller.createItem();
-                                        if (order != null) {
-                                          // Check if order is NOT null (success)
-                                          //Get.toNamed(
-                                          // AppRoutes.retailerSavedOrderScreen,
-                                          // arguments: order);
-
-                                          Get.lazyPut(() =>
-                                              RetailerSavedOrderScreenController());
-                                          Get.to(
-                                              () => RetailerSavedOrderScreen(),
-                                              arguments: order);
-                                        } else {
-                                          print("Order creation failed.");
-                                        }
+                                        controller.createItem();
+                                        // Check if order is NOT null (success)
+                                        //Get.toNamed(
+                                        // AppRoutes.retailerSavedOrderScreen,
+                                        // arguments: order);
+                                        // Get.lazyPut(() =>
+                                        //     RetailerSavedOrderScreenController());
+                                        // Get.to(
+                                        //   () => RetailerSavedOrderScreen(),
+                                        // );
                                       },
                                       label: AppStrings.save,
                                       backgroundColor: AppColors.primaryBlue,

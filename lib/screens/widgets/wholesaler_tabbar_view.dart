@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
-import 'package:inventory_app/screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_new_order_details_screen/wholesaler_new_order_details_screen.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
@@ -13,14 +13,14 @@ import '../../widgets/space_widget/space_widget.dart';
 class WholesalerTabView extends StatefulWidget {
   final List<Map<String, dynamic>>? pendingInvoices;
   final List<Map<String, dynamic>>? receivedInvoices;
-  final List<Map<String, dynamic>>? confirmedInvoices;
+  final Map<String, dynamic> confirmedInvoices;
   final int initialIndex;
   final void Function(BuildContext, String) showDeleteOrderDialog;
   const WholesalerTabView(
       {super.key,
       this.pendingInvoices = const [], // Default empty list
       this.receivedInvoices = const [], // Default empty list
-      this.confirmedInvoices = const [], // Default empty list
+      required this.confirmedInvoices, // Default empty list
       this.initialIndex = 0,
       required this.showDeleteOrderDialog // Default to first tab
       });
@@ -122,7 +122,7 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                 children: [
                   buildInvoiceList(widget.pendingInvoices ?? []),
                   buildInvoiceList(widget.receivedInvoices ?? []),
-                  buildInvoiceList(widget.confirmedInvoices ?? []),
+                  buildInvoice(widget.confirmedInvoices),
                 ],
               ),
             ),
@@ -132,8 +132,121 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
     );
   }
 
+  Widget buildInvoice(Map<String, dynamic> invoice) {
+    appLogger("in confirmed order: $invoice");
+    if (invoice.isEmpty) {
+      return const Center(child: Text("No orders available"));
+    }
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (context, index) => Card(
+        color: AppColors.white,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        margin: EdgeInsets.symmetric(
+          horizontal: ResponsiveUtils.width(16),
+          vertical: ResponsiveUtils.height(6),
+        ),
+        child: Container(
+          padding: const EdgeInsets.only(top: 12, left: 12, bottom: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  invoice['logo'],
+                  const SpaceWidget(spaceWidth: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget(
+                        text: invoice['company'],
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontColor: AppColors.black,
+                      ),
+                      const SpaceWidget(spaceHeight: 4),
+                      TextWidget(
+                        text:
+                            "Invoice: ${invoice['invoice'] ?? 'N/A'}", // Add null check
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        fontColor: AppColors.onyxBlack,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      TextWidget(
+                        text:
+                            "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}",
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        fontColor: AppColors.onyxBlack,
+                        textAlignment: TextAlign.end,
+                      ),
+                      const SpaceWidget(spaceHeight: 4),
+                      GestureDetector(
+                        onTap: () {
+                          int currentIndex =
+                              DefaultTabController.of(context).index;
+                          appLogger(
+                              "in wholesaler tabbar: ${invoice['product']}");
+                          Get.toNamed(
+                              AppRoutes.wholesalerConfirmedOrderDetailsScreen,
+                              arguments: {'products': invoice['product']});
+                        },
+                        child: const TextWidget(
+                          text: AppStrings.details,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          fontColor: AppColors.primaryBlue,
+                        ),
+                      ),
+                    ],
+                  ),
+                  PopupMenuButton(
+                    constraints:
+                        const BoxConstraints(minWidth: 18, minHeight: 18),
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: AppColors.black,
+                      size: 18,
+                    ),
+                    color: AppColors.white,
+                    onSelected: (value) {
+                      if (value == 1) {
+                        // Handle the delete functionality
+                        widget.showDeleteOrderDialog(context, invoice["id"]);
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 1,
+                        child: Text(AppStrings.delete),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildInvoiceList(List<Map<String, dynamic>> invoices) {
-    int currentIndex = DefaultTabController.of(context)!.index;
+    int currentIndex = DefaultTabController.of(context).index;
     if (invoices.isEmpty) {
       return const Center(
         child: TextWidget(
@@ -183,7 +296,7 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                           ),
                         ),
                         TextWidget(
-                          text: "Invoice: ${invoice['invoice']}",
+                          text: "Invoice: ${invoice['invoice'] ?? "N/A"}",
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           fontColor: AppColors.onyxBlack,
@@ -232,17 +345,23 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                         const SpaceWidget(spaceHeight: 4),
                         GestureDetector(
                           onTap: () {
+                            appLogger("Details button clicked");
                             int currentIndex =
-                                DefaultTabController.of(context)!.index;
+                                DefaultTabController.of(context).index;
+                            appLogger(
+                                "current index in order history: $currentIndex");
                             if (currentIndex == 0) {
-                              Get.to(WholesalerNewOrderDetailsScreen(
-                                  id: invoice["id"], product: invoice["product"],));
+                              Get.toNamed(
+                                  AppRoutes.wholesalerNewOrderDetailsScreen,
+                                  arguments: {
+                                    'products': invoice['product'],
+                                    'id': invoice['id']
+                                  });
                             } else if (currentIndex == 1) {
-                              Get.toNamed(AppRoutes
-                                  .wholesalerPendingOrderDetailsScreen);
-                            } else {
-                              Get.toNamed(AppRoutes
-                                  .wholesalerConfirmedOrderDetailsScreen);
+                              // Get.to(WholesalerPendingOrderDetailsScreen( product: invoice["product"],));
+                              Get.toNamed(
+                                  AppRoutes.wholesalerPendingOrderDetailsScreen,
+                                  arguments: {'products': invoice['product']});
                             }
                           },
                           child: const TextWidget(

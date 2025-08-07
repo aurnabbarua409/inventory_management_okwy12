@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_about_us_screen/retailer_about_us_screen.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_change_password_screen/retailer_change_password_screen.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_contact_us_screen/retailer_contact_us_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_about_us_screen/retailer_about_us_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_change_password_screen/retailer_change_password_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_contact_us_screen/retailer_contact_us_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_create_new_order_screen/retailer_create_new_order_screen.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_faq_screen/retailer_faq_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_faq_screen/retailer_faq_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_home_screen/order_history.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/retailer_notification_screen.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/retailer_confirmed_order_details_history_screen/retailer_confirmed_order_details_history_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_confirmed_order_details_history_screen/retailer_confirmed_order_details_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/retailer_order_history_screen.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_profile_screen/retailer_profile_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_profile_screen/retailer_profile_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_terms_conditions_screen/retailer_terms_conditions_screen.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_home_screen/wholesaler_home_screen.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_home_screen/wholesaler_order_details.dart';
@@ -16,7 +16,7 @@ import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_histor
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/add_card.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/payment_webview_page.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/subscription_screen.dart';
-import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_settings.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_settings_screen/wholesaler_settings.dart';
 import 'package:inventory_app/screens/widgets/wholesaler_tabbar_view.dart';
 
 import '../screens/auth_screens/forgot_password_screen/forgot_password_screen.dart';
@@ -30,18 +30,18 @@ import '../screens/bottom_nav_bar/bottom_nav_bar.dart';
 import '../screens/onboarding_screen/onboarding_screen.dart';
 import '../screens/retailer_screens/retailer_find_wholeseller_screen/retailer_find_wholeseller_screen.dart';
 import '../screens/retailer_screens/retailer_home_screen/retailer_home_screen.dart';
-import '../screens/retailer_screens/retailer_order_history_screen/retailer_pending_order_details_history_screen/retailer_pending_order_details_history_screen.dart';
-import '../screens/retailer_screens/retailer_order_history_screen/retailer_received_price_details_history_screen/retailer_received_price_details_history_screen.dart';
+import '../screens/retailer_screens/retailer_order_history_details_screen/retailer_pending_order_details_screen/retailer_pending_order_details_screen.dart';
+import '../screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/retailer_received_price_details_screen.dart';
 import '../screens/retailer_screens/retailer_saved_order_screen/retailer_saved_order_screen.dart';
 import '../screens/splash_screen/splash_screen.dart';
-import '../screens/wholesaler_screens/wholesaler_change_password_screen/wholesaler_change_password_screen.dart';
+import '../screens/wholesaler_screens/wholesaler_settings/wholesaler_change_password_screen/wholesaler_change_password_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_find_wholeseller_screen/wholesaler_find_wholeseller_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_confirmed_order_details_screen/wholesaler_confirmed_order_details_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_new_order_details_screen/wholesaler_new_order_details_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_new_orders_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_pending_order_details_screen/wholesaler_pending_order_details_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_notification_screen/wholesaler_notification_screen.dart';
-import '../screens/wholesaler_screens/wholesaler_profile_screen/wholesaler_profile_screen.dart';
+import '../screens/wholesaler_screens/wholesaler_settings/wholesaler_profile_screen/wholesaler_profile_screen.dart';
 import 'app_routes.dart';
 
 class RouteManager {
@@ -173,7 +173,7 @@ class RouteManager {
       ),
       GetPage(
         name: AppRoutes.retailerConfirmOrderDetailsHistoryScreen,
-        page: () => const RetailerConfirmedOrderDetailsHistoryScreen(),
+        page: () =>  RetailerConfirmedOrderDetailsHistoryScreen(),
         // binding: GeneralBindings(),
       ),
       GetPage(
@@ -231,11 +231,11 @@ class RouteManager {
         page: () => const WholesalerPendingOrderDetailsScreen(),
         // binding: GeneralBindings(),
       ),
-      // GetPage(
-      //   name: AppRoutes.wholesalerNewOrderDetailsScreen,
-      //   page: () => const WholesalerNewOrderDetailsScreen(),
-      //   // binding: GeneralBindings(),
-      // ),
+      GetPage(
+        name: AppRoutes.wholesalerNewOrderDetailsScreen,
+        page: () => const WholesalerNewOrderDetailsScreen(),
+        // binding: GeneralBindings(),
+      ),
       GetPage(
         name: AppRoutes.wholesalerProfileScreen,
         page: () => const WholesalerProfileScreen(),
@@ -256,7 +256,6 @@ class RouteManager {
         page: () => WholesalerFindWholeSellerScreen(),
         // binding: GeneralBindings(),
       ),
-      
     ];
   }
 }

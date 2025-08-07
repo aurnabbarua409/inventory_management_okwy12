@@ -26,7 +26,7 @@ class AppRoutes {
   static const retailerTerms = '/retailerTerms';
   static const retailerOrderHistoryScreen = '/retailerOrderHistoryScreen';
   static const invite = '/invite';
-  static const retailerSavedOrderScreen = "/savedOrderScreen";
+  // static const retailerSavedOrderScreen = "/savedOrderScreen";
   static const wholesalerHomeScreen = '/wholesalerHomeScreen';
   static const retailerFindWholeSellerScreen = '/findWholeSellerScreen';
   static const wholeSellerProfileScreen = '/wholeSellerProfileScreen';
@@ -54,5 +54,5 @@ class AppRoutes {
   static const wholesalerNotificationScreen = '/wholesalerNotificationScreen';
   static const wholesalerFindWholeSellerScreen =
       '/wholesalerFindWholeSellerScreen';
-      
+  static const retailerSavedOrderScreen = "/retailerSavedOrderScreen";
 }

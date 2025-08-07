@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
@@ -14,6 +15,7 @@ class NoData extends StatelessWidget {
           TextWidget(
             text: AppStrings.noData,
             fontSize: 16,
+            fontColor: AppColors.black,
           )
         ],
       ),

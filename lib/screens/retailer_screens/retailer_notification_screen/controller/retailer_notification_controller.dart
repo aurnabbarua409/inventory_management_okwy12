@@ -17,8 +17,8 @@ class NotificationsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    listenToNewNotification();
     getNotificationsRepo();
+    listenToNewNotification();
   }
 
   @override
@@ -29,13 +29,13 @@ class NotificationsController extends GetxController {
   // Listen to New Notifications via socket
   void listenToNewNotification() async {
     String id = await PrefsHelper.getString(PrefsHelper.userId);
-    debugPrint(
+    appLogger(
         "===================================Notification userId : $id==============================================");
 
-    SocketApi.socket.on("NewNotification::$id", (data) {
-      debugPrint("Socket Res=================>>>>>>>>>>>>>$data");
+    try {
+      SocketApi.socket.on("NewNotification::$id", (data) {
+        appLogger("Socket Res=================>>>>>>>>>>>>>$data");
 
-      try {
         if (data != null) {
           NotificationModel newNotification = NotificationModel.fromJson(data);
 
@@ -51,19 +51,19 @@ class NotificationsController extends GetxController {
 
           update();
         } else {
-          debugPrint("Received null data for notifications");
+          appLogger("Received null data for notifications");
         }
-      } catch (e) {
-        debugPrint("Error processing notifications: $e");
-      }
-    });
+      });
+    } catch (e) {
+      appLogger(e);
+    }
   }
 
   // Fetch notifications from the repository
   void getNotificationsRepo() async {
     // if (status.value == Status.loading) return;
     // status.value = Status.loading;
-    // update();
+    update();
 
     try {
       status.value = Status.loading;

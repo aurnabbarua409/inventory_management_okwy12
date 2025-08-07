@@ -12,8 +12,8 @@ class MConfirmedOrders {
   factory MConfirmedOrders.fromJson(dynamic json) => MConfirmedOrders(
         success: json["success"],
         total: json["Total"],
-        data:
-            List<Confirmed>.from(json["data"].map((x) => Confirmed.fromJson(x))),
+        data: List<Confirmed>.from(
+            json["data"].map((x) => Confirmed.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -24,24 +24,24 @@ class MConfirmedOrders {
 }
 
 class Confirmed {
-  String ? id;
-  Retailer ? retailer;
+  String? id;
+  Retailer? retailer;
   List<ProductConfirmed> product;
-  WholeSeller ? wholeSeller;
-  String ? status;
-  DateTime ? createdAt;
-  DateTime ? updatedAt;
-  int ? v;
+  WholeSeller? wholeSeller;
+  String? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
 
   Confirmed({
-     this.id,
-     this.retailer,
+    this.id,
+    this.retailer,
     required this.product,
-     this.wholeSeller,
-     this.status,
-     this.createdAt,
-     this.updatedAt,
-     this.v,
+    this.wholeSeller,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
   });
 
   factory Confirmed.fromJson(Map<String, dynamic> json) => Confirmed(

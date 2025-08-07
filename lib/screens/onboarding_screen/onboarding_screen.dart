@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/appbar_widget/auth_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
-import '../../constants/app_colors.dart';
-import '../../constants/app_strings.dart';
-import '../../routes/app_routes.dart';
-import '../../widgets/text_widget/text_widgets.dart';
-import '../../utils/app_size.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

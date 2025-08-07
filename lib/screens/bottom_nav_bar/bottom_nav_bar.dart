@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_home_screen/retailer_home_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/retailer_order_history_screen.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_settings_screen/retailer_settings_screen.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_settings_screen/retailer_settings_screen.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_home_screen/wholesaler_home_screen.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/wholesaler_order_history.dart';
-import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_settings.dart';
-
-import '../../constants/app_colors.dart';
-import '../../constants/app_icons_path.dart';
-import '../../utils/app_enum.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_settings_screen/wholesaler_settings.dart';
+import 'package:inventory_app/utils/app_enum.dart';
 import '../retailer_screens/retailer_find_wholeseller_screen/retailer_find_wholeseller_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -32,35 +31,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
         init: BottomNavbarController(),
         builder: (controller) {
           // Define which set of screens to show based on the user role
-          final List<Widget> widgetOptions =
-              controller.userRole == UserRole.retailer
-                  ? [
-                      const RetailerHomeScreen(),
-                      RetailerFindWholeSellerScreen(),
-                      const RetailerOrderHistoryScreen(),
-                      const RetailerSettingsScreen(),
-                    ]
-                  : [
-                      const WholesalerHomeScreen(),
-                      // RetailerOrderHistoryScreen(),
-                      // RetailerOrderHistoryScreen(),
-                      // WholesalerOrderHistoryScreen(),
-                      // WholesalerOrderHistoryScreen(),
-                      const WholesalerOrderHistoryScreen(
-                        initialTabIndex: 0,
-                        key: ValueKey("tab1"),
-                      ),
-                      const WholesalerOrderHistoryScreen(
-                        initialTabIndex: 1,
-                        key: ValueKey("tab2"),
-                      ),
-                      const WholesalerSettings(),
-                    ];
-
+          
           return Scaffold(         
             backgroundColor: AppColors.white,
             body: Center(
-                child: widgetOptions.elementAt(controller.selectedIndex.value)),
+                child: controller.widgetOptions.elementAt(controller.selectedIndex.value)),
             bottomNavigationBar: Container(
               decoration: BoxDecoration(
                 color: Colors.white,

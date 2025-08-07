@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/models/new_version/get_all_order_model.dart';
 import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/bottom_nav_bar.dart';
@@ -23,7 +25,7 @@ import '../../../widgets/popup_widget/popup_widget.dart';
 class RetailerSavedOrderScreen extends StatelessWidget {
   RetailerSavedOrderScreen({super.key});
 
-  final controller = Get.find<RetailerSavedOrderScreenController>();
+  final controller = Get.put(RetailerSavedOrderScreenController());
 
   void showDeleteOrderDialog(BuildContext context, String orderId) {
     showCustomPopup(
@@ -221,14 +223,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                               const SizedBox(width: 220),
                               // Send Button on the right
                               ButtonWidget(
-                                onPressed: () {
-                                  controller.shareSelection();
-                                  // final control =
-                                  //     Get.find<BottomNavbarController>();
-                                  // control.changeIndex(2);
-                                  Get.toNamed(
-                                      AppRoutes.retailerFindWholeSellerScreen);
-                                },
+                                onPressed: controller.shareSelection,
                                 label: 'Send',
                                 fontWeight: FontWeight.w500,
                                 backgroundColor: AppColors.primaryBlue,
@@ -320,7 +315,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildDataRows(List<Product> orders) {
+  List<Widget> _buildDataRows(List<GetAllOrderModel> orders) {
     if (orders.isEmpty) {
       return [
         const Center(
@@ -363,7 +358,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  item.name,
+                  item.productName ?? "N/A",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 13,
@@ -391,7 +386,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  item.unit,
+                  item.unit ?? "Pcs",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 13,

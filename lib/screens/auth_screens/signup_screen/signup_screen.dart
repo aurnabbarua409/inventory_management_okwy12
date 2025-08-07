@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
+import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/utils/app_enum.dart';
+import 'package:inventory_app/widgets/appbar_widget/auth_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/international_phone_field_widget/international_phone_field_widget.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_icons_path.dart';
-import '../../../constants/app_strings.dart';
-import '../../../routes/app_routes.dart';
-import '../../../utils/app_enum.dart';
-import '../../../widgets/appbar_widget/auth_appbar_widget.dart';
-import '../../../widgets/outlined_button_widget/outlined_button_widget.dart';
-import '../../../widgets/space_widget/space_widget.dart';
-import '../../../widgets/text_button_widget/text_button_widget.dart';
-import '../../../widgets/text_field_widget/text_field_widget.dart';
-import '../../../widgets/text_widget/text_widgets.dart';
+import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
+import 'package:inventory_app/widgets/text_field_widget/text_field_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'controller/signup_screen_controller.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -99,7 +97,7 @@ class SignupScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 12),
                     TextFieldWidget(
                       controller: controller.nameController,
-                      hintText: 'Enter your Name',
+                      hintText: AppStrings.enterYourName,
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -118,7 +116,7 @@ class SignupScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 12),
                     TextFieldWidget(
                       controller: controller.emailController,
-                      hintText: 'Enter your email',
+                      hintText: AppStrings.enterYourEmailAddress,
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -137,7 +135,7 @@ class SignupScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 12),
                     TextFieldWidget(
                       controller: controller.passwordController,
-                      hintText: 'Enter password',
+                      hintText: AppStrings.enterPassword,
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -157,7 +155,7 @@ class SignupScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 12),
                     TextFieldWidget(
                       controller: controller.confirmPasswordController,
-                      hintText: 'Enter password',
+                      hintText: AppStrings.enterPassword,
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {

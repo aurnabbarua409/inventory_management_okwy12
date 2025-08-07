@@ -57,6 +57,7 @@ class AppStrings {
   static const String email = "Email";
   static const String phoneNumber = "Phone Number";
   static const String address = "Address";
+  static const String phone = "Phone";
   static const String alreadyHaveAccount = "Already have an account?";
   static const String storeInformation = "Store Information";
   static const String businessName = "Business Name";
@@ -175,5 +176,16 @@ class AppStrings {
   static var orderId;
 
   static const somethingWentWrong = "Something went wrong";
-  static const shareApp = "Hey! Check out this app";
+  static const shareAppFromRetailer =
+      "I'm using ExpressList to connect directly with trusted wholesalers and get better prices for my store. You should try it too — it makes sourcing so much easier. So, download it now!";
+  static const shareAppFromWholesaler =
+      "ExpressList is helping me connect with verified retailers and manage orders more efficiently. If you're a wholesaler looking to grow, this app is a game-changer. So, download it now!";
+  static const String enterYourEmailAddress = "Enter your email address";
+  static const String enterYourName = 'Enter your Name';
+  static const String enterPassword = 'Enter password';
+  static const String enterBusinessName = 'Enter business Name';
+  static const String enterProductname = 'Enter product name';
+  static const String subTotal = "SubTotal";
+  static const String deliveryCharge = "Delivery Charges";
+  static const String grandTotal = "Grand Total";
 }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
+import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
+import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
@@ -14,7 +18,7 @@ import '../../../../constants/app_strings.dart';
 import '../../../../widgets/appbar_widget/main_appbar_widget.dart';
 import '../../../../widgets/space_widget/space_widget.dart';
 import '../../../../widgets/text_widget/text_widgets.dart';
-import 'controller/wholesaler_new_order_controller.dart';
+import 'controller/wholesaler_pending_order_controller.dart';
 
 class WholesalerPendingOrderDetailsScreen extends StatefulWidget {
   const WholesalerPendingOrderDetailsScreen({super.key});
@@ -89,6 +93,7 @@ class _WholesalerPendingOrderDetailsScreenState
                 flex: 1,
                 child: ButtonWidget(
                   onPressed: () {
+                    pendingController.sendData();
                     Get.back();
                     showSendOrderSuccessfulDialog(context);
                   },
@@ -190,44 +195,44 @@ class _WholesalerPendingOrderDetailsScreenState
 
             // List/Table View
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Obx(() {
-                  return ListView(
-                    children: [
-                      // Header Row
-                      Container(
-                        color: AppColors.headerColor,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            _buildHeaderCell("Sl", flex: 0),
-                            _buildHeaderCell("Product", flex: 2),
-                            _buildHeaderCell("Qty", flex: 1),
-                            _buildHeaderCell("Unit", flex: 1),
-                            _buildHeaderCell("Avail", flex: 1),
-                            _buildHeaderCell("Price", flex: 1),
-                            _buildHeaderCell("Total", flex: 1),
-                          ],
-                        ),
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Obx(
+                () => ListView(
+                  children: [
+                    // Header Row
+                    Container(
+                      color: AppColors.headerColor,
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          _buildHeaderCell("Sl", flex: 0),
+                          _buildHeaderCell("Product", flex: 2),
+                          _buildHeaderCell("Qty", flex: 1),
+                          _buildHeaderCell("Unit", flex: 1),
+                          _buildHeaderCell("Avail", flex: 1),
+                          _buildHeaderCell("Price", flex: 1),
+                          _buildHeaderCell("Total", flex: 1),
+                        ],
                       ),
-                      // Data Rows
-                      ..._buildDataRows(),
-                      const SpaceWidget(spaceHeight: 16),
-                      ButtonWidget(
-                        onPressed: () {
-                          // Show dialog to send order (implement functionality)
-                        },
-                        label: AppStrings.send,
-                        backgroundColor: AppColors.primaryBlue,
-                        buttonHeight: 45,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ],
-                  );
-                }),
+                    ),
+                    // Data Rows
+                    ..._buildDataRows(),
+                    const SpaceWidget(spaceHeight: 16),
+                    ButtonWidget(
+                      onPressed: () {
+                        // Show dialog to send order (implement functionality)
+                        showSendOrderDialog(context);
+                      },
+                      label: AppStrings.send,
+                      backgroundColor: AppColors.primaryBlue,
+                      buttonHeight: 45,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ],
+                ),
               ),
-            ),
+            )),
           ],
         ),
       ),
@@ -254,10 +259,13 @@ class _WholesalerPendingOrderDetailsScreenState
   }
 
   List<Widget> _buildDataRows() {
-    return pendingController.orders.asMap().entries.map((entry) {
+    return pendingController.products.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
-
+      // appLogger(item.product[0].productId.name);
+      int price = item.price ?? 1;
+      int quantity = item.product?.quantity ?? 1;
+      int total = price * quantity;
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
@@ -272,7 +280,7 @@ class _WholesalerPendingOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item.id.toString(),
+                  "${index + 1}", // item.id.toString(),
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -287,7 +295,7 @@ class _WholesalerPendingOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Text(
-                  item.product[0].productId.name,
+                  item.product?.productName ?? "N/A",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -300,18 +308,15 @@ class _WholesalerPendingOrderDetailsScreenState
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Obx(() {
-                  return Text(
-                    item.product[0].productId.quantity.toString(),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    item.product?.quantity.toString() ?? "0",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 10,
                       color: AppColors.onyxBlack,
                     ),
-                  );
-                }),
-              ),
+                  )),
             ),
             // Unit
             Expanded(
@@ -319,7 +324,7 @@ class _WholesalerPendingOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item.product[0].productId.unit,
+                  item.product?.unit ?? "Kg",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -330,69 +335,63 @@ class _WholesalerPendingOrderDetailsScreenState
             ),
             // Availability Switch
             Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Obx(() {
-                  return FlutterSwitch(
-                    width: 80,
-                    height: 18,
-                    toggleSize: 15,
-                    borderRadius: 30,
-                    padding: 2,
-                    value: item.product[0].availability,
-                    onToggle: (bool newValue) {
-                      pendingController.updateProductData(
-                          index, 0, availability: newValue);
-                    },
-                    activeColor: Colors.green,
-                    inactiveColor: AppColors.red,
-                    inactiveToggleColor: Colors.white,
-                    showOnOff: true,
-                    valueFontSize: 8,
-                    activeText: "Yes",
-                    inactiveText: "No",
-                    activeTextFontWeight: FontWeight.w600,
-                    inactiveTextFontWeight: FontWeight.w600,
-                    activeTextColor: AppColors.white,
-                    inactiveTextColor: AppColors.white,
-                  );
-                }),
-              ),
-            ),
+                flex: 1,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: FlutterSwitch(
+                      width: 80,
+                      height: 18,
+                      toggleSize: 15,
+                      borderRadius: 30,
+                      padding: 2,
+                      value: item.availability ?? false,
+                      onToggle: (bool newValue) {
+                        // pendingController.updateProductData(index, 0,
+                        //     availability: newValue);
+                        pendingController.products[index].availability =
+                            newValue;
+                        setState(() {});
+                      },
+                      activeColor: Colors.green,
+                      inactiveColor: AppColors.red,
+                      inactiveToggleColor: Colors.white,
+                      showOnOff: true,
+                      valueFontSize: 8,
+                      activeText: "Yes",
+                      inactiveText: "No",
+                      activeTextFontWeight: FontWeight.w600,
+                      inactiveTextFontWeight: FontWeight.w600,
+                      activeTextColor: AppColors.white,
+                      inactiveTextColor: AppColors.white,
+                    ))),
             // Price
             Expanded(
               flex: 1,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Obx(() {
-                  return Text(
-                    item.product[0].price.toString(),
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.onyxBlack,
-                    ),
-                  );
-                }),
+                child: Text(
+                  price.toString(),
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.onyxBlack,
+                  ),
+                ),
               ),
             ),
             // Total
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Obx(() {
-                  return Text(
-                    item.product[0].total.toString(),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    total.toString(),
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 10,
                       color: AppColors.onyxBlack,
                     ),
-                  );
-                }),
-              ),
+                  )),
             ),
           ],
         ),

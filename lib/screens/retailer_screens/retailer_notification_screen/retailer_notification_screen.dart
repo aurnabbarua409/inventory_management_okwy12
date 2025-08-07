@@ -83,103 +83,106 @@ class RetailerNotificationScreen extends StatelessWidget {
   }
 
   // Function to build notifications based on whether they are 'Today' or 'Yesterday'
-  List<Widget> _buildNotifications(NotificationsController controller, {required bool isToday}) {
-  // Filter the notifications for today or yesterday
-  List<NotificationModel> filteredNotifications = controller.notificationModel
-      .where((notification) => _isToday(notification, isToday))
-      .toList();
+  List<Widget> _buildNotifications(NotificationsController controller,
+      {required bool isToday}) {
+    // Filter the notifications for today or yesterday
+    List<NotificationModel> filteredNotifications = controller.notificationModel
+        .where((notification) => _isToday(notification, isToday))
+        .toList();
 
-  // If there are no notifications for today or yesterday, display a message
-  if (filteredNotifications.isEmpty) {
-    return [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Center(
-          child: TextWidget(
-            text: isToday ? "No new notifications for Today" : "No new notifications for Yesterday",
-            fontColor: AppColors.onyxBlack,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            textAlignment: TextAlign.center,
+    // If there are no notifications for today or yesterday, display a message
+    if (filteredNotifications.isEmpty) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Center(
+            child: TextWidget(
+              text: isToday
+                  ? "No new notifications for Today"
+                  : "No new notifications for Yesterday",
+              fontColor: AppColors.onyxBlack,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              textAlignment: TextAlign.center,
+            ),
           ),
         ),
-      ),
-    ];
-  }
+      ];
+    }
 
-  // Otherwise, build the list of notifications
-  return filteredNotifications.map((notification) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: GestureDetector(
-        onTap: () {
-          // Mark notification as read when tapped
-          controller.markNotificationAsRead(notification.id);
-        },
-        child: Card(
-          color: AppColors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: 3,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppColors.white,
+    // Otherwise, build the list of notifications
+    return filteredNotifications.map((notification) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: GestureDetector(
+          onTap: () {
+            // Mark notification as read when tapped
+            controller.markNotificationAsRead(notification.id);
+          },
+          child: Card(
+            color: AppColors.white,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Row(
-              children: [
-                // Show icon based on whether the notification is read
-                notification.isRead
-                    ? const IconWidget(
-                        icon: AppIconsPath.alert2,
-                        width: 44,
-                        height: 44,
-                      )
-                    : const IconWidget(
-                        icon: AppIconsPath.alert1,
-                        width: 44,
-                        height: 44,
-                      ),
-                const SpaceWidget(spaceWidth: 12),
-                // Wrap the column with Expanded to prevent overflow
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextWidget(
-                        text: notification.title,
-                        fontColor: AppColors.onyxBlack,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        textAlignment: TextAlign.start,
-                      ),
-                      const SpaceWidget(spaceHeight: 8),
-                      TextWidget(
-                        text: "${notification.createdAt.year}-${notification.createdAt.month}-${notification.createdAt.day}",
-                        fontColor: AppColors.onyxBlack,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        textAlignment: TextAlign.start,
-                      ),
-                    ],
-                  ),
-                )
-              ],
+            elevation: 3,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  // Show icon based on whether the notification is read
+                  notification.isRead
+                      ? const IconWidget(
+                          icon: AppIconsPath.alert2,
+                          width: 44,
+                          height: 44,
+                        )
+                      : const IconWidget(
+                          icon: AppIconsPath.alert1,
+                          width: 44,
+                          height: 44,
+                        ),
+                  const SpaceWidget(spaceWidth: 12),
+                  // Wrap the column with Expanded to prevent overflow
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextWidget(
+                          text: notification.title,
+                          fontColor: AppColors.onyxBlack,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlignment: TextAlign.start,
+                        ),
+                        const SpaceWidget(spaceHeight: 8),
+                        TextWidget(
+                          text:
+                              "${notification.createdAt.year}-${notification.createdAt.month}-${notification.createdAt.day}",
+                          fontColor: AppColors.onyxBlack,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlignment: TextAlign.start,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }).toList();
-}
-
+      );
+    }).toList();
+  }
 
   // Helper function to determine if a notification is from today or yesterday
   bool _isToday(NotificationModel notification, bool isToday) {

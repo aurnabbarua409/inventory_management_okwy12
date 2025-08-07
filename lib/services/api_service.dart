@@ -2,15 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import "package:http/http.dart" as http;
 
 import 'package:http_parser/http_parser.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/utils/app_logger.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:mime/mime.dart';
+import 'package:path/path.dart';
 
 import '../models/api_response_model.dart';
 
@@ -50,8 +53,13 @@ class ApiService {
         print(
             "==================================================> body ${response.body}");
       }
+      final responseBody = jsonDecode(response.body);
       if (response.statusCode == sucess) {
-        return jsonDecode(response.body);
+        return responseBody;
+      } else {
+        Get.snackbar(
+            "Error", responseBody["message"] ?? "Something went wrong");
+        return null;
       }
     } on SocketException {
       return null;
@@ -199,7 +207,276 @@ class ApiService {
 
   ///<<<======================== Patch Api ==============================>>>
 
-  static Future<dynamic> patchApi(String url, Map<String, dynamic> body,
+  static Future<dynamic> updateProfileImage(File? image, String url) async {
+    try {
+      appLogger("now running in update image");
+      final dio = Dio();
+      final token = await PrefsHelper.getToken();
+      String fileName = basename(image!.path);
+
+      FormData formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(
+          image.path,
+          filename: fileName,
+          contentType: MediaType('image', 'png'),
+        ),
+      });
+      appLogger("data sent");
+      final response = await dio.patch(
+        url,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': "Bearer $token",
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      appLogger("response");
+      appLogger(response);
+      final jsonbody = response.data;
+
+      appLogger(jsonbody);
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        Get.snackbar(
+          "Success",
+          jsonbody["message"],
+        );
+      } else {
+        Get.snackbar("Error", jsonbody["message"]);
+      }
+      return jsonbody;
+    } catch (e) {
+      appLogger(e);
+      Get.snackbar("Error", "Upload failed: $e");
+    }
+  }
+  // static Future<void> updateProfile(
+  //     {required String name,
+  //     required String email,
+  //     required String businessName,
+  //     required String location,
+  //     required String contact,
+  //     required File? imageFile}) async {
+  //   try {
+  //     final url = Uri.parse(Urls.userProfile);
+  //     final request = http.MultipartRequest('PATCH', url);
+  //     final token = await PrefsHelper.getToken();
+  //     request.fields['name'] = name;
+  //     request.fields['email'] = email;
+  //     request.fields['businessName'] = businessName;
+  //     request.fields['storeInformation[location]'] = location;
+  //     request.fields['phone'] = contact;
+  //     appLogger(imageFile);
+  //     if (imageFile != null) {
+  //       // final file = File(imageFile.path);
+  //       var mimeType = lookupMimeType(imageFile.path);
+  //       request.files.add(await http.MultipartFile.fromPath(
+  //           'image', imageFile.path,
+  //           filename: imageFile.path.split("/").last,
+  //           contentType:
+  //               MediaType.parse(mimeType ?? "application/octet-stream")));
+  //     }
+  //     request.headers['Authorization'] = 'Bearer $token';
+  //     // request.headers['Content-Type'] = 'application/json';
+
+  //     final streamedResponse = await request.send();
+  //     final response = await http.Response.fromStream(streamedResponse);
+
+  //     final data = jsonDecode(response.body);
+  //     appLogger(data);
+  //     if (response.statusCode == 200 && data["success"] == true) {
+  //       Get.snackbar(
+  //         "Success",
+  //         "Profile updated successfully!",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //       );
+  //     } else {
+  //       Get.snackbar(
+  //         "Error",
+  //         data["message"] ?? "Failed to update profile.",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     appLogger(e);
+  //     Get.snackbar(
+  //       "Error",
+  //       "An error occurred: $e",
+  //       snackPosition: SnackPosition.BOTTOM,
+  //     );
+  //   }
+  // }
+  // static Future<void> updateProfile({
+  //   required String name,
+  //   required String email,
+  //   required String businessName,
+  //   required String location,
+  //   required String contact,
+  //   required File? imageFile,
+  // }) async {
+  //   try {
+  //     final token = await PrefsHelper.getToken();
+  //     appLogger(imageFile!.path);
+  //     // Build FormData with manual key-value pairs
+  //     final formData = FormData.fromMap({
+  //       'name': name,
+  //       'email': email,
+  //       'businessName': businessName,
+  //       'storeInformation[location]': location,
+  //       'phone': contact,
+  //       if (imageFile != null)
+  //         'image': await MultipartFile.fromFile(
+  //           imageFile.path,
+  //           filename: imageFile.path.split('/').last,
+  //         ),
+  //     });
+
+  //     final dio = Dio();
+
+  //     final response = await dio.patch(
+  //       Urls.userProfile,
+  //       data: formData,
+  //       options: Options(
+  //         headers: {
+  //           'Authorization': 'Bearer $token',
+  //         },
+  //       ),
+  //     );
+  //     appLogger(response);
+  //     if (response.statusCode == 200 && response.data["success"] == true) {
+  //       Get.snackbar(
+  //         "Success",
+  //         "Profile updated successfully!",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //       );
+  //     } else {
+  //       Get.snackbar(
+  //         "Error",
+  //         response.data["message"] ?? "Failed to update profile.",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar(
+  //       "Error",
+  //       "An error occurred: $e",
+  //       snackPosition: SnackPosition.BOTTOM,
+  //     );
+  //   }
+  // }
+
+  static Future<ApiResponseModel> MultipartRequest({
+    required String url,
+    String? imagePath,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      appLogger("sending request for image");
+      appLogger(body);
+      var request = http.MultipartRequest('PATCH', Uri.parse(url));
+      body.forEach((key, value) {
+        if (value is Map || value is List) {
+          request.fields[key] = jsonEncode(value);
+        } else {
+          request.fields[key] = value.toString();
+        }
+      });
+
+      appLogger("sending request successful");
+
+      if (imagePath != null && imagePath.isNotEmpty) {
+        var mimeType = lookupMimeType(imagePath);
+        var img = await http.MultipartFile.fromPath('image', imagePath,
+            contentType: MediaType.parse(mimeType!));
+        request.files.add(img);
+      }
+      final token = await PrefsHelper.getToken();
+      request.headers["Authorization"] = "Bearer $token";
+
+      var response = await request.send();
+      appLogger("request send succesfully: $response");
+      appLogger("request send succesfully: ${response.stream.bytesToString()}");
+      appLogger(jsonDecode(response.stream.first.toString()));
+
+      if (response.statusCode == 200) {
+        String data = await response.stream.bytesToString();
+        appLogger(data);
+        return ApiResponseModel(200, jsonDecode(data)['message'], data);
+      } else {
+        String data = await response.stream.bytesToString();
+        return ApiResponseModel(
+            response.statusCode, jsonDecode(data)['message'], data);
+      }
+    } on SocketException {
+      return ApiResponseModel(503, "No internet connection", '');
+    } on FormatException {
+      return ApiResponseModel(400, "Bad Response Request", '');
+    } on TimeoutException {
+      return ApiResponseModel(408, "Request Time Out", "");
+    } catch (e) {
+      appLogger("request failed: $e");
+      return ApiResponseModel(400, e.toString(), "");
+    }
+  }
+
+  static Future<void> MultipartRequest1({
+    required String url,
+    String? imagePath,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      appLogger("sending request for image: $imagePath");
+      appLogger(body);
+      var request = http.MultipartRequest('PATCH', Uri.parse(url));
+      body.forEach((key, value) {
+        // if (value is Map || value is List) {
+        //   request.fields[key] = jsonEncode(value);
+        // } else {
+          request.fields[key] = value;
+        // }
+      });
+
+      if (imagePath != null && imagePath.isNotEmpty) {
+        var mimeType = lookupMimeType(imagePath);
+        var img = await http.MultipartFile.fromPath('image', imagePath,
+            contentType: MediaType.parse(mimeType!));
+        request.files.add(img);
+      }
+      final token = await PrefsHelper.getToken();
+      request.headers["Authorization"] = "Bearer $token";
+
+      final streamResponse = await request.send();
+      final response = await http.Response.fromStream(streamResponse);
+      appLogger("sending request successful: ${response.body}");
+      appLogger(response.statusCode);
+      // appLogger("request send succesfully: $response");
+      // appLogger("request send succesfully: ${response.stream.bytesToString()}");
+      // appLogger(jsonDecode(response.stream.first.toString()));
+      return;
+      // if (response.statusCode == 200) {
+      //   String data = await response.stream.bytesToString();
+      //   appLogger(data);
+      //   return ApiResponseModel(200, jsonDecode(data)['message'], data);
+      // } else {
+      //   String data = await response.stream.bytesToString();
+      //   return ApiResponseModel(
+      //       response.statusCode, jsonDecode(data)['message'], data);
+      // }
+    } on SocketException {
+      return;
+    } on FormatException {
+      return;
+    } on TimeoutException {
+      return;
+    } catch (e) {
+      appLogger("request failed: $e");
+      return;
+    }
+  }
+
+  static Future<dynamic> patchApi(String url, dynamic body,
       {Map<String, String>? header, int success = 200}) async {
     try {
       final token =
@@ -229,9 +506,13 @@ class ApiService {
         print(
             "==================================================> body ${response.body}");
       }
-
+      final responseBody = jsonDecode(response.body);
       if (response.statusCode == success) {
-        return jsonDecode(response.body);
+        return responseBody;
+      } else {
+        Get.snackbar(
+            "Error", responseBody["message"] ?? "Something went wrong");
+        return null;
       }
     } on SocketException {
       return null;
@@ -370,7 +651,7 @@ class ApiService {
 
   static Future<ApiResponseModel?> multipartRequest({
     required String url,
-    String method = "POST",
+    String method = "PATCH",
     String? imagePath,
     String imageName = 'image',
     required Map<String, dynamic> body,
@@ -381,8 +662,7 @@ class ApiService {
       // Default headers with Authorization
       Map<String, String> mainHeader = {
         'Authorization': PrefsHelper.token,
-        'Content-Type':
-            'multipart/form-data', // Required for multipart requests
+        'Content-Type': 'multipart/form-data',
       };
 
       if (kDebugMode) {
@@ -400,7 +680,7 @@ class ApiService {
 
       // Add body fields
       body.forEach((key, value) {
-        request.fields[key] = value.toString();
+        request.fields[key] = value;
       });
 
       // If there's an image path, add it as a multipart file

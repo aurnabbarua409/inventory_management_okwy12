@@ -4,14 +4,15 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/retailer_confirmed_order_details_history_screen/controller/retailer_confirmed_order_controller.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_confirmed_order_details_history_screen/controller/retailer_confirmed_order_controller.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_confirmed_order_details_history_screen/widgets/summary_item_widget.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
-
 import '../../../../widgets/icon_button_widget/icon_button_widget.dart';
 
 class WholesalerConfirmedOrderDetailsScreen extends StatefulWidget {
@@ -33,102 +34,125 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
   Widget build(BuildContext context) {
     // Initialize ResponsiveUtils
     ResponsiveUtils.initialize(context);
-
+    appLogger("In confirm order details page");
+    appLogger(confirmedController.confirmedData.value);
     return Scaffold(
         backgroundColor: AppColors.whiteLight,
-        body: Column(
-          children: [
-            MainAppbarWidget(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButtonWidget(
-                    onTap: () {
-                      Get.back();
-                    },
-                    icon: AppIconsPath.backIcon,
-                    color: AppColors.white,
-                    size: 22,
+        body: GetBuilder(
+          init: ConfirmedOrderDetailsHistoryController(),
+          builder: (controller) => SingleChildScrollView(
+            child: Column(
+              children: [
+                MainAppbarWidget(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButtonWidget(
+                        onTap: () {
+                          Get.back();
+                        },
+                        icon: AppIconsPath.backIcon,
+                        color: AppColors.white,
+                        size: 22,
+                      ),
+                      const TextWidget(
+                        text: AppStrings.orderDetails,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontColor: AppColors.white,
+                      ),
+                      const SpaceWidget(spaceWidth: 28),
+                    ],
                   ),
-                  const TextWidget(
-                    text: AppStrings.orderDetails,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontColor: AppColors.white,
-                  ),
-                  const SpaceWidget(spaceWidth: 28),
-                ],
-              ),
-            ),
-            SingleChildScrollView(
-              child: Obx(() {
-                debugPrint(
-                    'isLoading value: ${confirmedController.isLoading.value}');
-                if (confirmedController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
+                ),
+                Obx(() {
+                  debugPrint(
+                      'isLoading value: ${confirmedController.isLoading.value}');
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
                     child: Column(
                       children: [
-                        if (confirmedController.ordersConfirmed.isNotEmpty)
+                        if (confirmedController.confirmedData.value != null)
                           // Order Details Section
-                          _buildDetailsList(
-                            title: AppStrings.retailerDetails,
-                            details: [
-                              {
-                                AppStrings.name: confirmedController
-                                    .ordersConfirmed.first.retailer?.name ?? '',
-                              },
-                              {
-                                AppStrings.email: confirmedController
-                                    .ordersConfirmed.first.retailer?. email ?? '',
-                              },
-                              {
-                                AppStrings.orderDate: confirmedController
-                                    .ordersConfirmed.first.createdAt
-                                    .toString(),
-                              },
-                            ],
+                          const SpaceWidget(
+                            spaceHeight: 20,
                           ),
+                        _buildDetailsList(
+                          title: AppStrings.retailerDetails,
+                          details: [
+                            {
+                              AppStrings.name: confirmedController.confirmedData
+                                      .value?.retailer?.first.name ??
+                                  '',
+                            },
+                            {
+                              AppStrings.address: confirmedController
+                                      .confirmedData
+                                      .value
+                                      ?.retailer
+                                      ?.first
+                                      .location ??
+                                  '',
+                            },
+                            {
+                              AppStrings.phone: confirmedController
+                                      .confirmedData
+                                      .value
+                                      ?.retailer
+                                      ?.first
+                                      .phone ??
+                                  ""
+                            },
+                          ],
+                        ),
                         SizedBox(height: ResponsiveUtils.height(16.0)),
 
                         // Wholesaler Details Section
-                         _buildDetailsList(
-                            title: AppStrings.wholesalerDetails,
-                            details: [
-                              {
-                                AppStrings.name: confirmedController
-                                    .ordersConfirmed.first.wholeSeller?.name ?? '',
-                              },
-                              {
-                                AppStrings.email: confirmedController
-                                    .ordersConfirmed.first.wholeSeller?. email ?? '',
-                              },
-                              {
-                                AppStrings.orderDate: confirmedController
-                                    .ordersConfirmed.first.createdAt
-                                    .toString(),
-                              },
-                            ],
-                          ),
+                        _buildDetailsList(
+                          title: AppStrings.wholesalerDetails,
+                          details: [
+                            {
+                              AppStrings.name: confirmedController.confirmedData
+                                      .value?.wholesaler?.first.name ??
+                                  '',
+                            },
+                            {
+                              AppStrings.address: confirmedController
+                                      .confirmedData
+                                      .value
+                                      ?.wholesaler
+                                      ?.first
+                                      .location ??
+                                  '',
+                            },
+                            {
+                              AppStrings.phone: confirmedController
+                                      .confirmedData
+                                      .value
+                                      ?.wholesaler
+                                      ?.first
+                                      .phone ??
+                                  ''
+                            },
+                          ],
+                        ),
+                        SizedBox(height: ResponsiveUtils.height(16.0)),
+
+                        // Invoice Table
+                        _buildInvoiceTable(),
+                        SizedBox(height: ResponsiveUtils.height(16.0)),
+
+                        // Summary and Download Button
+                        _buildSummarySection(),
                       ],
                     ),
                   );
-                }
-              }),
+                }),
+              ],
             ),
-
-            SizedBox(height: ResponsiveUtils.height(16.0)),
-
-            // Invoice Table
-            _buildInvoiceTable(),
-            SizedBox(height: ResponsiveUtils.height(16.0)),
-
-            // Summary and Download Button
-            _buildSummarySection(),
-          ],
+          ),
         ));
   }
 
@@ -172,15 +196,14 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
   }
 
   Widget _buildInvoiceTable() {
-    final invoiceItems = confirmedController.ordersConfirmed.isNotEmpty
-        ? confirmedController.ordersConfirmed.first.product
+    final invoiceItems = confirmedController.confirmedData.value != null
+        ? confirmedController.confirmedData.value?.product!
             .map((product) => {
-                  "product": product.productId.name,
-                  "qty": product.productId.quantity.toString(),
-                  "unit": product.productId.unit,
+                  "product": product.productName,
+                  "qty": product.quantity.toString(),
+                  "unit": product.unit,
                   "price": product.price.toString(),
-                  "total":
-                      (product.price * product.productId.quantity).toString(),
+                  "total": (product.price * product.quantity).toString(),
                 })
             .toList()
         : [];
@@ -196,7 +219,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
           child: Row(
             children: [
               _buildTableCell("SI", flex: 1, isHeader: true),
-              _buildTableCell("Product", flex: 2, isHeader: true),
+              _buildTableCell("Product", flex: 1, isHeader: true),
               _buildTableCell("Qty", flex: 1, isHeader: true),
               _buildTableCell("Unit", flex: 1, isHeader: true),
               _buildTableCell("Price", flex: 1, isHeader: true),
@@ -205,7 +228,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
           ),
         ),
         // Table Rows
-        ...invoiceItems.asMap().entries.map((entry) {
+        ...invoiceItems!.asMap().entries.map((entry) {
           final index = entry.key + 1;
           final item = entry.value;
           totalAmount += double.tryParse(item["total"] ?? "0") ?? 0;
@@ -219,15 +242,15 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
             child: Row(
               children: [
                 _buildTableCell(index.toString(), flex: 1),
-                _buildTableCell(item["product"] ?? "", flex: 2),
+                _buildTableCell(item["product"] ?? "", flex: 1),
                 _buildTableCell(item["qty"] ?? "", flex: 1),
                 _buildTableCell(item["unit"] ?? "", flex: 1),
-                _buildTableCellWithIcon(item["price"] ?? "", flex: 1),
-                _buildTableCellWithIcon(item["total"] ?? "", flex: 1),
+                _buildTableCell(item["price"] ?? "", flex: 1),
+                _buildTableCell(item["total"] ?? "", flex: 1),
               ],
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -238,27 +261,16 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            const Text(
-              "Grand Total:",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Row(
-              children: [
-                const ImageWidget(
-                  imagePath: AppImagesPath.currencyIcon,
-                  width: 11,
-                  height: 11,
-                ),
-                Text(
-                  grandTotal.toStringAsFixed(2),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ],
+        const SpaceWidget(
+          spaceHeight: 10,
         ),
+        SummaryItemWidget(title: AppStrings.grandTotal, price: grandTotal),
+        SummaryItemWidget(
+            title: AppStrings.deliveryCharge,
+            price: confirmedController.deliveryCharge),
+        SummaryItemWidget(
+            title: AppStrings.grandTotal,
+            price: grandTotal + confirmedController.deliveryCharge),
         SizedBox(height: ResponsiveUtils.height(24)),
         // Download Button
         SizedBox(
@@ -285,9 +297,9 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
         child: Text(
           text,
           style: TextStyle(
-            fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-            fontSize: 12,
-          ),
+              fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+              fontSize: 12,
+              overflow: TextOverflow.ellipsis),
           textAlign: TextAlign.left,
         ),
       ),

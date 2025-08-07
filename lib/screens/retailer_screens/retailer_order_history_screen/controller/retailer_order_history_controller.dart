@@ -1,15 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_confirmed_model.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
+import 'package:inventory_app/models/new_version/get_confirm_model.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
+import 'package:inventory_app/models/new_version/get_received_order_model.dart';
 import 'package:inventory_app/services/api_service.dart';
-import 'package:inventory_app/services/repo/retailer/retailer_repo.dart';
+import 'package:inventory_app/services/repository/retailer/retailer_repo.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -24,11 +25,14 @@ class RetailerOrderHistoryController extends GetxController {
   RetailerRepo retailerRepo = RetailerRepo();
 
   RxBool isLoading = false.obs;
-  RxList<Datum> pendingOrders = <Datum>[].obs;
-  RxList<Received> receivedOrders = <Received>[].obs;
-  RxList<Confirmed> confirmedOrders = <Confirmed>[].obs;
-
+  RxList<GetPendingOrderModel> pendingOrders = <GetPendingOrderModel>[].obs;
+  RxList<GetReceivedOrderModel> receivedOrders = <GetReceivedOrderModel>[].obs;
+  // RxList<Confirmed> confirmedOrders = <Confirmed>[].obs;
+  Rxn<GetConfirmModel> confirmedOrders = Rxn<GetConfirmModel>();
+  Timer? refreshTimer;
   Future<void> fetchPendingOrders() async {
+    update();
+    appLogger("trying to fetch orders");
     isLoading.value = true; // Show loading indicator
     try {
       var data = await retailerRepo.getRetailers();
@@ -43,11 +47,15 @@ class RetailerOrderHistoryController extends GetxController {
 
   // Fetch Received Orders
   Future<void> fetchReceivedOrders() async {
+    update();
     isLoading.value = true; // Show loading indicator
     try {
       var recievedData = await retailerRepo.getRecieved();
       appLogger("fetching received data: $recievedData");
       receivedOrders.value = recievedData;
+      // if(kDebugMode){
+      //   receivedOrders.add(GetReceivedOrderModel(wholeSaler: WholeSaler(id: "0", name: "From Debugmode", email: "N/A", image: "", createAt: DateTime.now().toString(), updateAt: DateTime.now().toString()), orders: [Orders(id: "0", product: )]))
+      // }
     } catch (e) {
       appLogger(e);
     } finally {
@@ -57,13 +65,20 @@ class RetailerOrderHistoryController extends GetxController {
 
   // Fetch Confirmed Orders
   Future<void> fetchConfirmedOrders() async {
+    update();
     isLoading.value = true; // Show loading indicator
     try {
-      var confirmedData = await retailerRepo.getConfirmed();
-      appLogger("fetching confirm order: $confirmedData");
-      confirmedOrders.value = confirmedData;
+      var response = await ApiService.getApi(Urls.confirmedOrderRetailer);
+      appLogger("response from getting confirmed order: $response");
+      if (response != null) {
+        confirmedOrders.value = GetConfirmModel.fromJson(response['data']);
+        appLogger("Data after added confirm order");
+        appLogger(confirmedOrders.value);
+      }
+      // appLogger("fetching confirm order: $confirmedData");
+      // confirmedOrders.value = confirmedData;
     } catch (e) {
-      appLogger(e);
+      appLogger("Error in fetching confirm order data: $e");
     } finally {
       isLoading.value = false; // Hide loading indicator
     }
@@ -161,11 +176,27 @@ class RetailerOrderHistoryController extends GetxController {
     );
   }
 
-  @override
-  void onInit() {
+  Future initalize() async {
     fetchPendingOrders();
     fetchReceivedOrders();
     fetchConfirmedOrders();
+  }
+
+  @override
+  void onInit() {
+    initalize();
+
     super.onInit();
+
+    refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      initalize(); // repeat fetch
+    });
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    refreshTimer?.cancel();
   }
 }

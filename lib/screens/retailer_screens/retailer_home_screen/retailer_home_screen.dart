@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
+import 'package:inventory_app/utils/app_urls.dart';
+import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_icons_path.dart';
-import '../../../constants/app_images_path.dart';
-import '../../../constants/app_strings.dart';
-import '../../../widgets/appbar_widget/main_appbar_widget.dart';
-import '../../../widgets/space_widget/space_widget.dart';
-import '../../../widgets/text_widget/text_widgets.dart';
 
 class RetailerHomeScreen extends StatelessWidget {
   const RetailerHomeScreen({super.key});
@@ -40,14 +40,24 @@ class RetailerHomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Obx(() {
-                        return ImageWidget(
-                          height: 40,
-                          width: 40,
-                          imagePath: profileController.image.value.isNotEmpty
-                              ? profileController
-                                  .image.value // Pass URL string directly
-                              : AppImagesPath
-                                  .profileImage, // Default profile image if empty
+                        return CircleAvatar(
+                          radius: 20,
+                          backgroundImage: profileController
+                                  .image.value.isNotEmpty
+                              ? NetworkImage(
+                                  "${Urls.socketUrl}${profileController.image.value}")
+                              : const AssetImage(AppImagesPath.profileImage),
+                          // child: ImageWidget(
+                          //   height: 40,
+                          //   width: 40,
+                          //   fromNetwork:
+                          //       profileController.image.value.isNotEmpty,
+                          //   imagePath: profileController.image.value.isNotEmpty
+                          //       ? profileController
+                          //           .image.value // Pass URL string directly
+                          //       : AppImagesPath
+                          //           .profileImage, // Default profile image if empty
+                          // ),
                         );
                       }),
                       const TextWidget(
@@ -157,7 +167,7 @@ class RetailerHomeScreen extends StatelessWidget {
                         TextButtonWidget(
                           onPressed: () {
                             Share.share(
-                              'Check out this amazing content!',
+                              AppStrings.shareAppFromRetailer,
                               subject: 'Flutter Share Example',
                             );
                           },

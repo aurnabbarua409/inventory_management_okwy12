@@ -1,29 +1,35 @@
-class MPendingOrders {
-  bool? success;
-  int? total;
-  List<Datum> data;
+class RetailerPendingModel {
+  final String? id;
+  final String? productName;
+  final String? unit;
+  final String? additionalInfo;
+  final String? retailer;
+  final bool? status;
+  final String? createdAt;
+  final String? updatedAt;
+  RetailerPendingModel(
+      this.id,
+      this.productName,
+      this.unit,
+      this.additionalInfo,
+      this.retailer,
+      this.status,
+      this.createdAt,
+      this.updatedAt);
 
-  MPendingOrders({
-    this.success,
-    this.total,
-    required this.data,
-  });
-
-  factory MPendingOrders.fromJson(dynamic json) => MPendingOrders(
-        success: json["success"] ?? false,
-        total: json["Total"] ?? 0,
-        data:
-            List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)) ?? {}),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "success": success,
-        "Total": total,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
-      };
+  factory RetailerPendingModel.fromJson(Map<String, dynamic> json) =>
+      RetailerPendingModel(
+          json['_id'] ?? "N/A",
+          json['productName'] ?? "N/A",
+          json['unit'] ?? "Pcs",
+          json['additionalInfo'] ?? "N/A",
+          json['retailer'] ?? "N/A",
+          json['status'] ?? false,
+          json['createdAt'] ?? "N/A",
+          json['updatedAt'] ?? "N/A");
 }
 
-class Datum {
+class MPendingOrders {
   String id;
   Retailer retailer;
   List<Product> product;
@@ -33,7 +39,7 @@ class Datum {
   DateTime updatedAt;
   int v;
 
-  Datum({
+  MPendingOrders({
     required this.id,
     required this.retailer,
     required this.product,
@@ -44,9 +50,11 @@ class Datum {
     required this.v,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["_id"] ?? "",
-        retailer: Retailer.fromJson(json["retailer"] ?? {}),
+  factory MPendingOrders.fromJson(Map<String, dynamic> json) => MPendingOrders(
+        id: json["_id"] != null && json["_id"] is String ? json["_id"] : "",
+        retailer: json["retailer"] != null && json["retailer"] is Map
+            ? Retailer.fromJson(json["retailer"] ?? {})
+            : Retailer.fromJson({}),
         product: json["product"] != null && json["product"] is List
             ? List<Product>.from(
                 json["product"].map((x) => Product.fromJson(x)))
@@ -84,11 +92,16 @@ class Retailer {
   });
 
   factory Retailer.fromJson(Map<String, dynamic> json) => Retailer(
-        id: json["_id"] ?? "",
-        name: json["name"] ?? "",
-        email: json["email"] ?? "",
+        id: json["_id"] != null && json["_id"] is String ? json["_id"] : "",
+        name:
+            json["name"] != null && json["name"] is String ? json["name"] : "",
+        email: json["email"] != null && json["email"] is String
+            ? json["email"]
+            : "",
         storeInformation:
-            StoreInformation.fromJson(json["storeInformation"] ?? {}),
+            json["storeInformation"] != null && json["storeInformation"] is Map
+                ? StoreInformation.fromJson(json["storeInformation"] ?? {})
+                : StoreInformation.fromJson({}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -113,11 +126,16 @@ class Wholesaler {
   });
 
   factory Wholesaler.fromJson(Map<String, dynamic> json) => Wholesaler(
-        id: json["_id"] ?? "",
-        name: json["name"] ?? "",
-        email: json["email"] ?? "",
+        id: json["_id"] != null && json["_id"] is String ? json["_id"] : "",
+        name:
+            json["name"] != null && json["name"] is String ? json["name"] : "",
+        email: json["email"] != null && json["email"] is String
+            ? json["email"]
+            : "",
         storeInformation:
-            StoreInformation.fromJson(json["storeInformation"] ?? {}),
+            json["storeInformation"] != null && json["storeInformation"] is Map
+                ? StoreInformation.fromJson(json["storeInformation"] ?? {})
+                : StoreInformation.fromJson(json["storeInformation"]),
       );
 
   Map<String, dynamic> toJson() => {

@@ -1,0 +1,9 @@
+from Retailer:
+    - update pending price details
+    - update received price details
+    - check api for confirmed price history and then mnodify. 
+
+from wholesaler:
+    - ask backend why there is no data in pending price
+    - update pending order details
+    - write code for confirmed order and details

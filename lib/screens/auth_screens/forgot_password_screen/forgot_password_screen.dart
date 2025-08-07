@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/utils/app_size.dart';
-
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_strings.dart';
-import '../../../widgets/appbar_widget/auth_appbar_widget.dart';
-import '../../../widgets/button_widget/button_widget.dart';
-import '../../../widgets/space_widget/space_widget.dart';
-import '../../../widgets/text_field_widget/text_field_widget.dart';
-import '../../../widgets/text_widget/text_widgets.dart';
+import 'package:inventory_app/widgets/appbar_widget/auth_appbar_widget.dart';
+import 'package:inventory_app/widgets/button_widget/button_widget.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:inventory_app/widgets/text_field_widget/text_field_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'controller/forgot_password_screen_controller.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -51,7 +50,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   const SpaceWidget(spaceHeight: 12),
                   TextFieldWidget(
                     controller: controller.emailController,
-                    hintText: 'Enter your email address',
+                    hintText: AppStrings.enterYourEmailAddress,
                     maxLines: 1,
                   ),
                   const SpaceWidget(spaceHeight: 48),

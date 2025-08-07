@@ -7,121 +7,133 @@ import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
 
-class RetailerOrderHistoryScreen extends StatelessWidget {
+class RetailerOrderHistoryScreen extends StatefulWidget {
   const RetailerOrderHistoryScreen({super.key});
-  // final retailerController =
-  //     Get.put(RetailerOrderHistoryController());
+
+  @override
+  State<RetailerOrderHistoryScreen> createState() =>
+      _RetailerOrderHistoryScreenState();
+}
+
+class _RetailerOrderHistoryScreenState
+    extends State<RetailerOrderHistoryScreen> {
+  final controller = Get.put(RetailerOrderHistoryController());
 
   @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context); // Initialize the screen dimensions
 
-    return GetBuilder(
-      init: RetailerOrderHistoryController(),
-      builder: (controller) => DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          backgroundColor: AppColors.whiteLight,
-          body: Column(
-            children: [
-              MainAppbarWidget(
-                child: Stack(children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButtonWidget(
-                      onTap: () {
-                        final control = Get.find<BottomNavbarController>();
-                        control.changeIndex(0);
-                      },
-                      icon: AppIconsPath.backIcon,
-                      color: AppColors.white,
-                      size: ResponsiveUtils.width(22),
-                    ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: AppColors.whiteLight,
+        body: Column(
+          children: [
+            MainAppbarWidget(
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButtonWidget(
+                    onTap: () {
+                      final control = Get.find<BottomNavbarController>();
+                      control.changeIndex(0);
+                      Get.back();
+                    },
+                    icon: AppIconsPath.backIcon,
+                    color: AppColors.white,
+                    size: ResponsiveUtils.width(22),
                   ),
-                  const Center(
-                    child: TextWidget(
-                      text: AppStrings.orderHistory,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      fontColor: AppColors.white,
-                    ),
-                  ),
-                ]),
-              ),
-              SizedBox(height: ResponsiveUtils.height(16)),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: controller.fetchPendingOrders,
-                  child: Obx(() {
-                    if (controller.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      return OrdersTabView(
-                        showDeleteOrderDialog: controller.showDeleteOrderDialog,
-                        pendingInvoices:
-                            controller.pendingOrders.map((pending) {
-                          return {
-                            "company": pending.wholeSeller.name,
-                            "date": pending.createdAt.toIso8601String(),
-                            "logo": ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  ResponsiveUtils.width(2)),
-                              child: Icon(
-                                Icons.business,
-                                color: AppColors.primaryBlue,
-                                size: ResponsiveUtils.width(30),
-                              ),
-                            ),
-                            "id": pending.id
-                          };
-                        }).toList(),
-                        receivedInvoices:
-                            controller.receivedOrders.map((received) {
-                          return {
-                            "company": received.wholeSeller.name,
-                            "date": received.createdAt.toIso8601String(),
-                            "logo": ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  ResponsiveUtils.width(4)),
-                              child: Icon(
-                                Icons.business_center,
-                                color: AppColors.primaryBlue,
-                                size: ResponsiveUtils.width(38),
-                              ),
-                            ),
-                            "id": received.id
-                          };
-                        }).toList(),
-                        confirmedInvoices:
-                            controller.confirmedOrders.map((confirmed) {
-                          return {
-                            "company": confirmed.wholeSeller?.name ?? "No Name",
-                            "date": confirmed.createdAt?.toIso8601String() ??
-                                "No Date",
-                            "logo": ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  ResponsiveUtils.width(4)),
-                              child: Icon(
-                                Icons.verified,
-                                color: AppColors.primaryBlue,
-                                size: ResponsiveUtils.width(38),
-                              ),
-                            ),
-                            "id": confirmed.id
-                          };
-                        }).toList(),
-                      );
-                    }
-                  }),
                 ),
-              )
-            ],
-          ),
+                const Center(
+                  child: TextWidget(
+                    text: AppStrings.orderHistory,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    fontColor: AppColors.white,
+                  ),
+                ),
+              ]),
+            ),
+            SizedBox(height: ResponsiveUtils.height(16)),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: controller.fetchPendingOrders,
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    return OrdersTabView(
+                      showDeleteOrderDialog: controller.showDeleteOrderDialog,
+                      pendingInvoices: controller.pendingOrders.map((pending) {
+                        return {
+                          "company": pending.wholesaler!.length > 1
+                              ? pending.wholesaler?.first.name ?? "N/A"
+                              : "N/A",
+                          "date": pending.createAt ?? DateTime.now().toString(),
+                          "logo": ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveUtils.width(2)),
+                            child: Icon(
+                              Icons.business,
+                              color: AppColors.primaryBlue,
+                              size: ResponsiveUtils.width(30),
+                            ),
+                          ),
+                          "id": pending.id ?? "0",
+                          "products": pending.product ?? []
+                        };
+                      }).toList(),
+                      receivedInvoices:
+                          controller.receivedOrders.map((received) {
+                        return {
+                          "company": received.wholeSaler?.name ?? "N/A",
+                          "date": received.wholeSaler?.createAt ??
+                              DateTime.now().toString(),
+                          "logo": ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveUtils.width(4)),
+                            child: Icon(
+                              Icons.business_center,
+                              color: AppColors.primaryBlue,
+                              size: ResponsiveUtils.width(38),
+                            ),
+                          ),
+                          "id": received.wholeSaler?.id ?? "0",
+                          "products": received.orders ?? []
+                        };
+                      }).toList(),
+                      confirmedInvoices: {
+                        "company": controller
+                                .confirmedOrders.value?.wholesaler?.first.name ??
+                            "N/A",
+                        "date": controller.confirmedOrders.value?.product?.first
+                                .createAt ??
+                            "N/A",
+                        "logo": ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(ResponsiveUtils.width(4)),
+                          child: Icon(
+                            Icons.verified,
+                            color: AppColors.primaryBlue,
+                            size: ResponsiveUtils.width(38),
+                          ),
+                        ),
+                        "id": controller.confirmedOrders.value?.retailer?.first.id ??
+                            "0",
+                        "product": controller.confirmedOrders.value
+                      },
+                    );
+                  }
+                }),
+              ),
+            )
+          ],
         ),
       ),
     );

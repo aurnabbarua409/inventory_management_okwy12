@@ -4,23 +4,24 @@ class Urls {
   //"http://10.0.70.188:5006/api/v1";
 
   //static const imageUrl = "http://10.0.70.188:5000/api/v1";
-
-  static const socketUrl = "http://75.119.138.163:5006";
+  static const socketUrl = "http://10.10.7.46:5006";
+  // static const socketUrl = "http://75.119.138.163:5006";
 
   //"http://10.0.70.188:5006/";
 
   static const signUp = "$baseUrl/user";
   static const verifyingOTP = "$baseUrl/user/verify-otp";
   static const signIn = "$baseUrl/auth/login";
-  static const createOrders = "$baseUrl/product/create";
-  static const getAllOrders = "$baseUrl/product/";
+  static const createOrders = "$baseUrl/new-order/create";
+  static const getAllOrders = "$baseUrl/new-order/all";
   static const deleteOrder = "$baseUrl/product/delete";
   static const getWholesaler = "$baseUrl/wholesalers"; //?search=Rakib
-  static const sendOrder = "$baseUrl/send-offer/create/";
+  static const sendOrder = "$baseUrl/products/send";
   static const userProfile = "$baseUrl/user/profile";
-  static const pendingOrder = "$baseUrl/send-offer/pending-retailer";
+  static const newPendingOrder = "$baseUrl/products/all/pending";
+  static const receivedOrdersRetailer = "$baseUrl/replay/all";
   static const receivedOrders = "$baseUrl/send-offer/received";
-  static const confirmedOrders = "$baseUrl/send-offer/confirm";
+  static const confirmedOrders = "$baseUrl/confirmation/";
   static const deletePending = "$baseUrl/send-offer/pending/";
   static const storeInfo = "$baseUrl/user/update-store/";
   static const getNotification = "$baseUrl/notification/";
@@ -31,4 +32,10 @@ class Urls {
   static const resetPassword = "$baseUrl/auth/reset-password";
   static const wholesalerProductDetailsFromRetailer =
       "$baseUrl/send-offer/pending/";
+  static const updateProduct = "$baseUrl/products/update/";
+  static const updateWholesalerProduct = "$baseUrl/send-offer/update-product/";
+  static const updateReceivedOrder = "$baseUrl/new-order/";
+  static const updateAllReceivedOrders = "$baseUrl/confirmation";
+  static const confirmedOrderRetailer = "$baseUrl/confirmation/retailer";
+  static const confirmedOrderWholesaler = "$baseUrl/confirmation";
 }
