@@ -49,8 +49,8 @@ class Product {
       additionalInfo: json['additionalInfo'] ?? "N/A",
       status: json['status'] ?? false,
       price: json['price'] ?? 0,
-      createAt: json['createdAt'] ?? DateTime.now().toString(),
-      updateAt: json['createdAt'] ?? DateTime.now().toString());
+      createAt: json['createdAt'].toString(),
+      updateAt: json['createdAt'].toString());
 }
 
 class Retailer {

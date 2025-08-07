@@ -33,8 +33,8 @@ class WholeSaler {
       name: json['name'] ?? "N/A",
       email: json['email'] ?? "N/A",
       image: json['image'] ?? "N/A",
-      createAt: json['createdAt'] ?? "N/A",
-      updateAt: json['updatedAt'] ?? "N/A");
+      createAt: json['createdAt'].toString(),
+      updateAt: json['updatedAt'].toString());
 }
 
 class Orders {
@@ -54,12 +54,12 @@ class Orders {
       this.createAt});
 
   factory Orders.fromJson(Map<String, dynamic> json) => Orders(
-      id: json['_id'] as String,
+      id: json['_id'] ?? "",
       product: Product.fromJson(json['product'] ?? {}),
-      status: json['status'] as String,
+      status: json['status']??"",
       price: json['price']?? 1.0,
-      availability: json['availability'] as bool,
-      createAt: json['createdAt'] as String);
+      availability: json['availability'] ?? false,
+      createAt: json['createdAt'].toString());
 }
 
 class Product {
@@ -83,6 +83,6 @@ class Product {
       productName: json['productName'] ?? "N/A",
       unit: json['unit'] ?? "N/A",
       quantity: json['quantity'] ?? 0,
-      createAt: json['createdAt'] ?? "N/A",
-      updateAt: json['updatedAt'] ?? "N/A");
+      createAt: json['createdAt'].toString(),
+      updateAt: json['updatedAt'].toString());
 }

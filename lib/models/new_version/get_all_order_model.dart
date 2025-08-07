@@ -28,6 +28,6 @@ class GetAllOrderModel {
           additionalInfo: json['additionalInfo'] ?? "N/A",
           retailer: json['retailer'] ?? "N/A",
           status: json['status'] ?? false,
-          createdAt: json['createdAt'] ?? "N/A",
-          updatedAt: json['updatedAt'] ?? "N/A");
+          createdAt: json['createdAt'].toString(),
+          updatedAt: json['updatedAt'].toString());
 }
