@@ -186,8 +186,9 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       TextWidget(
-                        text:
-                            "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}",
+                        text: invoice['date'] != null
+                            ? "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}"
+                            : null,
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
                         fontColor: AppColors.onyxBlack,
@@ -202,7 +203,10 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                               "in wholesaler tabbar: ${invoice['product']}");
                           Get.toNamed(
                               AppRoutes.wholesalerConfirmedOrderDetailsScreen,
-                              arguments: {'products': invoice['product']});
+                              arguments: {
+                                'products': invoice['product'],
+                                'id': invoice['id']
+                              });
                         },
                         child: const TextWidget(
                           text: AppStrings.details,
@@ -332,8 +336,9 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                         SizedBox(
                           width: ResponsiveUtils.width(70),
                           child: TextWidget(
-                            text:
-                                "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}",
+                            text: invoice['date'] != null
+                                ? "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}"
+                                : null,
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.onyxBlack,
@@ -361,7 +366,10 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                               // Get.to(WholesalerPendingOrderDetailsScreen( product: invoice["product"],));
                               Get.toNamed(
                                   AppRoutes.wholesalerPendingOrderDetailsScreen,
-                                  arguments: {'products': invoice['product']});
+                                  arguments: {
+                                    'products': invoice['product'],
+                                    'id': invoice['id']
+                                  });
                             }
                           },
                           child: const TextWidget(

@@ -30,6 +30,7 @@ class WholesalerOrderHistoryController extends GetxController {
   Timer? refreshTimer;
   Future<void> fetchNewOrders() async {
     update();
+    pendingOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
       final response = await ApiService.getApi(Urls.newPendingOrder);
@@ -49,6 +50,7 @@ class WholesalerOrderHistoryController extends GetxController {
   // Fetch Received Orders
   Future<void> fetchPendingOrders() async {
     update();
+    receivedOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
       final response = await ApiService.getApi(
@@ -197,7 +199,7 @@ class WholesalerOrderHistoryController extends GetxController {
   }
 
   @override
-  void onClose() {    
+  void onClose() {
     super.onClose();
     refreshTimer?.cancel();
   }

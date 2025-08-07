@@ -32,6 +32,7 @@ class RetailerOrderHistoryController extends GetxController {
   Timer? refreshTimer;
   Future<void> fetchPendingOrders() async {
     update();
+    pendingOrders.clear();
     appLogger("trying to fetch orders");
     isLoading.value = true; // Show loading indicator
     try {
@@ -48,6 +49,7 @@ class RetailerOrderHistoryController extends GetxController {
   // Fetch Received Orders
   Future<void> fetchReceivedOrders() async {
     update();
+    receivedOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
       var recievedData = await retailerRepo.getRecieved();
@@ -66,6 +68,7 @@ class RetailerOrderHistoryController extends GetxController {
   // Fetch Confirmed Orders
   Future<void> fetchConfirmedOrders() async {
     update();
+
     isLoading.value = true; // Show loading indicator
     try {
       var response = await ApiService.getApi(Urls.confirmedOrderRetailer);

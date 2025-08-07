@@ -11,7 +11,7 @@ class RetailerSettingController extends GetxController {
     PrefsHelper.userRole = "";
     PrefsHelper.removeAllPrefData();
     PrefsHelper.isLogIn = false;
-    PrefsHelper.setString('isLogIn', false);
+    PrefsHelper.setBool('isLogIn', false);
     Get.toNamed(AppRoutes.onboardingScreen);
   }
 

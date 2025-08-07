@@ -33,7 +33,7 @@ class NotificationsController extends GetxController {
         "===================================Notification userId : $id==============================================");
 
     try {
-      SocketApi.socket.on("NewNotification::$id", (data) {
+      SocketApi.socket.on("get-notification::$id", (data) {
         appLogger("Socket Res=================>>>>>>>>>>>>>$data");
 
         if (data != null) {

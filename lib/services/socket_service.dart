@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 //class SocketServices {
@@ -61,7 +62,7 @@ class SocketApi {
   SocketApi._internal();
 
   static io.Socket socket = io.io(
-    "http://10.0.70.188:5000/",
+    Urls.socketUrl,
     io.OptionBuilder()
         .setTransports(['websocket'])
         .disableAutoConnect()

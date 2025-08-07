@@ -186,9 +186,9 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       TextWidget(
-                        text: invoice["date"] != "N/A"
+                        text: invoice['date'] != null
                             ? "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}"
-                            : "N/A",
+                            : "",
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
                         fontColor: AppColors.onyxBlack,
@@ -307,8 +307,9 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         TextWidget(
-                          text:
-                              "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}",
+                          text: invoice['date'] != null
+                              ? "${formatDay(invoice["date"])}\n${formatDate(invoice["date"])}"
+                              : "",
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           fontColor: AppColors.onyxBlack,
@@ -375,11 +376,13 @@ class _OrdersTabViewState extends State<OrdersTabView> {
 }
 
 String formatDate(String isoDate) {
+  if (isoDate == null || isoDate.isEmpty) return '';
   final dateTime = DateTime.parse(isoDate);
   return DateFormat.jm().format(dateTime);
 }
 
 String formatDay(String isoDate) {
+  if (isoDate == null || isoDate.isEmpty) return '';
   final dateTime = DateTime.parse(isoDate);
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
