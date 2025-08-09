@@ -39,4 +39,6 @@ class AppIconsPath {
   static const String voiceIcon = 'assets/icons/voiceIcon.svg';
   static const String closeIcon = 'assets/icons/closeIcon.svg';
   static const String moreIcon = 'assets/icons/moreIcon.svg';
+  static const String noInternetIcon = 'assets/icons/no-wifi.png';
+  static const String noOrderIcon = "assets/icons/checkout.png";
 }

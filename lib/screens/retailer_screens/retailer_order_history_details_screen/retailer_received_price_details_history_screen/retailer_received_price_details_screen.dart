@@ -33,7 +33,11 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
+    int grandtotal = 0;
+    for (int i = 0; i < receivedController.products.length; i++) {
+      grandtotal += ((receivedController.products[i].price ?? 0) *
+          (receivedController.products[i].product?.quantity ?? 1));
+    }
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       body: Center(
@@ -74,6 +78,14 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ListView(
                     children: [
+                      Row(
+                        children: [
+                          const TextWidget(
+                            text: AppStrings.grandTotal,
+                          ),
+                          TextWidget(text: "$grandtotal",)
+                        ],
+                      ),
                       // Header Row
                       Container(
                         color: AppColors.headerColor,

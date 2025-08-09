@@ -87,7 +87,7 @@ class FindWholesalerController extends GetxController {
       filteredWholesalers.assignAll(wholesalers);
       return;
     }
-
+    appLogger("Writing query: $query");
     print("This function call so far =-=-==-===-=-=-=--=-==-");
 
     // Check if query is numeric (to search by phone number)

@@ -115,6 +115,10 @@ class ProfileScreenController extends GetxController {
       Map<String, dynamic> body = {
         "name": fullNameController.text,
         "email": emailController.text,
+        "storeInformation": {
+          "businessName": businessNameController.text,
+          "location": addressController.text
+        },
         // "businessName": businessNameController.text,
         // "storeInformation": {"location": addressController.text},
         // You can update this to dynamically pass image URL
@@ -124,8 +128,10 @@ class ProfileScreenController extends GetxController {
       // try {
       // Call the patchApi function with the body data
       // var response = await ApiService.patchApi(Urls.userProfile, body);
+      await ApiService.patchApi(Urls.userProfile, body);
       await ApiService.MultipartRequest1(
-          url: Urls.userProfile, body: body, imagePath: imageFile.value?.path);
+          url: Urls.userProfile, imagePath: imageFile.value?.path);
+
       getProfileRepo();
       Get.back();
       // final imageRespinse = await ApiService.updateProfileImage(

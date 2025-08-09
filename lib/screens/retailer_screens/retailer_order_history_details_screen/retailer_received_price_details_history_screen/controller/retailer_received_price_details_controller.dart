@@ -212,6 +212,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
       appLogger(response);
       Get.snackbar("Success ${response["success"]}", response['message']);
       Get.back();
+      Get.back();
     } catch (e) {
       appLogger(e);
       Get.snackbar("Error", "Failed to update");

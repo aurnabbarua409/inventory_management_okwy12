@@ -6,8 +6,6 @@ import 'package:inventory_app/screens/retailer_screens/retailer_order_history_de
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
-import 'package:pdf/widgets.dart' as pw;
-
 
 class BuildSummarySectionWidget extends StatelessWidget {
   const BuildSummarySectionWidget(this.confirmedController, {super.key});
@@ -22,7 +20,7 @@ class BuildSummarySectionWidget extends StatelessWidget {
         const SpaceWidget(
           spaceHeight: 10,
         ),
-        SummaryItemWidget(title: AppStrings.grandTotal, price: grandTotal),
+        SummaryItemWidget(title: AppStrings.subTotal, price: grandTotal),
         SummaryItemWidget(
             title: AppStrings.deliveryCharge,
             price: confirmedController.deliveryCharge),
@@ -47,4 +45,3 @@ class BuildSummarySectionWidget extends StatelessWidget {
     );
   }
 }
-

@@ -58,33 +58,33 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   }
 
   // Fetch orders from the API
-  Future<void> fetchPending() async {
-    try {
-      String? token = await PrefsHelper.getToken();
-      if (token.isEmpty) {
-        Get.snackbar("Error", "User is not authenticated.");
-        return;
-      }
+  // Future<void> fetchPending() async {
+  //   try {
+  //     String? token = await PrefsHelper.getToken();
+  //     if (token.isEmpty) {
+  //       Get.snackbar("Error", "User is not authenticated.");
+  //       return;
+  //     }
 
-      update();
+  //     update();
 
-      // Call getApi to fetch pending orders
-      var response = await ApiService.getApi(Urls.newPendingOrder);
+  //     // Call getApi to fetch pending orders
+  //     var response = await ApiService.getApi(Urls.newPendingOrder);
 
-      if (response == null) {
-        Get.snackbar('Error', 'Failed to load orders');
-        return;
-      }
+  //     if (response == null) {
+  //       Get.snackbar('Error', 'Failed to load orders');
+  //       return;
+  //     }
 
-      debugPrint("Response: $response");
+  //     debugPrint("Response: $response");
 
-      // Handle the response when status code is 200 (success)
-      orders.value = <MPendingOrders>[];
-      if (response["data"] != null && response["data"] is List) {
-        for (var element in response["data"]) {
-          orders.add(MPendingOrders.fromJson(element));
-        }
-      }
+  //     // Handle the response when status code is 200 (success)
+  //     orders.value = <MPendingOrders>[];
+  //     if (response["data"] != null && response["data"] is List) {
+  //       for (var element in response["data"]) {
+  //         orders.add(MPendingOrders.fromJson(element));
+  //       }
+  //     }
       // MPendingOrders pendingResponse = MPendingOrders.fromJson(data);
 
       // if (pendingResponse.success == true) {
@@ -120,16 +120,16 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
       //       ),
       //     );
 
-      else {
-        Get.snackbar('Error', 'Failed to load orders');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'An error occurred while fetching orders');
-      appLogger("Error fetching orders: $e");
-    } finally {
-      isLoading(false);
-    }
-  }
+  //     else {
+  //       Get.snackbar('Error', 'Failed to load orders');
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar('Error', 'An error occurred while fetching orders');
+  //     appLogger("Error fetching orders: $e");
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
 
   @override
   void onClose() {
@@ -216,7 +216,7 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
         "additionalInfo": additionalInfoController.text
       });
       appLogger(response);
-      fetchPending();
+      //fetchPending();
       update();
       if (response != null) {
         Get.snackbar("Success", "Updated Successfully");

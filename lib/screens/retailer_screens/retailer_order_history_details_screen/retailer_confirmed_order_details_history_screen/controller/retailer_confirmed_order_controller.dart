@@ -170,7 +170,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
       pdf.addPage(pw.Page(
         build: (context) {
           return pw.Column(children: [
-            pw.Text("Order Confirmed",
+            pw.Text("Invoice",
                 textAlign: pw.TextAlign.center,
                 style:
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 25)),

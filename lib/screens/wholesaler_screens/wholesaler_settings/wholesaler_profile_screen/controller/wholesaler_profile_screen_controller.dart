@@ -50,6 +50,10 @@ class WholesalerProfileScreenController extends GetxController {
     Map<String, dynamic> body = {
       "name": fullNameController.text,
       "email": emailController.text,
+      "storeInformation": {
+        "businessName": businessNameController.text,
+        "location": addressController.text
+      },
       if (phoneNumber.value.isNotEmpty) "phone": phoneNumber.value,
       // "storeInformation": {
       //   "businessName": businessNameController.text,
@@ -63,10 +67,12 @@ class WholesalerProfileScreenController extends GetxController {
     try {
       // Call the patchApi function with the body data
       // var response = await ApiService.patchApi(Urls.userProfile, body);
+      await ApiService.patchApi(Urls.userProfile, body);
       await ApiService.MultipartRequest1(
-          url: Urls.userProfile, body: body, imagePath: imageFile.value?.path);
+          url: Urls.userProfile, imagePath: imageFile.value?.path);
       fetchProfile();
       Get.back();
+    
       // if (response != null) {
       // Check the response and handle accordingly
       // if (response.statusCode == 200) {

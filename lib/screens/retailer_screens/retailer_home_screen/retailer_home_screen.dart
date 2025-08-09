@@ -61,7 +61,7 @@ class RetailerHomeScreen extends StatelessWidget {
                         );
                       }),
                       const TextWidget(
-                        text: AppStrings.home,
+                        text: "",
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                         fontColor: AppColors.white,
@@ -105,6 +105,7 @@ class RetailerHomeScreen extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w200,
                     fontColor: AppColors.white,
+                    textAlignment: TextAlign.left,
                   ),
                 ],
               ),

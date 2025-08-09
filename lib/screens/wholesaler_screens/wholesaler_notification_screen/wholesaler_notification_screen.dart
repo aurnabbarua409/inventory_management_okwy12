@@ -18,7 +18,7 @@ class WholesalerNotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final controller = NotificationsController.instance;
+    final controller = NotificationsController.instance;
 
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
@@ -32,57 +32,53 @@ class WholesalerNotificationScreen extends StatelessWidget {
         text: AppStrings.notification,
         centerTitle: true,
       ),
-      body: GetBuilder(        
-          init: NotificationsController(),
-          builder: (controller) {
-            switch (controller.status.value) {
-              case Status.loading:
-                return const Center(child: CircularProgressIndicator());
-              case Status.error:
-                return Center(
-                  child: ElevatedButton(
-                    onPressed: controller.getNotificationsRepo,
-                    child: const Text('Retry'),
-                  ),
-                );
-              case Status.completed:
-                return controller.notificationModel.isEmpty
-                    ? const NoData()
-                    : SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsets.all(ResponsiveUtils.width(16)),
-                              child: TextWidget(
-                                text: AppStrings.today,
-                                fontColor: AppColors.aquaBlue,
-                                fontSize: ResponsiveUtils.width(14),
-                                fontWeight: FontWeight.w600,
-                                maxLines: 1,
-                              ),
-                            ),
-                            ..._buildNotifications(controller, isToday: true),
-                            Padding(
-                              padding:
-                                  EdgeInsets.all(ResponsiveUtils.width(16)),
-                              child: TextWidget(
-                                text: AppStrings.yesterday,
-                                fontColor: AppColors.aquaBlue,
-                                fontSize: ResponsiveUtils.width(14),
-                                fontWeight: FontWeight.w600,
-                                maxLines: 1,
-                              ),
-                            ),
-                            ..._buildNotifications(controller, isToday: false),
-                          ],
+      body: Obx(() {
+        switch (controller.status.value) {
+          case Status.loading:
+            return const Center(child: CircularProgressIndicator());
+          case Status.error:
+            return Center(
+              child: ElevatedButton(
+                onPressed: controller.getNotificationsRepo,
+                child: const Text('Retry'),
+              ),
+            );
+          case Status.completed:
+            return controller.notificationModel.isEmpty
+                ? const NoData()
+                : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(ResponsiveUtils.width(16)),
+                          child: TextWidget(
+                            text: AppStrings.today,
+                            fontColor: AppColors.aquaBlue,
+                            fontSize: ResponsiveUtils.width(14),
+                            fontWeight: FontWeight.w600,
+                            maxLines: 1,
+                          ),
                         ),
-                      );
-              default:
-                return const SizedBox.shrink();
-            }
-          }),
+                        ..._buildNotifications(controller, isToday: true),
+                        Padding(
+                          padding: EdgeInsets.all(ResponsiveUtils.width(16)),
+                          child: TextWidget(
+                            text: AppStrings.yesterday,
+                            fontColor: AppColors.aquaBlue,
+                            fontSize: ResponsiveUtils.width(14),
+                            fontWeight: FontWeight.w600,
+                            maxLines: 1,
+                          ),
+                        ),
+                        ..._buildNotifications(controller, isToday: false),
+                      ],
+                    ),
+                  );
+          default:
+            return const SizedBox.shrink();
+        }
+      }),
     );
   }
 

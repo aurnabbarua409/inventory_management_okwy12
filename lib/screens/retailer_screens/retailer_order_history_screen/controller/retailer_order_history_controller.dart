@@ -52,6 +52,7 @@ class RetailerOrderHistoryController extends GetxController {
     receivedOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
+      
       var recievedData = await retailerRepo.getRecieved();
       appLogger("fetching received data: $recievedData");
       receivedOrders.value = recievedData;

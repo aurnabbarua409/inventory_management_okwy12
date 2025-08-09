@@ -55,4 +55,5 @@ class AppRoutes {
   static const wholesalerFindWholeSellerScreen =
       '/wholesalerFindWholeSellerScreen';
   static const retailerSavedOrderScreen = "/retailerSavedOrderScreen";
+  static const noInternetConnection = "/noInternetScreen";
 }

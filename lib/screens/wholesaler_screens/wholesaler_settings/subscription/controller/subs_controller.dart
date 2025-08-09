@@ -31,7 +31,7 @@ class PaymentController extends GetxController {
       String userEmail = PrefsHelper.emailId;
       debugPrint('==============Fetched user email=========: $userEmail');
 
-      double staticAmount = 11.0;
+      double staticAmount = 5000.0;
 
       if (userEmail.isNotEmpty && staticAmount > 0) {
         debugPrint("============================user email: $userEmail");

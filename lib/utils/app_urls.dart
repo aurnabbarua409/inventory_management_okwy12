@@ -38,4 +38,7 @@ class Urls {
   static const updateAllReceivedOrders = "$baseUrl/confirmation";
   static const confirmedOrderRetailer = "$baseUrl/confirmation/retailer";
   static const confirmedOrderWholesaler = "$baseUrl/confirmation";
+
+  // retailer received order
+  static const receivedOrderRetailer = "$baseUrl/products/all/received";
 }

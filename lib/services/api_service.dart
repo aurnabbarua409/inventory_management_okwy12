@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
@@ -11,7 +12,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/utils/app_logger.dart';
-import 'package:inventory_app/utils/app_urls.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';
 
@@ -21,11 +21,22 @@ class ApiService {
   ///<<<======================== Main Header ==============================>>>
 
   static const int timeOut = 120;
+  static Future<bool> checkNoInternet() async {
+    final result = await Connectivity().checkConnectivity();
+    if (result.first == ConnectivityResult.none) {
+      return true;
+    }
+    return false;
+  }
 
   ///<<<======================== Post Api ==============================>>>
 
   static Future<dynamic> postApi(String url, Map<String, dynamic> body,
       {Map<String, String>? header, int sucess = 200}) async {
+    if (await checkNoInternet()) {
+      Get.toNamed(AppRoutes.noInternetConnection);
+      return;
+    }
     try {
       final token =
           await PrefsHelper.getToken(); // Retrieve token asynchronously
@@ -62,6 +73,7 @@ class ApiService {
         return null;
       }
     } on SocketException {
+      Get.toNamed(AppRoutes.noInternetConnection);
       return null;
     } on FormatException {
       return null;
@@ -76,6 +88,10 @@ class ApiService {
   // New function for sending a list of objects
   static Future<dynamic> postApiList(
       String url, List<Map<String, dynamic>> bodyList) async {
+    if (await checkNoInternet()) {
+      Get.toNamed(AppRoutes.noInternetConnection);
+      return;
+    }
     try {
       String? token = await PrefsHelper.getToken();
       final headers = {
@@ -107,6 +123,9 @@ class ApiService {
       } else {
         return jsonDecode(response.body); // Return the error body
       }
+    } on SocketException catch (e) {
+      Get.toNamed(AppRoutes.noInternetConnection);
+      return null;
     } catch (e) {
       debugPrint("Error in postApiList: $e");
       return null;
@@ -127,6 +146,10 @@ class ApiService {
 
   static Future<dynamic> getApi(String url,
       {Map<String, String>? header, int sucess = 200}) async {
+    if (await checkNoInternet()) {
+      Get.toNamed(AppRoutes.noInternetConnection);
+      return;
+    }
     try {
       // Retrieve token correctly
       String? token = await PrefsHelper.getToken();
@@ -161,6 +184,7 @@ class ApiService {
         return jsonDecode(response.body);
       }
     } on SocketException {
+      Get.toNamed(AppRoutes.noInternetConnection);
       return null;
     } on FormatException {
       return null;
@@ -247,6 +271,9 @@ class ApiService {
         Get.snackbar("Error", jsonbody["message"]);
       }
       return jsonbody;
+    } on SocketException catch (e) {
+      Get.toNamed(AppRoutes.noInternetConnection);
+      return null;
     } catch (e) {
       appLogger(e);
       Get.snackbar("Error", "Upload failed: $e");
@@ -424,19 +451,21 @@ class ApiService {
   static Future<void> MultipartRequest1({
     required String url,
     String? imagePath,
-    required Map<String, dynamic> body,
+    Map<String, dynamic>? body,
   }) async {
     try {
       appLogger("sending request for image: $imagePath");
       appLogger(body);
       var request = http.MultipartRequest('PATCH', Uri.parse(url));
-      body.forEach((key, value) {
-        // if (value is Map || value is List) {
-        //   request.fields[key] = jsonEncode(value);
-        // } else {
+      if (body != null) {
+        body.forEach((key, value) {
+          // if (value is Map || value is List) {
+          //   request.fields[key] = jsonEncode(value);
+          // } else {
           request.fields[key] = value;
-        // }
-      });
+          // }
+        });
+      }
 
       if (imagePath != null && imagePath.isNotEmpty) {
         var mimeType = lookupMimeType(imagePath);
@@ -451,6 +480,8 @@ class ApiService {
       final response = await http.Response.fromStream(streamResponse);
       appLogger("sending request successful: ${response.body}");
       appLogger(response.statusCode);
+      final resp = jsonDecode(response.body);
+      Get.snackbar("Success: ${resp['success']}", resp['message']);
       // appLogger("request send succesfully: $response");
       // appLogger("request send succesfully: ${response.stream.bytesToString()}");
       // appLogger(jsonDecode(response.stream.first.toString()));
@@ -465,6 +496,7 @@ class ApiService {
       //       response.statusCode, jsonDecode(data)['message'], data);
       // }
     } on SocketException {
+      Get.toNamed(AppRoutes.noInternetConnection);
       return;
     } on FormatException {
       return;
@@ -515,6 +547,7 @@ class ApiService {
         return null;
       }
     } on SocketException {
+      Get.toNamed(AppRoutes.noInternetConnection);
       return null;
     } on FormatException {
       return null;

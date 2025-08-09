@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:inventory_app/screens/no_internet_connection_screen/no_internet_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_about_us_screen/retailer_about_us_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_change_password_screen/retailer_change_password_screen.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_contact_us_screen/retailer_contact_us_screen.dart';
@@ -254,6 +255,11 @@ class RouteManager {
       GetPage(
         name: AppRoutes.wholesalerFindWholeSellerScreen,
         page: () => WholesalerFindWholeSellerScreen(),
+        // binding: GeneralBindings(),
+      ),
+      GetPage(
+        name: AppRoutes.noInternetConnection,
+        page: () => const NoInternetScreen(),
         // binding: GeneralBindings(),
       ),
     ];
