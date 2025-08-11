@@ -222,6 +222,7 @@ class _TableDataRowState extends State<TableDataRow> {
                         ),
                       ),
                     ),
+
                     // More Options
                     SizedBox(
                       width: 14,

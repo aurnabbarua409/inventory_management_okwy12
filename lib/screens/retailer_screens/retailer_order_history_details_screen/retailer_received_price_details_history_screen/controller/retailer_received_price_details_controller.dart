@@ -30,6 +30,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
   final RxList<Product> products = <Product>[].obs;
+  RxInt grandtotal = 0.obs;
   @override
   void onInit() {
     super.onInit();

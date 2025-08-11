@@ -85,40 +85,40 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   //         orders.add(MPendingOrders.fromJson(element));
   //       }
   //     }
-      // MPendingOrders pendingResponse = MPendingOrders.fromJson(data);
+  // MPendingOrders pendingResponse = MPendingOrders.fromJson(data);
 
-      // if (pendingResponse.success == true) {
-      //   orders.clear();
+  // if (pendingResponse.success == true) {
+  //   orders.clear();
 
-      //   for (var offer in pendingResponse.data) {
-      //     // Iterate through products within each Datum entry
-      //     var products = offer.product
-      //         .map((product) => Product(
-      //               productId: ProductId(
-      //                 id: product.productId.id,
-      //                 name: product.productId.name,
-      //                 unit: product.productId.unit,
-      //                 quantity: product.productId.quantity,
-      //                 additionalInfo: product.productId.additionalInfo,
-      //               ),
-      //               availability: product.availability,
-      //               price: product.price,
-      //               id: product.id,
-      //             ))
-      //         .toList();
+  //   for (var offer in pendingResponse.data) {
+  //     // Iterate through products within each Datum entry
+  //     var products = offer.product
+  //         .map((product) => Product(
+  //               productId: ProductId(
+  //                 id: product.productId.id,
+  //                 name: product.productId.name,
+  //                 unit: product.productId.unit,
+  //                 quantity: product.productId.quantity,
+  //                 additionalInfo: product.productId.additionalInfo,
+  //               ),
+  //               availability: product.availability,
+  //               price: product.price,
+  //               id: product.id,
+  //             ))
+  //         .toList();
 
-      //     orders.add(
-      //       Datum(
-      //         id: offer.id,
-      //         retailer: offer.retailer,
-      //         status: offer.status,
-      //         createdAt: offer.createdAt,
-      //         updatedAt: offer.updatedAt,
-      //         product: products,
-      //         wholeSeller: offer.wholeSeller,
-      //         v: offer.v,
-      //       ),
-      //     );
+  //     orders.add(
+  //       Datum(
+  //         id: offer.id,
+  //         retailer: offer.retailer,
+  //         status: offer.status,
+  //         createdAt: offer.createdAt,
+  //         updatedAt: offer.updatedAt,
+  //         product: products,
+  //         wholeSeller: offer.wholeSeller,
+  //         v: offer.v,
+  //       ),
+  //     );
 
   //     else {
   //       Get.snackbar('Error', 'Failed to load orders');
@@ -203,7 +203,7 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   }
 
   void setSelectedUnit(String? value) {
-    selectedUnit.value = value ?? 'Kg';
+    selectedUnit.value = value ?? 'pcs';
   }
 
   void updateProduct(String id) async {
