@@ -73,17 +73,26 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                             title: AppStrings.retailerDetails,
                             details: [
                               {
-                                AppStrings.name: confirmedController.confirmedData.value?.retailer?.storeInformation?.businessname ??
+                                AppStrings.name: confirmedController
+                                        .confirmedData
+                                        .value
+                                        ?.retailer
+                                        ?.storeInformation
+                                        ?.businessname ??
                                     'Someone',
                               },
                               {
-                                AppStrings.address: confirmedController.confirmedData.value?.retailer?.storeInformation?.location
-                                         ??
+                                AppStrings.address: confirmedController
+                                        .confirmedData
+                                        .value
+                                        ?.retailer
+                                        ?.storeInformation
+                                        ?.location ??
                                     'N/A',
                               },
                               {
-                                AppStrings.phone: confirmedController.confirmedData.value?.retailer?.storeInformation?.location
-                                         ??
+                                AppStrings.phone: confirmedController
+                                        .confirmedData.value?.retailer?.phone ??
                                     "N/A",
                               },
                             ],
@@ -95,18 +104,22 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                           title: AppStrings.wholesalerDetails,
                           details: [
                             {
-                              AppStrings.name: confirmedController.confirmedData
-                                      .value?.wholesaler?.name ??
+                              AppStrings.name: confirmedController
+                                      .confirmedData.value?.wholesaler?.name ??
                                   'N/A',
                             },
                             {
-                              AppStrings.address: confirmedController.confirmedData.value?.wholesaler?.storeInformation?.location
-                                       ??
+                              AppStrings.address: confirmedController
+                                      .confirmedData
+                                      .value
+                                      ?.wholesaler
+                                      ?.storeInformation
+                                      ?.location ??
                                   'N/A',
                             },
                             {
-                              AppStrings.phone: confirmedController.confirmedData.value?.wholesaler?.phone
-                                       ??
+                              AppStrings.phone: confirmedController
+                                      .confirmedData.value?.wholesaler?.phone ??
                                   "N/A",
                             },
                           ],

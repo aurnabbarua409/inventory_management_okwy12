@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
+import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
@@ -41,9 +43,15 @@ class _RetailerOrderHistoryScreenState
                   alignment: Alignment.centerLeft,
                   child: IconButtonWidget(
                     onTap: () {
-                      final control = Get.find<BottomNavbarController>();
-                      control.changeIndex(0);
-                      Get.back();
+                      // final control = Get.find<BottomNavbarController>();
+                      // control.changeIndex(0);
+                      final userId = PrefsHelper.userId;
+                      final role = PrefsHelper.userRole;
+                      Get.offAllNamed(AppRoutes.retailerHomeScreen,
+                          arguments: {'userId': userId});
+                      Get.offAllNamed(AppRoutes.bottomNavBar,
+                          arguments: {'userRole': role, 'userId': userId});
+                      // Get.back();
                     },
                     icon: AppIconsPath.backIcon,
                     color: AppColors.white,

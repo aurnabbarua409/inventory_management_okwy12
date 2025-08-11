@@ -50,7 +50,7 @@ class _TableDataRowState extends State<TableDataRow> {
             final item = widget.productsReceived[index];
             bool isAvailable = item.availability ?? false;
             int price = item.price ?? 0;
-            int quantity = item.quantity ?? 1;
+            int quantity = item.quantity ?? 0;
             int total = price * quantity;
 
             return InkWell(

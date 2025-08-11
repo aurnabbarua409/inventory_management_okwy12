@@ -23,11 +23,13 @@ class WholesalerPendingOrderDetailController extends GetxController {
   // RxList<MPendingOrders> orders = <MPendingOrders>[].obs;
   final RxList<Product> products = <Product>[].obs;
   final RxString id = "".obs;
+  final companyName = "".obs;
   void fetchData() {
     try {
       final arg = Get.arguments;
       products.value = arg['products'];
       id.value = arg['id'];
+      companyName.value = arg['company'];
       appLogger(products);
     } catch (e) {
       appLogger("Failed to get pending data: $e");
@@ -54,7 +56,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
     if (isSuccess) {
       Get.snackbar("Success", "Products updated successfully");
       Get.back();
-                    showSendOrderSuccessfulDialog(context);
+      showSendOrderSuccessfulDialog(context);
     } else {
       appLogger("failed to update product");
       Get.snackbar("Error", "Failed to update product");
@@ -186,6 +188,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
       );
     }
   }
+
   void showSendOrderSuccessfulDialog(BuildContext context) {
     showCustomPopup(
       context,
@@ -210,9 +213,9 @@ class WholesalerPendingOrderDetailController extends GetxController {
           ),
         ),
         const SpaceWidget(spaceHeight: 20),
-        const Center(
+        Center(
           child: TextWidget(
-            text: AppStrings.wholesalerOrderSentSuccessfully,
+            text: "Order successfully sent to ${companyName.value} for review",
             fontSize: 16,
             fontWeight: FontWeight.w600,
             fontColor: AppColors.primaryBlue,

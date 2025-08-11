@@ -59,9 +59,10 @@ class _WholesalerPendingOrderDetailsScreenState
           ),
         ),
         const SpaceWidget(spaceHeight: 2),
-        const Center(
+        Center(
           child: TextWidget(
-            text: AppStrings.wholesalerAreYouSureDesc,
+            text:
+                "You want to send this order to ${pendingController.companyName.value} for review?",
             fontSize: 15,
             fontWeight: FontWeight.w500,
             fontColor: AppColors.onyxBlack,

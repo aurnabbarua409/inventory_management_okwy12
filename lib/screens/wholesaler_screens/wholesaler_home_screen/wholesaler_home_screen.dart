@@ -5,14 +5,12 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/wholesaler_order_history.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_profile_screen/controller/wholesaler_profile_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
-import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -71,7 +69,9 @@ class WholesalerHomeScreen extends StatelessWidget {
                       },
                       icon: Obx(() {
                         return Badge(
-                          isLabelVisible: true,
+                          isLabelVisible: NotificationsController
+                                  .instance.unreadMessage.value >
+                              0,
                           label: Text(
                             "${NotificationsController.instance.unreadMessage.value}",
                             style: const TextStyle(fontWeight: FontWeight.bold),

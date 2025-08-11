@@ -209,7 +209,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             pw.Row(children: [
               pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.name ?? "N/A",
+              pw.Text(confirmedData.value?.wholesaler?.storeInformation?.businessname ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [

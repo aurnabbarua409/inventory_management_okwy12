@@ -200,7 +200,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
         ),
         const SpaceWidget(spaceHeight: 16),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             OutlinedButtonWidget(
               onPressed: () {
@@ -209,13 +209,12 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               },
               label: AppStrings.update,
               backgroundColor: AppColors.white,
-              buttonWidth: 150,
+              buttonWidth: MediaQuery.of(context).size.width * 0.7,
               buttonHeight: 50,
               textColor: AppColors.primaryBlue,
               borderColor: AppColors.primaryBlue,
               fontSize: 16,
             ),
-            const SpaceWidget(spaceWidth: 28),
           ],
         ),
         const SpaceWidget(spaceHeight: 20),

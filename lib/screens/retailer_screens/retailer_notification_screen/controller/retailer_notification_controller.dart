@@ -18,7 +18,7 @@ class NotificationsController extends GetxController {
   void onInit() {
     super.onInit();
     getNotificationsRepo();
-    // listenToNewNotification();
+    listenToNewNotification();
   }
 
   @override
@@ -41,8 +41,9 @@ class NotificationsController extends GetxController {
 
           debugPrint("New notification received: $newNotification");
 
-          notificationModel.insert(0, newNotification);
-          notificationModel.refresh();
+          // notificationModel.insert(0, newNotification);
+          // notificationModel.refresh();
+          // unreadMessage.value++;
 
           if (!newNotification.isRead) {
             unreadMessage.value += 1;

@@ -14,7 +14,7 @@ class Urls {
   static const signIn = "$baseUrl/auth/login";
   static const createOrders = "$baseUrl/new-order/create";
   static const getAllOrders = "$baseUrl/new-order/all";
-  static const deleteOrder = "$baseUrl/product/delete";
+  static const deleteOrder = "$baseUrl/products/";
   static const getWholesaler = "$baseUrl/wholesalers"; //?search=Rakib
   static const sendOrder = "$baseUrl/products/send";
   static const userProfile = "$baseUrl/user/profile";
@@ -22,7 +22,7 @@ class Urls {
   static const receivedOrdersRetailer = "$baseUrl/products/all/received";
   static const receivedOrders = "$baseUrl/send-offer/received";
   static const confirmedOrders = "$baseUrl/confirmation/";
-  static const deletePending = "$baseUrl/send-offer/pending/";
+  // static const deleteOrder = "$baseUrl/send-offer/pending/";
   static const storeInfo = "$baseUrl/user/update-store/";
   static const getNotification = "$baseUrl/notification/";
   static const readNotification = "$baseUrl/notification/";
@@ -37,7 +37,8 @@ class Urls {
   static const updateReceivedOrder = "$baseUrl/new-order/";
   static const updateAllReceivedOrders = "$baseUrl/confirmation";
   static const confirmedOrderRetailer = "$baseUrl/products/all/confirm";
-  static const confirmedOrderWholesaler = "$baseUrl/products/all-product/confirm";
+  static const confirmedOrderWholesaler =
+      "$baseUrl/products/all-product/confirm";
 
   // retailer received order
   static const receivedOrderRetailer = "$baseUrl/products/all/received";

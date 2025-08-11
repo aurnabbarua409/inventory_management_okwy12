@@ -4,6 +4,7 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
@@ -72,7 +73,9 @@ class RetailerHomeScreen extends StatelessWidget {
                         },
                         icon: Obx(() {
                           return Badge(
-                            isLabelVisible: true,
+                            isLabelVisible: NotificationsController
+                                    .instance.unreadMessage.value >
+                                0,
                             label: Text(
                               "${NotificationsController.instance.unreadMessage.value}",
                               style:

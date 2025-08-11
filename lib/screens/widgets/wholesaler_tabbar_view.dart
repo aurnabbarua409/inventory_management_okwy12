@@ -365,7 +365,8 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                                   AppRoutes.wholesalerNewOrderDetailsScreen,
                                   arguments: {
                                     'products': invoice['product'],
-                                    'id': invoice['id']
+                                    'id': invoice['id'],
+                                    'company': invoice['company']
                                   });
                             } else if (currentIndex == 1) {
                               // Get.to(WholesalerPendingOrderDetailsScreen( product: invoice["product"],));
@@ -373,7 +374,8 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                                   AppRoutes.wholesalerPendingOrderDetailsScreen,
                                   arguments: {
                                     'products': invoice['product'],
-                                    'id': invoice['id']
+                                    'id': invoice['id'],
+                                    'company': invoice['company']
                                   });
                             } else {
                               Get.toNamed(

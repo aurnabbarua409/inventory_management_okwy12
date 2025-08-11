@@ -96,6 +96,7 @@ class _WholesalerNewOrderDetailsScreenState
                     // Data Rows
                     ..._buildDataRows(),
                     const SpaceWidget(spaceHeight: 16),
+
                     ButtonWidget(
                       onPressed: () {
                         pendingController.showSendOrderDialog(context);
@@ -140,7 +141,7 @@ class _WholesalerNewOrderDetailsScreenState
       final item = entry.value;
       // bool isPriceNotZero = item. != 0;
       double price = pendingController.availableList[index].values.first;
-      int quantity = item.quantity ?? 1;
+      int quantity = item.quantity ?? 0;
       double totalPrice = price * quantity;
       bool available = pendingController.availableList[index].keys.first;
 

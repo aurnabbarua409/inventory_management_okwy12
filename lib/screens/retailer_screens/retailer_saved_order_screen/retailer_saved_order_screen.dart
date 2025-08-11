@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/new_version/get_all_order_model.dart';
-import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
-import 'package:inventory_app/screens/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -220,7 +216,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                                   icon: AppIconsPath.delete,
                                 ),
                               ),
-                              const SizedBox(width: 220),
+
                               // Send Button on the right
                               ButtonWidget(
                                 onPressed: controller.shareSelection,

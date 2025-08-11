@@ -136,7 +136,7 @@ class RetailerOrderHistoryController extends GetxController {
                 flex: 1,
                 child: ButtonWidget(
                   onPressed: () async {
-                    final url = "${Urls.deletePending}$orderId";
+                    final url = "${Urls.deleteOrder}$orderId";
                     try {
                       final response = await ApiService.deleteApi(url, {});
                       appLogger(response.body);

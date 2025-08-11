@@ -32,11 +32,13 @@ class WholesalerNewOrderDetailsController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
   final RxList<Map<bool, double>> availableList = <Map<bool, double>>[].obs;
   final orderId = "".obs;
+  final companyName = "".obs;
   void fetchData() {
     try {
       final args = Get.arguments;
       products.value = args['products'];
       orderId.value = args['id'];
+      companyName.value = args['company'];
       appLogger(
           "order id while fetching data from new order: ${orderId.value}");
     } catch (e) {
@@ -98,9 +100,10 @@ class WholesalerNewOrderDetailsController extends GetxController {
           ),
         ),
         const SpaceWidget(spaceHeight: 2),
-        const Center(
+        Center(
           child: TextWidget(
-            text: AppStrings.wholesalerAreYouSureDesc,
+            text:
+                "You want to send this order to ${companyName.value} for review?",
             fontSize: 15,
             fontWeight: FontWeight.w500,
             fontColor: AppColors.onyxBlack,
@@ -175,9 +178,9 @@ class WholesalerNewOrderDetailsController extends GetxController {
           ),
         ),
         const SpaceWidget(spaceHeight: 20),
-        const Center(
+        Center(
           child: TextWidget(
-            text: AppStrings.wholesalerOrderSentSuccessfully,
+            text: "Order successfully sent to ${companyName.value} for review",
             fontSize: 16,
             fontWeight: FontWeight.w600,
             fontColor: AppColors.primaryBlue,
@@ -285,7 +288,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
     fetchData();
     availableList.value = List.generate(
       products.length,
-      (index) => {false: 1.0},
+      (index) => {false: 0.0},
     );
   }
 
