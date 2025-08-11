@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_confirmed_order_details_history_screen/controller/retailer_confirmed_order_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_confirmed_order_details_history_screen/widgets/build_table_cell_widget.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_confirmed_order_details_history_screen/widgets/build_table_cell_with_icon_widget.dart';
 import 'package:inventory_app/utils/app_size.dart';
 
 class BuildInvoiceTableWidget extends StatelessWidget {
@@ -17,7 +16,7 @@ class BuildInvoiceTableWidget extends StatelessWidget {
                   "qty": product.quantity.toString(),
                   "unit": product.unit,
                   "price": product.price.toString(),
-                  "total": (product.price * product.quantity).toString(),
+                  "total": ((product.price ?? 0) * (product.quantity ?? 0)).toString(),
                 })
             .toList()
         : [];

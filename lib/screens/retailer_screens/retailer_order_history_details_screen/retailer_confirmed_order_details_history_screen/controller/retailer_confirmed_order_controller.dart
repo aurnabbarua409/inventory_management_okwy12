@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/models/new_version/get_confirm_model.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
 
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:open_file/open_file.dart';
@@ -18,7 +18,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
   // var confirmedData = <Confirmed>[].obs;
   final deliveryCharge = 5.00;
   final RxDouble totalPrice = 0.0.obs;
-  final Rxn<GetConfirmModel> confirmedData = Rxn<GetConfirmModel>();
+  final Rxn<GetPendingOrderModel> confirmedData = Rxn<GetPendingOrderModel>();
   @override
   void onInit() {
     super.onInit();
@@ -68,7 +68,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
       appLogger("in confirmed data: $args");
       confirmedData.value = args['products'];
       appLogger(
-          "After coming confirm data: ${confirmedData.value!.wholesaler!.first.name}");
+          "After coming confirm data: ${confirmedData.value!.wholesaler!.name}");
     } catch (e) {
       appLogger("error fetching details confirmed order data: $e");
     }
@@ -184,19 +184,19 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             pw.Row(children: [
               pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.retailer?.first.name ?? "N/A",
+              pw.Text(confirmedData.value?.retailer?.storeInformation?.businessname ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.retailer?.first.location ?? "N/A",
+              pw.Text(confirmedData.value?.retailer?.storeInformation?.location ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Phone:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.retailer?.first.phone ?? "N/A",
+              pw.Text(confirmedData.value?.retailer?.phone ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.SizedBox(height: 15),
@@ -209,19 +209,19 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             pw.Row(children: [
               pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.first.name ?? "N/A",
+              pw.Text(confirmedData.value?.wholesaler?.name ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.first.location ?? "N/A",
+              pw.Text(confirmedData.value?.wholesaler?.storeInformation?.location ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Phone:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.first.phone ?? "N/A",
+              pw.Text(confirmedData.value?.wholesaler?.phone ?? "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.SizedBox(height: 15),
@@ -259,7 +259,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
                     style: const pw.TextStyle(fontSize: 15)),
                 pw.Spacer(),
                 pw.Text(
-                    "${(confirmedData.value?.product![i].quantity ?? 0) * (confirmedData.value!.product![i].price)}",
+                    "${(confirmedData.value?.product![i].quantity ?? 0) * (confirmedData.value!.product![i].price ?? 0)}",
                     style: const pw.TextStyle(fontSize: 15)),
               ]),
             pw.SizedBox(height: 15),

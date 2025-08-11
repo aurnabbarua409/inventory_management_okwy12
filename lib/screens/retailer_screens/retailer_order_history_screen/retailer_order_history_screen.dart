@@ -72,9 +72,10 @@ class _RetailerOrderHistoryScreenState
                       showDeleteOrderDialog: controller.showDeleteOrderDialog,
                       pendingInvoices: controller.pendingOrders.map((pending) {
                         return {
-                          "company": pending.wholesaler != null &&
-                                  pending.wholesaler!.isNotEmpty
-                              ? pending.wholesaler?.first.name ?? ""
+                          "company": pending.wholesaler != null
+                              ? pending.wholesaler?.storeInformation
+                                      ?.businessname ??
+                                  ""
                               : "",
                           "date": pending.createAt ?? "",
                           "logo": ClipRRect(
@@ -93,8 +94,10 @@ class _RetailerOrderHistoryScreenState
                       receivedInvoices:
                           controller.receivedOrders.map((received) {
                         return {
-                          "company": received.wholeSaler?.name ?? "N/A",
-                          "date": received.wholeSaler?.createAt ?? "",
+                          "company": received
+                                  .wholesaler?.storeInformation?.businessname ??
+                              "N/A",
+                          "date": received.createAt ?? "",
                           "logo": ClipRRect(
                             borderRadius:
                                 BorderRadius.circular(ResponsiveUtils.width(4)),
@@ -104,42 +107,30 @@ class _RetailerOrderHistoryScreenState
                               size: ResponsiveUtils.width(38),
                             ),
                           ),
-                          "id": received.wholeSaler?.id ?? "0",
-                          "products": received.orders ?? []
+                          "id": received.id ?? "0",
+                          "products": received.product ?? []
                         };
                       }).toList(),
-                      confirmedInvoices:  {
-                        "company": (controller.confirmedOrders.value?.retailer
-                                    ?.isNotEmpty ??
-                                false)
-                            ? controller.confirmedOrders.value!.retailer!.first
-                                    .name
-                            : null,
-                        "date": (controller.confirmedOrders.value?.product
-                                    ?.isNotEmpty ??
-                                false)
-                            ? controller
-                                .confirmedOrders.value!.product!.first.createAt
-                            : null,
-                        "logo": controller.confirmedOrders.value != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    ResponsiveUtils.width(4)),
-                                child: Icon(
-                                  Icons.verified,
-                                  color: AppColors.primaryBlue,
-                                  size: ResponsiveUtils.width(38),
-                                ),
-                              )
-                            : null,
-                        "id": (controller.confirmedOrders.value?.retailer
-                                    ?.isNotEmpty ??
-                                false)
-                            ? controller
-                                .confirmedOrders.value!.retailer!.first.id
-                            : null,
-                        "product": controller.confirmedOrders.value
-                      });
+                      confirmedInvoices:
+                          controller.confirmedOrders.map((confirmed) {
+                        return {
+                          "company": confirmed
+                                  .wholesaler?.storeInformation?.businessname ??
+                              "N/A",
+                          "date": confirmed.createAt ?? "",
+                          "logo": ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveUtils.width(4)),
+                            child: Icon(
+                              Icons.verified,
+                              color: AppColors.primaryBlue,
+                              size: ResponsiveUtils.width(38),
+                            ),
+                          ),
+                          "id": confirmed.id ?? "0",
+                          "products": confirmed
+                        };
+                      }).toList());
                 }
               }),
             )

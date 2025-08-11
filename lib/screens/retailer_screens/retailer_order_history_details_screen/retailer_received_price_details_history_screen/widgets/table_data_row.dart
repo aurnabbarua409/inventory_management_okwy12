@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/new_version/get_received_order_model.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/controller/retailer_received_price_details_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
-import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 
 class TableDataRow extends StatefulWidget {
   const TableDataRow(
       {super.key, required this.productsReceived, required this.controller});
-  final List<Orders> productsReceived;
+  final List<Product> productsReceived;
   final RetailerReceivedOrderDetailsHistoryController controller;
 
   @override
@@ -50,8 +49,8 @@ class _TableDataRowState extends State<TableDataRow> {
           itemBuilder: (context, index) {
             final item = widget.productsReceived[index];
             bool isAvailable = item.availability ?? false;
-            int price = item.price ?? 1;
-            int quantity = item.product?.quantity ?? 1;
+            int price = item.price ?? 0;
+            int quantity = item.quantity ?? 1;
             int total = price * quantity;
 
             return InkWell(
@@ -91,7 +90,7 @@ class _TableDataRowState extends State<TableDataRow> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          item.product?.productName ?? "N/A",
+                          item.productName ?? "N/A",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 12 *
@@ -115,7 +114,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                 child: TextFormField(
                                   keyboardType: TextInputType.number,
                                   controller: TextEditingController(
-                                      text: item.product?.quantity.toString()),
+                                      text: item.quantity.toString()),
                                   decoration: InputDecoration(
                                     enabledBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -135,7 +134,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                       ),
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 0, horizontal: 0),
+                                        vertical: 0, horizontal: 4),
                                   ),
                                   style: const TextStyle(
                                     fontSize: 10,
@@ -144,10 +143,10 @@ class _TableDataRowState extends State<TableDataRow> {
                                   onChanged: (value) {
                                     try {
                                       if (value.isEmpty) {
-                                        item.product?.quantity = 0;
+                                        item.quantity = 0;
                                         return;
                                       }
-                                      item.product?.quantity = int.parse(value);
+                                      item.quantity = int.parse(value);
                                     } catch (e) {
                                       appLogger(e);
                                     }
@@ -156,7 +155,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                 ),
                               )
                             : Text(
-                                item.product?.quantity.toString() ?? "0",
+                                item.quantity.toString(),
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   fontSize: 10,
@@ -171,7 +170,7 @@ class _TableDataRowState extends State<TableDataRow> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          item.product?.unit ?? "kg",
+                          item.unit ?? "pcs",
                           textAlign: TextAlign.left,
                           style: const TextStyle(
                             fontSize: 10,
@@ -241,17 +240,17 @@ class _TableDataRowState extends State<TableDataRow> {
                         color: AppColors.white,
                         onSelected: (value) async {
                           if (value == 1) {
-                            if (isEditing[index]) {
-                              try {
-                                final url =
-                                    "${Urls.updateReceivedOrder}${item.product!.id}";
-                                final response = await ApiService.patchApi(url,
-                                    {"quantity": item.product?.quantity ?? 0});
-                                appLogger(response);
-                              } catch (e) {
-                                appLogger(e);
-                              }
-                            }
+                            // if (isEditing[index]) {
+                            //   try {
+                            //     final url =
+                            //         "${Urls.updateReceivedOrder}${item.id}";
+                            //     final response = await ApiService.patchApi(url,
+                            //         {"quantity": item.quantity ?? 0});
+                            //     appLogger(response);
+                            //   } catch (e) {
+                            //     appLogger(e);
+                            //   }
+                            // }
                             setState(() {
                               isEditing[index] = !isEditing[index];
                             });

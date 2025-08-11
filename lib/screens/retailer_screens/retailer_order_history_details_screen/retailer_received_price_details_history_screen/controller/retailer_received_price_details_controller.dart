@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
-import 'package:inventory_app/models/new_version/get_received_order_model.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
+import 'package:inventory_app/models/new_version/update_product_model.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
@@ -29,7 +29,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final productNameController = TextEditingController();
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
-  final RxList<Orders> products = <Orders>[].obs;
+  final RxList<Product> products = <Product>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -79,7 +79,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     appLogger(products);
   }
 
-  void showProductDetailsDialog(BuildContext context, Orders item) {
+  void showProductDetailsDialog(BuildContext context, Product item) {
     showCustomPopup(
       context,
       [
@@ -112,7 +112,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
         ),
         const SpaceWidget(spaceHeight: 16),
         TextWidget(
-          text: item.product?.productName ?? "N/A",
+          text: item.productName ?? "N/A",
           fontSize: 14,
           fontWeight: FontWeight.w600,
           fontColor: AppColors.black,
@@ -206,13 +206,20 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
 
   void send() async {
     //need to implement later
+    List<Map<String, dynamic>> data = [];
+    for (int i = 0; i < products.length; i++) {
+      data.add({"_id": products[i].id, "quantity": products[i].quantity ?? 0});
+    }
+    final updatedData = {"product": data};
     try {
       final response =
-          await ApiService.patchApi(Urls.updateAllReceivedOrders, {});
+          await ApiService.patchApi(Urls.updateAllReceivedOrders, updatedData);
       appLogger(response);
-      Get.snackbar("Success ${response["success"]}", response['message']);
-      Get.back();
-      Get.back();
+      if (response != null) {
+        Get.snackbar("Success", "Updated Successfully");
+      } else {
+        Get.snackbar("Failed", "Failed to update");
+      }
     } catch (e) {
       appLogger(e);
       Get.snackbar("Error", "Failed to update");

@@ -19,7 +19,7 @@ class Urls {
   static const sendOrder = "$baseUrl/products/send";
   static const userProfile = "$baseUrl/user/profile";
   static const newPendingOrder = "$baseUrl/products/all/pending";
-  static const receivedOrdersRetailer = "$baseUrl/replay/all";
+  static const receivedOrdersRetailer = "$baseUrl/products/all/received";
   static const receivedOrders = "$baseUrl/send-offer/received";
   static const confirmedOrders = "$baseUrl/confirmation/";
   static const deletePending = "$baseUrl/send-offer/pending/";
@@ -36,9 +36,11 @@ class Urls {
   static const updateWholesalerProduct = "$baseUrl/send-offer/update-product/";
   static const updateReceivedOrder = "$baseUrl/new-order/";
   static const updateAllReceivedOrders = "$baseUrl/confirmation";
-  static const confirmedOrderRetailer = "$baseUrl/confirmation/retailer";
-  static const confirmedOrderWholesaler = "$baseUrl/confirmation";
+  static const confirmedOrderRetailer = "$baseUrl/products/all/confirm";
+  static const confirmedOrderWholesaler = "$baseUrl/products/all-product/confirm";
 
   // retailer received order
   static const receivedOrderRetailer = "$baseUrl/products/all/received";
+  static const pendingOrderWholesaler =
+      "$baseUrl/products/all-product/received";
 }

@@ -174,7 +174,7 @@ class RouteManager {
       ),
       GetPage(
         name: AppRoutes.retailerConfirmOrderDetailsHistoryScreen,
-        page: () =>  RetailerConfirmedOrderDetailsHistoryScreen(),
+        page: () =>  const RetailerConfirmedOrderDetailsHistoryScreen(),
         // binding: GeneralBindings(),
       ),
       GetPage(

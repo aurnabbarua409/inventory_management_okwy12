@@ -93,9 +93,7 @@ class _WholesalerPendingOrderDetailsScreenState
                 flex: 1,
                 child: ButtonWidget(
                   onPressed: () {
-                    pendingController.sendData();
-                    Get.back();
-                    showSendOrderSuccessfulDialog(context);
+                    pendingController.sendData(context);
                   },
                   label: AppStrings.yes,
                   backgroundColor: AppColors.primaryBlue,
@@ -113,51 +111,6 @@ class _WholesalerPendingOrderDetailsScreenState
   }
 
   // Function to show the successful order sent dialog
-  void showSendOrderSuccessfulDialog(BuildContext context) {
-    showCustomPopup(
-      context,
-      [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButtonWidget(
-            onTap: () {
-              Get.back();
-            },
-            icon: AppIconsPath.closeIcon,
-            size: 20,
-            color: AppColors.black,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 16),
-        const Center(
-          child: ImageWidget(
-            height: 64,
-            width: 64,
-            imagePath: AppImagesPath.checkImage,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.wholesalerOrderSentSuccessfully,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            fontColor: AppColors.primaryBlue,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 2),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.wholesalerOrderSentSuccessfullyDesc,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            fontColor: AppColors.onyxBlack,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -263,8 +216,8 @@ class _WholesalerPendingOrderDetailsScreenState
       final index = entry.key;
       final item = entry.value;
       // appLogger(item.product[0].productId.name);
-      int price = item.price ?? 1;
-      int quantity = item.product?.quantity ?? 1;
+      int price = item.price ?? 0;
+      int quantity = item.quantity ?? 1;
       int total = price * quantity;
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -295,7 +248,7 @@ class _WholesalerPendingOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Text(
-                  item.product?.productName ?? "N/A",
+                  item.productName ?? "N/A",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,
@@ -310,7 +263,7 @@ class _WholesalerPendingOrderDetailsScreenState
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    item.product?.quantity.toString() ?? "0",
+                    item.quantity.toString(),
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 10,
@@ -324,7 +277,7 @@ class _WholesalerPendingOrderDetailsScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  item.product?.unit ?? "Kg",
+                  item.unit ?? "pcs",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 10,

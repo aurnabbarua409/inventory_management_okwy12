@@ -1,6 +1,6 @@
 import 'package:inventory_app/models/new_version/get_confirm_model.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
-import 'package:inventory_app/models/new_version/get_received_order_model.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_wholesaler_model.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_confirmed_model.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
@@ -44,19 +44,19 @@ class RetailerRepo {
     return retailers;
   }
 
-  Future<List<GetReceivedOrderModel>> getRecieved() async {
-    List<GetReceivedOrderModel> recieved = [];
+  Future<List<GetPendingOrderModel>> getRecieved() async {
+    List<GetPendingOrderModel> recieved = [];
     try {
       final response = await ApiService.getApi(Urls.receivedOrdersRetailer);
       appLogger("Retailer received order: $response");
       if (response != null) {
         if (response['data'] != null && response['data'] is List) {
           for (var elementReceived in response['data']) {
-            recieved.add(GetReceivedOrderModel.fromJson(elementReceived));
+            recieved.add(GetPendingOrderModel.fromJson(elementReceived));
           }
         }
       }
-      appLogger("retailer after adding received: ${recieved.first.orders}");
+      appLogger("retailer after adding received: $recieved");
       return recieved;
       // if (response.statusCode == 200) {
       //   final data = json.decode(response.body);
@@ -71,14 +71,14 @@ class RetailerRepo {
     }
     return recieved;
   }
-  // Future<GetConfirmModel> getConfirmed() async {    
+  // Future<GetConfirmModel> getConfirmed() async {
   //   try {
   //     final response = await ApiService.getApi(Urls.confirmedOrderRetailer);
   //     appLogger("response from confirmed order model: $response");
   //     if (response != null) {
   //       return (GetConfirmModel.fromJson(response['data']));
   //     }
-      
+
   //     // if (response.statusCode == 200) {
   //     //   final data = json.decode(response.body);
   //     //   final List<MPendingOrders> orders = (data['data'])
@@ -94,27 +94,23 @@ class RetailerRepo {
 
   //   return ;
   // }
-  // Future<List<GetConfirmModel>> getConfirmed() async {
-  //   List<GetConfirmModel> confirmed = [];
-  //   try {
-  //     final response = await ApiService.getApi(Urls.confirmedOrderRetailer);
-  //     appLogger("response from confirmed order model: $response");
-  //     if (response != null) {
-  //       confirmed.add(GetConfirmModel.fromJson(response['data']));
-  //     }
-  //     return confirmed;
-  //     // if (response.statusCode == 200) {
-  //     //   final data = json.decode(response.body);
-  //     //   final List<MPendingOrders> orders = (data['data'])
-  //     //       .map((orderJson) => MPendingOrders.fromJson(orderJson))
-  //     //       .toList();
+  Future<List<GetPendingOrderModel>> getConfirmed() async {
+    List<GetPendingOrderModel> confirmed = [];
+    try {
+      final response = await ApiService.getApi(Urls.confirmedOrderRetailer);
+      appLogger("response from confirmed order model: $response");
+      if (response != null) {
+        if (response['data'] != null && response['data'] is List) {
+          for (var elementReceived in response['data']) {
+            confirmed.add(GetPendingOrderModel.fromJson(elementReceived));
+          }
+        }
+      }
+      return confirmed;
+    } catch (e) {
+      appLogger("Error while fetching confirmed order: $e");
+    }
 
-  //     //   retailers.addAll(orders);
-  //     // }
-  //   } catch (e) {
-  //     appLogger("Error while fetching confirmed order: $e");
-  //   }
-
-  //   return confirmed;
-  // }
+    return confirmed;
+  }
 }

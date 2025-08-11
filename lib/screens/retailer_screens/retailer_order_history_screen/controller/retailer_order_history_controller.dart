@@ -8,7 +8,7 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/new_version/get_confirm_model.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
-import 'package:inventory_app/models/new_version/get_received_order_model.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_wholesaler_model.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/services/repository/retailer/retailer_repo.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -26,9 +26,9 @@ class RetailerOrderHistoryController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxList<GetPendingOrderModel> pendingOrders = <GetPendingOrderModel>[].obs;
-  RxList<GetReceivedOrderModel> receivedOrders = <GetReceivedOrderModel>[].obs;
+  RxList<GetPendingOrderModel> receivedOrders = <GetPendingOrderModel>[].obs;
   // RxList<Confirmed> confirmedOrders = <Confirmed>[].obs;
-  Rxn<GetConfirmModel> confirmedOrders = Rxn<GetConfirmModel>();
+  RxList<GetPendingOrderModel> confirmedOrders = <GetPendingOrderModel>[].obs;
   Timer? refreshTimer;
   Future<void> fetchPendingOrders() async {
     update();
@@ -52,7 +52,6 @@ class RetailerOrderHistoryController extends GetxController {
     receivedOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
-      
       var recievedData = await retailerRepo.getRecieved();
       appLogger("fetching received data: $recievedData");
       receivedOrders.value = recievedData;
@@ -72,15 +71,9 @@ class RetailerOrderHistoryController extends GetxController {
 
     isLoading.value = true; // Show loading indicator
     try {
-      var response = await ApiService.getApi(Urls.confirmedOrderRetailer);
-      appLogger("response from getting confirmed order: $response");
-      if (response != null) {
-        confirmedOrders.value = GetConfirmModel.fromJson(response['data']);
-        appLogger("Data after added confirm order");
-        appLogger(confirmedOrders.value);
-      }
-      // appLogger("fetching confirm order: $confirmedData");
-      // confirmedOrders.value = confirmedData;
+      var data = await retailerRepo.getConfirmed();
+      appLogger("Fetching confirm order from retailer: $data");
+      confirmedOrders.value = data;
     } catch (e) {
       appLogger("Error in fetching confirm order data: $e");
     } finally {

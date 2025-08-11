@@ -1,6 +1,6 @@
 class SendProductModel {
   final List<String> product;
-  final List<String> wholesaler;
+  final String wholesaler;
 
   SendProductModel(this.product, this.wholesaler);
 

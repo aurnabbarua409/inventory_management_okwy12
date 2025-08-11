@@ -73,30 +73,17 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                             title: AppStrings.retailerDetails,
                             details: [
                               {
-                                AppStrings.name: confirmedController
-                                        .confirmedData
-                                        .value
-                                        ?.retailer
-                                        ?.first
-                                        .name ??
+                                AppStrings.name: confirmedController.confirmedData.value?.retailer?.storeInformation?.businessname ??
                                     'Someone',
                               },
                               {
-                                AppStrings.address: confirmedController
-                                        .confirmedData
-                                        .value
-                                        ?.retailer
-                                        ?.first
-                                        .location ??
+                                AppStrings.address: confirmedController.confirmedData.value?.retailer?.storeInformation?.location
+                                         ??
                                     'N/A',
                               },
                               {
-                                AppStrings.phone: confirmedController
-                                        .confirmedData
-                                        .value
-                                        ?.retailer
-                                        ?.first
-                                        .phone ??
+                                AppStrings.phone: confirmedController.confirmedData.value?.retailer?.storeInformation?.location
+                                         ??
                                     "N/A",
                               },
                             ],
@@ -109,25 +96,17 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                           details: [
                             {
                               AppStrings.name: confirmedController.confirmedData
-                                      .value?.wholesaler?.first.name ??
+                                      .value?.wholesaler?.name ??
                                   'N/A',
                             },
                             {
-                              AppStrings.address: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.first
-                                      .location ??
+                              AppStrings.address: confirmedController.confirmedData.value?.wholesaler?.storeInformation?.location
+                                       ??
                                   'N/A',
                             },
                             {
-                              AppStrings.phone: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.first
-                                      .phone ??
+                              AppStrings.phone: confirmedController.confirmedData.value?.wholesaler?.phone
+                                       ??
                                   "N/A",
                             },
                           ],

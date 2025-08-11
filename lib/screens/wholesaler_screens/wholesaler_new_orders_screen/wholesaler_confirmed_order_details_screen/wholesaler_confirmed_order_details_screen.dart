@@ -84,25 +84,14 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                           details: [
                             {
                               AppStrings.name: confirmedController.confirmedData
-                                      .value?.retailer?.first.name ??
+                                      .value?.retailer?.name ??
                                   '',
                             },
                             {
-                              AppStrings.address: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.retailer
-                                      ?.first
-                                      .location ??
-                                  '',
+                              AppStrings.address: confirmedController.confirmedData.value?.retailer?.storeInformation?.location ?? "",
                             },
                             {
-                              AppStrings.phone: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.retailer
-                                      ?.first
-                                      .phone ??
+                              AppStrings.phone: confirmedController.confirmedData.value?.retailer?.phone ??
                                   ""
                             },
                           ],
@@ -115,25 +104,15 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                           details: [
                             {
                               AppStrings.name: confirmedController.confirmedData
-                                      .value?.wholesaler?.first.name ??
+                                      .value?.wholesaler?.name ??
                                   '',
                             },
                             {
-                              AppStrings.address: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.first
-                                      .location ??
+                              AppStrings.address: confirmedController.confirmedData.value?.wholesaler?.storeInformation?.location ??
                                   '',
                             },
                             {
-                              AppStrings.phone: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.first
-                                      .phone ??
+                              AppStrings.phone: confirmedController.confirmedData.value?.wholesaler?.phone ??
                                   ''
                             },
                           ],
@@ -203,7 +182,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                   "qty": product.quantity.toString(),
                   "unit": product.unit,
                   "price": product.price.toString(),
-                  "total": (product.price * product.quantity).toString(),
+                  "total": ( (product.price ?? 0) * (product.quantity ?? 0)).toString(),
                 })
             .toList()
         : [];

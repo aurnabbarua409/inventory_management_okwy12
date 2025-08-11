@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/models/new_version/get_received_order_model.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_wholesaler_model.dart';
 import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/controller/retailer_received_price_details_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/widgets/table_data_row.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_icons_path.dart';
@@ -36,7 +38,7 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
     int grandtotal = 0;
     for (int i = 0; i < receivedController.products.length; i++) {
       grandtotal += ((receivedController.products[i].price ?? 0) *
-          (receivedController.products[i].product?.quantity ?? 1));
+          (receivedController.products[i].quantity ?? 1));
     }
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
@@ -80,11 +82,23 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                     children: [
                       Row(
                         children: [
+                          const Spacer(),
                           const TextWidget(
-                            text: AppStrings.grandTotal,
+                            text: "${AppStrings.grandTotal}: ",
+                            fontColor: AppColors.black,
                           ),
-                          TextWidget(text: "$grandtotal",)
+                          const ImageWidget(
+                              height: 13,
+                              width: 13,
+                              imagePath: AppImagesPath.currencyIcon),
+                          TextWidget(
+                            text: "$grandtotal",
+                            fontColor: AppColors.black,
+                          )
                         ],
+                      ),
+                      const SpaceWidget(
+                        spaceHeight: 10,
                       ),
                       // Header Row
                       Container(
@@ -127,10 +141,12 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
               children: [
                 const Spacer(),
                 ButtonWidget(
-                  label: "Confirm",
-                  backgroundColor: AppColors.primaryBlue,
-                  onPressed: receivedController.send,
-                ),
+                    label: "Confirm",
+                    backgroundColor: AppColors.primaryBlue,
+                    onPressed: () {
+                      receivedController.send();
+                      Get.back();
+                    }),
                 const SpaceWidget(
                   spaceWidth: 10,
                 )

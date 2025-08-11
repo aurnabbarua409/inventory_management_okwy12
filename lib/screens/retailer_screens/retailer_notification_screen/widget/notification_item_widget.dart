@@ -52,10 +52,11 @@ class NotificationItem extends StatelessWidget {
                     children: [
                       Flexible(
                         child: TextWidget(
-                          text: item.title,
+                          text: item.message,
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           maxLines: 1,
+                          fontColor: AppColors.black,
                         ),
                       ),
                       TextWidget(
@@ -71,7 +72,7 @@ class NotificationItem extends StatelessWidget {
                     text: item.message, // Display the message
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    maxLines: 2,
+                    maxLines: 2, fontColor: AppColors.black,
                   ),
                 ],
               ),

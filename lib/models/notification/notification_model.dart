@@ -1,37 +1,37 @@
 // Notification Model class
 class NotificationModel {
   String id;
-  String userId;
-  String title;
+  String sender;
+  String receiver;
   String message;
   bool isRead;
   DateTime createdAt;
   DateTime updatedAt;
+  int v;
 
   NotificationModel({
     required this.id,
-    required this.userId,
-    required this.title,
+    required this.sender,
+    required this.receiver,
     required this.message,
     required this.isRead,
     required this.createdAt,
     required this.updatedAt,
+    required this.v
   });
 
   // Factory constructor to create Notification object from JSON
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['_id'] as String? ?? '',  // Null check for _id
-      userId: json['userId'] as String? ?? '',  // Null check for userId
-      title: json['title'] as String? ?? '',  // Null check for title
-      message: json['message'] as String? ?? '',  // Null check for message
-      isRead: json['isRead'] as bool? ?? false,  // Null check for isRead
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'] as String) ?? DateTime.now()  // Safe DateTime parsing
-          : DateTime.now(),  // Null check for createdAt
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.tryParse(json['updatedAt'] as String) ?? DateTime.now()  // Safe DateTime parsing
-          : DateTime.now(),  // Null check for updatedAt
+      id: json['_id'] as String? ?? '', // Null check for _id
+      sender: json['sender'] as String? ?? '', // Null check for userId
+      receiver: json['receiver'] as String? ?? '', // Null check for title
+      message: json['message'] as String? ?? '', // Null check for message
+      isRead: json['isRead'] as bool? ?? false, // Null check for isRead
+      createdAt: json['createdAt'] != null ? DateTime.parse( json['createdAt'].toString()) : DateTime.now()
+           , // Null check for createdAt
+      updatedAt: json['updatedAt'] != null? DateTime.parse(json['updatedAt'].toString()): DateTime.now(),
+      v: json['__v'] ?? 0 // Null check for updatedAt
     );
   }
 
@@ -39,12 +39,12 @@ class NotificationModel {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'userId': userId,
-      'title': title,
+      'sender': sender,
+      'receiver': receiver,
       'message': message,
       'isRead': isRead,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
@@ -66,12 +66,16 @@ class NotificationResponse {
   // Factory constructor to create NotificationResponse from JSON
   factory NotificationResponse.fromJson(Map<String, dynamic> json) {
     return NotificationResponse(
-      success: json['success'] as bool? ?? false,  // Null check for success
-      total: json['Total'] is int ? json['Total'] : 0,  // Safely handling Total value
-      message: json['message'] as String? ?? '',  // Null check for message
+      success: json['success'] as bool? ?? false, // Null check for success
+      total: json['Total'] is int
+          ? json['Total']
+          : 0, // Safely handling Total value
+      message: json['message'] as String? ?? '', // Null check for message
       data: (json['data'] as List?)
-              ?.map((item) => NotificationModel.fromJson(item as Map<String, dynamic>))
-              .toList() ?? [],
+              ?.map((item) =>
+                  NotificationModel.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 

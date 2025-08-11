@@ -1,12 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/helpers/prefs_helper.dart';
-import 'package:inventory_app/models/new_version/get_received_order_model.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
+import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
 import 'package:inventory_app/models/new_version/update_product_model.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:inventory_app/widgets/image_widget/image_widget.dart';
+import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 class WholesalerPendingOrderDetailController extends GetxController {
   var isLoading = true.obs;
@@ -14,7 +21,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
 
   // Update orders list type to match the new model
   // RxList<MPendingOrders> orders = <MPendingOrders>[].obs;
-  final RxList<Orders> products = <Orders>[].obs;
+  final RxList<Product> products = <Product>[].obs;
   final RxString id = "".obs;
   void fetchData() {
     try {
@@ -27,7 +34,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
     }
   }
 
-  void sendData() async {
+  void sendData(BuildContext context) async {
     List<Map<String, dynamic>> updatedData = [];
     appLogger("Data is now updating");
     for (int index = 0; index < products.length; index++) {
@@ -46,6 +53,8 @@ class WholesalerPendingOrderDetailController extends GetxController {
     appLogger(response);
     if (isSuccess) {
       Get.snackbar("Success", "Products updated successfully");
+      Get.back();
+                    showSendOrderSuccessfulDialog(context);
     } else {
       appLogger("failed to update product");
       Get.snackbar("Error", "Failed to update product");
@@ -176,6 +185,51 @@ class WholesalerPendingOrderDetailController extends GetxController {
         colorText: AppColors.blackDarkest,
       );
     }
+  }
+  void showSendOrderSuccessfulDialog(BuildContext context) {
+    showCustomPopup(
+      context,
+      [
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButtonWidget(
+            onTap: () {
+              Get.back();
+            },
+            icon: AppIconsPath.closeIcon,
+            size: 20,
+            color: AppColors.black,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        const Center(
+          child: ImageWidget(
+            height: 64,
+            width: 64,
+            imagePath: AppImagesPath.checkImage,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+        const Center(
+          child: TextWidget(
+            text: AppStrings.wholesalerOrderSentSuccessfully,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontColor: AppColors.primaryBlue,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 2),
+        const Center(
+          child: TextWidget(
+            text: AppStrings.wholesalerOrderSentSuccessfullyDesc,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            fontColor: AppColors.onyxBlack,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+      ],
+    );
   }
 
   @override

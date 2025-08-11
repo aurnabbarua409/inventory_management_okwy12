@@ -153,8 +153,8 @@ class RetailerNotificationScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextWidget(
-                          text: notification.title,
-                          fontColor: AppColors.onyxBlack,
+                          text: notification.message,
+                          fontColor: AppColors.black,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                           overflow: TextOverflow.ellipsis,
@@ -163,8 +163,7 @@ class RetailerNotificationScreen extends StatelessWidget {
                         ),
                         const SpaceWidget(spaceHeight: 8),
                         TextWidget(
-                          text:
-                              "${notification.createdAt.year}-${notification.createdAt.month}-${notification.createdAt.day}",
+                          text: controller.timeAgo(notification.createdAt),
                           fontColor: AppColors.onyxBlack,
                           fontSize: 10,
                           fontWeight: FontWeight.w600,

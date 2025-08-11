@@ -365,36 +365,33 @@ class FindWholesalerController extends GetxController {
       //     "status": status,
       //   };
       // }).toList();
-      final wholesalerIds = <String>[];
-      for (int i = 0; i < wholesalers.length; i++) {
-        wholesalerIds.add(wholesalers[i].id);
+      // final wholesalerIds = <String>[];
+      // for (int i = 0; i < wholesalers.length; i++) {
+      //   wholesalerIds.add(wholesalers[i].id);
+      // }
+      final List<Map<String, dynamic>> orders = [];
+      for (int i = 0; i < selectedWholesalerIds.length; i++) {
+        final orderList =
+            SendProductModel(selectedProductIds, selectedWholesalerIds[i]);
+        debugPrint("Request Body: $orderList");
+        orders.add(orderList.toJson());
+        // Send a single request with the list of order objects.
       }
-      final orderList = SendProductModel(selectedProductIds, wholesalerIds);
-      debugPrint("Request Body: $orderList");
-
-      // Send a single request with the list of order objects.
-      var response =
-          await ApiService.postApi(Urls.sendOrder, orderList.toJson())
-              .timeout(const Duration(seconds: 30));
+      var response = await ApiService.postApiList(Urls.sendOrder, orders)
+          .timeout(const Duration(seconds: 30));
 
       if (response != null && response['success'] == true) {
         appLogger("response after sending product to wholesaler: $response");
-
-        selectedItems
-            .assignAll(List.generate(wholesalers.length, (index) => false));
-
-        // var newOffer = response['data'];
-
-        // for (var offer in newOffer) {
-        //   addOffer(offer);
-        // }
-        update();
-      } else {
-        String errorMessage = response != null && response['message'] != null
-            ? response['message']
-            : "Failed to send order.";
-        Get.snackbar("Error", errorMessage);
       }
+      selectedItems
+          .assignAll(List.generate(wholesalers.length, (index) => false));
+
+      // var newOffer = response['data'];
+
+      // for (var offer in newOffer) {
+      //   addOffer(offer);
+      // }
+      update();
     } catch (e) {
       Get.snackbar("Error", "An error occurred while sending the order: $e");
     } finally {

@@ -88,9 +88,11 @@ class _WholesalerOrderHistoryScreenState
                   : Obx(
                       () => WholesalerTabView(
                         showDeleteOrderDialog: controller.showDeleteOrderDialog,
-                        pendingInvoices: controller.pendingOrders.map((order) {
+                        pendingInvoices: controller.newOrders.map((order) {
                           return {
-                            "company": order.retailer?.name ?? "N/A",
+                            "company": order
+                                    .retailer?.storeInformation?.businessname ??
+                                "N/A",
                             "date": order.createAt ?? DateTime.now().toString(),
                             "logo": ClipRRect(
                               borderRadius: BorderRadius.circular(
@@ -107,11 +109,12 @@ class _WholesalerOrderHistoryScreenState
                             "product": order.product ?? []
                           };
                         }).toList(),
-                        receivedInvoices:
-                            controller.receivedOrders.map((order) {
+                        receivedInvoices: controller.pendingOrders.map((order) {
                           return {
-                            "company": order.wholeSaler?.name ?? "N/A",
-                            "date": order.wholeSaler?.createAt ?? "N/A",
+                            "company": order
+                                    .retailer?.storeInformation?.businessname ??
+                                "N/A",
+                            "date": order.createAt ?? "N/A",
                             "logo": ClipRRect(
                               borderRadius: BorderRadius.circular(
                                   ResponsiveUtils.width(
@@ -123,41 +126,33 @@ class _WholesalerOrderHistoryScreenState
                                     38), // Responsive size
                               ),
                             ),
-                            "id": order.wholeSaler?.id ?? "N/A",
-                            "product": order.orders ?? []
+                            "id": order.id ?? "N/A",
+                            "product": order.product ?? []
                           };
                         }).toList(),
-                        confirmedInvoices: {
-                          "company": (controller.confirmedOrders.value?.retailer
-                                      ?.isNotEmpty ??
-                                  false)
-                              ? controller.confirmedOrders.value!.retailer!
-                                      .first.name ??
-                                  ""
-                              : "",
-                          "date": (controller.confirmedOrders.value?.product
-                                      ?.isNotEmpty ??
-                                  false)
-                              ? controller.confirmedOrders.value!.product!.first
-                                  .createAt
-                              : "",
-                          "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(4)),
-                            child: Icon(
-                              Icons.verified,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(38),
+                        confirmedInvoices: controller.confirmedOrders.map((order) {
+                          return {
+                            "company": order
+                                    .retailer?.storeInformation?.businessname ??
+                                "N/A",
+                            "date": order.createAt ?? "N/A",
+                            "logo": ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(
+                                      4)), // Responsive radius
+                              child: Icon(
+                                Icons.business_center,
+                                color: AppColors.primaryBlue,
+                                size: ResponsiveUtils.width(
+                                    38), // Responsive size
+                              ),
                             ),
-                          ),
-                          "id": (controller.confirmedOrders.value?.retailer
-                                      ?.isNotEmpty ??
-                                  false)
-                              ? controller
-                                  .confirmedOrders.value!.retailer!.first.id
-                              : null,
-                          "product": controller.confirmedOrders.value
-                        },
+                            "id": order.id ?? "N/A",
+                            "product": order
+                          };
+                        }).toList(),
+                          
+                       
 
                         initialIndex: widget
                             .initialTabIndex, // Passing initialTabIndex here

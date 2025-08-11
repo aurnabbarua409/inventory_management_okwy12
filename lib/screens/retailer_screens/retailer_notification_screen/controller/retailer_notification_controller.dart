@@ -18,7 +18,7 @@ class NotificationsController extends GetxController {
   void onInit() {
     super.onInit();
     getNotificationsRepo();
-    listenToNewNotification();
+    // listenToNewNotification();
   }
 
   @override
@@ -101,24 +101,24 @@ class NotificationsController extends GetxController {
   Future<void> markNotificationAsRead(String notificationId) async {
     String url = '${Urls.getNotification}/$notificationId';
 
-    Map<String, dynamic> body = {'isRead': true};
+    // Map<String, dynamic> body = {'isRead': true};
 
     try {
-      var response = await ApiService.patchApi(url, body);
+      var response = await ApiService.patchApi(url, {});
 
       if (response != null && response['success'] == true) {
         // Find the notification in the observable list
         NotificationModel? notification = notificationModel.firstWhere(
           (item) => item.id == notificationId,
           orElse: () => NotificationModel(
-            id: '',
-            userId: '',
-            title: '',
-            message: '',
-            isRead: false,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ),
+              id: '',
+              sender: '',
+              receiver: '',
+              message: '',
+              isRead: false,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+              v: 0),
         );
 
         if (notification.id.isNotEmpty) {
@@ -157,4 +157,23 @@ class NotificationsController extends GetxController {
 
   static NotificationsController get instance =>
       Get.put(NotificationsController());
+
+  String timeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final diff = now.difference(dateTime);
+
+    if (diff.inSeconds < 60) {
+      return '${diff.inSeconds} sec ago';
+    } else if (diff.inMinutes < 60) {
+      return '${diff.inMinutes} min ago';
+    } else if (diff.inHours < 24) {
+      return '${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago';
+    } else if (diff.inDays == 1) {
+      return 'Yesterday';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago';
+    } else {
+      return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+    }
+  }
 }
