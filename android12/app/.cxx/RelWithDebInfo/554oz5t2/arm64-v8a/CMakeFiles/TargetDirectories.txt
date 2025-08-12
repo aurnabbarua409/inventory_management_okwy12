@@ -1,2 +1,0 @@
-/Users/binarybards/Downloads/Inventory_Management_App_okwy12_flutter_app/android/app/.cxx/RelWithDebInfo/554oz5t2/arm64-v8a/CMakeFiles/edit_cache.dir
-/Users/binarybards/Downloads/Inventory_Management_App_okwy12_flutter_app/android/app/.cxx/RelWithDebInfo/554oz5t2/arm64-v8a/CMakeFiles/rebuild_cache.dir

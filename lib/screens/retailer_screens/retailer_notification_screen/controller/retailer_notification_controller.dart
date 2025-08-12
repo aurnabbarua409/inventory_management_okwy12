@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/models/api_response_model.dart';
@@ -13,12 +15,15 @@ class NotificationsController extends GetxController {
   RxInt unreadMessage = 0.obs;
   Rx<Status> status =
       Status.loading.obs; // Make status observable using Rx<Status>
-
+  Timer? refreshTimer;
   @override
   void onInit() {
     super.onInit();
     getNotificationsRepo();
     listenToNewNotification();
+    refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      getNotificationsRepo(); // repeat fetch
+    });
   }
 
   @override

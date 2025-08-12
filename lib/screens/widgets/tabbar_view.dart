@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 import '../../widgets/space_widget/space_widget.dart';
@@ -258,7 +260,14 @@ class _OrdersTabViewState extends State<OrdersTabView> {
     appLogger("buildInvoiceList called with ${invoices.length} items");
 
     if (invoices.isEmpty) {
-      return const Center(child: Text("No orders available"));
+      return const Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconWidget(height: 40, width: 40, icon: AppIconsPath.noOrderIcon),
+          Text("No orders available"),
+        ],
+      ));
     }
 
     return ListView.builder(

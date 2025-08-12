@@ -111,15 +111,13 @@ class WholesalerProfileCard extends StatelessWidget {
       children: [
         IconWidget(height: 14, width: 14, icon: icon),
         const SpaceWidget(spaceWidth: 8),
-        Expanded(
-          child: TextWidget(
-            text: text,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            fontColor: AppColors.onyxBlack,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines,
-          ),
+        TextWidget(
+          text: text,
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          fontColor: AppColors.onyxBlack,
+          overflow: TextOverflow.ellipsis,
+          maxLines: maxLines,
         ),
       ],
     );

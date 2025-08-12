@@ -1,11 +1,11 @@
 class Urls {
-  // static const baseUrl = "http://75.119.138.163:5006/api/v1";
-  static const baseUrl = "http://10.10.7.46:5006/api/v1";
+  static const baseUrl = "http://75.119.138.163:5006/api/v1";
+  // static const baseUrl = "http://10.10.7.46:5006/api/v1";
   //"http://10.0.70.188:5006/api/v1";
 
   //static const imageUrl = "http://10.0.70.188:5000/api/v1";
-  static const socketUrl = "http://10.10.7.46:5006";
-  // static const socketUrl = "http://75.119.138.163:5006";
+  // static const socketUrl = "http://10.10.7.46:5006";
+  static const socketUrl = "http://75.119.138.163:5006";
 
   //"http://10.0.70.188:5006/";
 
