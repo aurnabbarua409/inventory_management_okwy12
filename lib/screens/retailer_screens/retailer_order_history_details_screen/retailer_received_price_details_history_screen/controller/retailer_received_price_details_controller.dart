@@ -23,7 +23,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   var deleteIsLoading = false.obs;
 
   // Update orders list type to match the new model
-  var ordersReceived = <Received>[].obs;
+  // var ordersReceived = <Received>[].obs;
 
   // TextEditingControllers for the fields
   final productNameController = TextEditingController();
@@ -35,6 +35,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData();
+    updateGrandTotal();
     // fetchReceived();
     // if (kDebugMode) {
     //   ordersReceived.add(Received(
@@ -138,72 +139,72 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   }
 
   // Fetch orders from the API
-  Future<void> fetchReceived() async {
-    try {
-      String? token = await PrefsHelper.getToken();
-      if (token.isEmpty) {
-        Get.snackbar("Error", "User is not authenticated.");
-        return;
-      }
+  // Future<void> fetchReceived() async {
+  //   try {
+  //     String? token = await PrefsHelper.getToken();
+  //     if (token.isEmpty) {
+  //       Get.snackbar("Error", "User is not authenticated.");
+  //       return;
+  //     }
 
-      update();
+  //     update();
 
-      // Call getApi to fetch pending orders
-      var response = await ApiService.getApi(Urls.receivedOrders);
+  //     // Call getApi to fetch pending orders
+  //     var response = await ApiService.getApi(Urls.receivedOrders);
 
-      if (response == null) {
-        Get.snackbar('Error', 'Failed to load orders');
-        return;
-      }
-      appLogger("received price: $response");
-      print("Response: $response");
+  //     if (response == null) {
+  //       Get.snackbar('Error', 'Failed to load orders');
+  //       return;
+  //     }
+  //     appLogger("received price: $response");
+  //     print("Response: $response");
 
-      // Handle the response when status code is 200 (success)
-      var data = response;
-      MReceivedOrders receivedResponse = MReceivedOrders.fromJson(data);
+  //     // Handle the response when status code is 200 (success)
+  //     var data = response;
+  //     MReceivedOrders receivedResponse = MReceivedOrders.fromJson(data);
 
-      if (receivedResponse.success == true) {
-        ordersReceived.clear();
+  //     if (receivedResponse.success == true) {
+  //       ordersReceived.clear();
 
-        for (var offer in receivedResponse.data) {
-          var products = offer.product
-              .map((productReceived) => ProductReceived(
-                    productId: ReceivedProductId(
-                        id: productReceived.productId.id,
-                        name: productReceived.productId.name,
-                        unit: productReceived.productId.unit,
-                        quantity: productReceived.productId.quantity,
-                        additionalInfo:
-                            productReceived.productId.additionalInfo),
-                    availability: productReceived.availability,
-                    price: productReceived.price.toDouble(),
-                    id: productReceived.id,
-                  ))
-              .toList();
+  //       for (var offer in receivedResponse.data) {
+  //         var products = offer.product
+  //             .map((productReceived) => ProductReceived(
+  //                   productId: ReceivedProductId(
+  //                       id: productReceived.productId.id,
+  //                       name: productReceived.productId.name,
+  //                       unit: productReceived.productId.unit,
+  //                       quantity: productReceived.productId.quantity,
+  //                       additionalInfo:
+  //                           productReceived.productId.additionalInfo),
+  //                   availability: productReceived.availability,
+  //                   price: productReceived.price.toDouble(),
+  //                   id: productReceived.id,
+  //                 ))
+  //             .toList();
 
-          ordersReceived.add(
-            Received(
-              id: offer.id,
-              retailer: offer.retailer,
-              status: offer.status,
-              createdAt: offer.createdAt,
-              updatedAt: offer.updatedAt,
-              product: products,
-              wholeSeller: offer.wholeSeller,
-              v: offer.v,
-            ),
-          );
-        }
-      } else {
-        Get.snackbar('Error', 'Failed to load orders');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'An error occurred while fetching orders');
-      print("Error fetching orders: $e");
-    } finally {
-      isLoading(false);
-    }
-  }
+  //         ordersReceived.add(
+  //           Received(
+  //             id: offer.id,
+  //             retailer: offer.retailer,
+  //             status: offer.status,
+  //             createdAt: offer.createdAt,
+  //             updatedAt: offer.updatedAt,
+  //             product: products,
+  //             wholeSeller: offer.wholeSeller,
+  //             v: offer.v,
+  //           ),
+  //         );
+  //       }
+  //     } else {
+  //       Get.snackbar('Error', 'Failed to load orders');
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar('Error', 'An error occurred while fetching orders');
+  //     print("Error fetching orders: $e");
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
 
   void send() async {
     //need to implement later
@@ -303,5 +304,13 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
 
   void setSelectedUnit(String? value) {
     selectedUnit.value = value ?? 'Kg';
+  }
+
+  void updateGrandTotal() {    
+    grandtotal.value = 0;
+    for (int i = 0; i < products.length; i++) {
+      grandtotal.value +=
+          ((products[i].price ?? 0) * (products[i].quantity ?? 1));
+    }
   }
 }

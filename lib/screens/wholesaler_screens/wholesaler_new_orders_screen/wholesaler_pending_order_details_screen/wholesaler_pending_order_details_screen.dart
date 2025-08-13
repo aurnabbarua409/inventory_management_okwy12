@@ -220,134 +220,164 @@ class _WholesalerPendingOrderDetailsScreenState
       int price = item.price ?? 0;
       int quantity = item.quantity ?? 1;
       int total = price * quantity;
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-        ),
-        child: Row(
-          children: [
-            // Sl Number
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  "${index + 1}", // item.id.toString(),
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            // Product Name
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(
-                  item.productName ?? "N/A",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            // Quantity
-            Expanded(
-              flex: 1,
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    item.quantity.toString(),
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.onyxBlack,
-                    ),
-                  )),
-            ),
-            // Unit
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  item.unit ?? "pcs",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            // Availability Switch
-            Expanded(
+      return GestureDetector(
+        onTap: () {
+          pendingController.showProductDetailsDialog(context, item);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+          ),
+          child: Row(
+            children: [
+              // Sl Number
+              Expanded(
                 flex: 1,
                 child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: FlutterSwitch(
-                      width: 80,
-                      height: 18,
-                      toggleSize: 15,
-                      borderRadius: 30,
-                      padding: 2,
-                      value: item.availability ?? false,
-                      onToggle: (bool newValue) {
-                        // pendingController.updateProductData(index, 0,
-                        //     availability: newValue);
-                        pendingController.products[index].availability =
-                            newValue;
-                        setState(() {});
-                      },
-                      activeColor: Colors.green,
-                      inactiveColor: AppColors.red,
-                      inactiveToggleColor: Colors.white,
-                      showOnOff: true,
-                      valueFontSize: 8,
-                      activeText: "Yes",
-                      inactiveText: "No",
-                      activeTextFontWeight: FontWeight.w600,
-                      inactiveTextFontWeight: FontWeight.w600,
-                      activeTextColor: AppColors.white,
-                      inactiveTextColor: AppColors.white,
-                    ))),
-            // Price
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  price.toString(),
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            // Total
-            Expanded(
-              flex: 1,
-              child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    total.toString(),
+                    "${index + 1}", // item.id.toString(),
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 10,
                       color: AppColors.onyxBlack,
                     ),
-                  )),
-            ),
-          ],
+                  ),
+                ),
+              ),
+              // Product Name
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    item.productName ?? "N/A",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
+                ),
+              ),
+              // Quantity
+              Expanded(
+                flex: 1,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      item.quantity.toString(),
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: AppColors.onyxBlack,
+                      ),
+                    )),
+              ),
+              // Unit
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    item.unit ?? "pcs",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
+                ),
+              ),
+              // Availability Switch
+              Expanded(
+                  flex: 1,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: FlutterSwitch(
+                        width: 80,
+                        height: 18,
+                        toggleSize: 15,
+                        borderRadius: 30,
+                        padding: 2,
+                        value: item.availability ?? false,
+                        onToggle: (bool newValue) {
+                          // pendingController.updateProductData(index, 0,
+                          //     availability: newValue);
+                          pendingController.products[index].availability =
+                              newValue;
+                          setState(() {});
+                        },
+                        activeColor: Colors.green,
+                        inactiveColor: AppColors.red,
+                        inactiveToggleColor: Colors.white,
+                        showOnOff: true,
+                        valueFontSize: 8,
+                        activeText: "Yes",
+                        inactiveText: "No",
+                        activeTextFontWeight: FontWeight.w600,
+                        inactiveTextFontWeight: FontWeight.w600,
+                        activeTextColor: AppColors.white,
+                        inactiveTextColor: AppColors.white,
+                      ))),
+              // Price
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: item.availability ?? false
+                      ? SizedBox(
+                          height: 30,
+                          width: 10,
+                          child: TextFormField(
+                            initialValue: price.toString(),
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.all(8),
+                              border: OutlineInputBorder(),
+                            ),
+                            enabled: true,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: AppColors.onyxBlack,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                price = int.parse(value);
+                                pendingController.products[index].price = price;
+                                total = quantity * price;
+                              });
+                            },
+                          ),
+                        )
+                      : Text(
+                          price.toString(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.onyxBlack,
+                          ),
+                        ),
+                ),
+              ),
+              // Total
+              Expanded(
+                flex: 1,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      total.toString(),
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: AppColors.onyxBlack,
+                      ),
+                    )),
+              ),
+            ],
+          ),
         ),
       );
     }).toList();

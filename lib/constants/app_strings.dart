@@ -34,7 +34,7 @@ class AppStrings {
   static const String enterVerificationCode = "Enter Verification Code";
   static const String sentACode = "We’ve sent a code to ";
   static const String code = "Code";
-  static const String remainingTime = "Remaining time: 00.00";
+  static const String remainingTime = "";
   static const String resendCodeIn = "Resend code in ";
   static const String didntReceiveOtp = "Didn’t you receive OTP?";
   static const String resendOtp = "Resend OTP";

@@ -147,8 +147,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                         return;
                                       }
                                       item.quantity = int.parse(value);
-                                      widget.controller.quantity.value =
-                                          item.quantity ?? 0;
+                                      widget.controller.updateGrandTotal();                                      
                                     } catch (e) {
                                       appLogger(e);
                                     }

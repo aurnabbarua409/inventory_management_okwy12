@@ -22,8 +22,20 @@ import '../../../../widgets/appbar_widget/main_appbar_widget.dart';
 import '../../../../widgets/space_widget/space_widget.dart';
 import '../../../../widgets/text_widget/text_widgets.dart';
 
-class WholesalerHomeScreen extends StatelessWidget {
+class WholesalerHomeScreen extends StatefulWidget {
   const WholesalerHomeScreen({super.key});
+
+  @override
+  State<WholesalerHomeScreen> createState() => _WholesalerHomeScreenState();
+}
+
+class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {

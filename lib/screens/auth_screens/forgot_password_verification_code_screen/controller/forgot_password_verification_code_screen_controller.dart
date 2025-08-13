@@ -97,7 +97,7 @@ class ForgotPasswordVerifyCodeScreenController extends GetxController {
 
     Map<String, dynamic> body = {
       "email": email,
-      "otp": int.parse(otp),
+      "otp": num.parse(otp),
     };
 
     try {

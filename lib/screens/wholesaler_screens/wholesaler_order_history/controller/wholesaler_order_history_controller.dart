@@ -61,7 +61,7 @@ class WholesalerOrderHistoryController extends GetxController {
 
       if (isSuccess) {
         for (var element in response["data"]) {
-          pendingOrders.add(GetPendingOrderModel.fromJson(element));
+          pendingOrders.insert(0, GetPendingOrderModel.fromJson(element));
         }
       }
       // var recievedData = await retailerRepo.getRecieved();

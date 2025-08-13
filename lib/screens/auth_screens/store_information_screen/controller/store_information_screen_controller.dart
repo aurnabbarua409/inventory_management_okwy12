@@ -4,12 +4,13 @@ import 'package:get/get.dart';
 import 'package:inventory_app/models/auth/store_information_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 class StoreInformationScreenController extends GetxController {
   final businessNameController = TextEditingController();
   final storeAddressController = TextEditingController();
-  final locationController = TextEditingController();
+
   final RxBool isChecked = false.obs;
 
   var selectedBusinessCategory = 'Education'.obs;
@@ -37,7 +38,7 @@ class StoreInformationScreenController extends GetxController {
     selectedBusinessCategory.value = value ?? 'Education';
   }
 
-  Future<void> continueToNextScreen() async {   
+  Future<void> continueToNextScreen() async {
     final arguments = Get.arguments;
     final userRole = arguments['userRole'] ?? "";
     final email = arguments['email'] ?? "";
@@ -56,16 +57,16 @@ class StoreInformationScreenController extends GetxController {
     Map<String, String> body = {
       "businessName": businessNameController.text.trim(),
       "businessCategory": selectedBusinessCategory.value,
-      "location": locationController.text.trim(),
-      "role": userRole.toString().capitalizeFirst ?? "",
-      "email": email,
+      "location": storeAddressController.text.trim(),
+      // "role": userRole.toString().capitalizeFirst ?? "",
+      // "email": email,
     };
 
     try {
       String storeUrl = "${Urls.storeInfo}$userId";
 
       var response = await ApiService.patchApi(storeUrl, body);
-
+      appLogger("response after sending storeInformation: $response");
       if (response != null) {
         // The response is already decoded.
         StoreUpdateResponse storeUpdateResponse =
@@ -96,7 +97,6 @@ class StoreInformationScreenController extends GetxController {
   void onClose() {
     businessNameController.dispose();
     storeAddressController.dispose();
-    locationController.dispose();
     super.onClose();
   }
 }

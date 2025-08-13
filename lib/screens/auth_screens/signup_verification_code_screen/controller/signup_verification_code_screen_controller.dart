@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/models/auth/otp_verification_model.dart';
 import '../../../../utils/app_enum.dart';
@@ -112,23 +113,21 @@ class SignupVerifyCodeScreenController extends GetxController {
     }
 
     Map<String, dynamic> body = {
-      "otp": otp,
       "email": email,
+      "otp": num.tryParse(otp) ?? 0,
     };
 
     try {
-      var response = await ApiService.postApi(Urls.verifyingOTP, body);
+      var response = await ApiService.postApi(Urls.verifyingOTP, body,
+          header: {'Content-Type': 'application/json'});
+      appLogger("response from otp: $response");
 
       if (response != null) {
-        OTPVerificationModel otpVerificationModel =
-            OTPVerificationModel.fromJson(response);
-
-        if (otpVerificationModel.success) {
-          Get.snackbar("Success", "OTP verified successfully");
-
+        if (response['success'] ?? false) {
+          Get.snackbar("Success", response['message']);
           Get.offAllNamed(AppRoutes.onboardingScreen);
         } else {
-          Get.snackbar("Error", otpVerificationModel.message);
+          Get.snackbar("Failed", response['message']);
         }
       } else {
         Get.snackbar("Error", "OTP verification failed. Please try again.");

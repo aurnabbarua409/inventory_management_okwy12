@@ -14,7 +14,6 @@ import 'package:inventory_app/screens/widgets/home_list_widget.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
-import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/models/auth/sign_up_model.dart'; // Make sure to update to the new model file path
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import '../../../../utils/app_enum.dart';
@@ -59,7 +60,7 @@ class SignupScreenController extends GetxController {
 
     try {
       var response = await ApiService.postApi(Urls.signUp, body);
-
+      appLogger("response in signup first page: $response");
       if (response != null) {
         var data = response; // The response is already decoded.
 

@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/models/api_response_model.dart';
 import 'package:inventory_app/models/notification/notification_model.dart';
+import 'package:inventory_app/models/notification/socket_notification_model.dart';
 import 'package:inventory_app/services/api_service.dart';
+
 import 'package:inventory_app/services/socket_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
@@ -18,7 +20,7 @@ class NotificationsController extends GetxController {
   Timer? refreshTimer;
   @override
   void onInit() {
-    super.onInit();
+    super.onInit();    
     getNotificationsRepo();
     listenToNewNotification();
     refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
@@ -31,9 +33,14 @@ class NotificationsController extends GetxController {
     super.onClose();
   }
 
+
   // Listen to New Notifications via socket
   void listenToNewNotification() async {
     String id = await PrefsHelper.getString(PrefsHelper.userId);
+    if (id.isEmpty) {
+      id = PrefsHelper.userId;
+    }
+
     appLogger(
         "===================================Notification userId : $id==============================================");
 
@@ -42,14 +49,15 @@ class NotificationsController extends GetxController {
         appLogger("Socket Res=================>>>>>>>>>>>>>$data");
 
         if (data != null) {
-          NotificationModel newNotification = NotificationModel.fromJson(data);
+          SocketNotificationModel newNotification = SocketNotificationModel.fromJson(data);
 
           debugPrint("New notification received: $newNotification");
 
           // notificationModel.insert(0, newNotification);
           // notificationModel.refresh();
           // unreadMessage.value++;
-
+          unreadMessage.value += 1;
+          appLogger("unread notification value: ${unreadMessage.value}");
           if (!newNotification.isRead) {
             unreadMessage.value += 1;
             unreadMessage.refresh();

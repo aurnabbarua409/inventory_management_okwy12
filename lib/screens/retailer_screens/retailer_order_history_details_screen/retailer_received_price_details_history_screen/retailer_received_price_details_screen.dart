@@ -36,11 +36,6 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    for (int i = 0; i < receivedController.products.length; i++) {
-      receivedController.grandtotal.value +=
-          ((receivedController.products[i].price ?? 0) *
-              (receivedController.products[i].quantity ?? 1));
-    }
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       body: Center(
@@ -92,9 +87,11 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                               height: 13,
                               width: 13,
                               imagePath: AppImagesPath.currencyIcon),
-                          TextWidget(
-                            text: "${receivedController.grandtotal.value}",
-                            fontColor: AppColors.black,
+                          Obx(
+                            () => TextWidget(
+                              text: "${receivedController.grandtotal.value}",
+                              fontColor: AppColors.black,
+                            ),
                           )
                         ],
                       ),

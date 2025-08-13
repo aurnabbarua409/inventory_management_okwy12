@@ -140,199 +140,207 @@ class _WholesalerNewOrderDetailsScreenState
       final index = entry.key;
       final item = entry.value;
       // bool isPriceNotZero = item. != 0;
-      double price = pendingController.availableList[index].values.first;
+      int price = pendingController.availableList[index].values.first;
       int quantity = item.quantity ?? 0;
-      double totalPrice = price * quantity;
+      int totalPrice = price * quantity;
       bool available = pendingController.availableList[index].keys.first;
 
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  "${index + 1}",
-                  // item["sl"]?.toString() ?? "",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(
-                  item.productName ?? "N/A",
-                  // item["name"]?.toString() ?? "",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  quantity.toString(),
-                  // item["qty"]?.toString() ?? "",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  item.unit ?? "Kg",
-                  // item["unit"]?.toString() ?? "",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
-                  ),
-                ),
-              ),
-            ),
-
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: FlutterSwitch(
-                  width: 80,
-                  height: 18,
-                  toggleSize: 15,
-                  borderRadius: 30,
-                  padding: 2,
-                  value: pendingController.availableList[index].keys.first,
-                  onToggle: (bool newValue) {
-                    appLogger(
-                        "after toggling, isAvailable: $newValue, index: $index");
-                    available = newValue;
-                    pendingController.availableList
-                        .insert(index, {available: price});
-                    setState(() {});
-                  },
-                  activeColor: Colors.green,
-                  inactiveColor: AppColors.red,
-                  inactiveToggleColor: Colors.white,
-                  showOnOff: true,
-                  valueFontSize: 8,
-                  activeText: "Yes",
-                  inactiveText: "No",
-                  activeTextFontWeight: FontWeight.w600,
-                  inactiveTextFontWeight: FontWeight.w600,
-                  activeTextColor: AppColors.white,
-                  inactiveTextColor: AppColors.white,
-                ),
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              flex: 1,
-              child: pendingController.availableList[index].keys.first
-                  ? SizedBox(
-                      height: 30,
-                      width: 10,
-                      child: TextFormField(
-                        initialValue: price.toString(),
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(8),
-                          border: OutlineInputBorder(),
-                        ),
-                        enabled: true,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: AppColors.onyxBlack,
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            price = double.parse(value);
-                            pendingController.availableList
-                                .insert(index, {available: price});
-
-                            totalPrice = (quantity * price).toDouble();
-                          });
-                        },
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Text(
-                        price.toString(),
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: AppColors.onyxBlack,
-                        ),
-                      ),
+      return GestureDetector(
+        onTap: () {
+          pendingController.showProductDetailsDialog(context, item);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    "${index + 1}",
+                    // item["sl"]?.toString() ?? "",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
                     ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  totalPrice.toString(),
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.onyxBlack,
                   ),
                 ),
               ),
-            ),
-            // SizedBox(
-            //   width: 14,
-            //   child: PopupMenuButton(
-            //     padding: EdgeInsets.zero,
-            //     style: const ButtonStyle(
-            //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            //       padding: WidgetStatePropertyAll(EdgeInsets.zero),
-            //       visualDensity: VisualDensity.compact,
-            //     ),
-            //     icon: const Icon(
-            //       Icons.more_vert,
-            //       color: AppColors.black,
-            //       size: 18,
-            //     ),
-            //     color: AppColors.white,
-            //     onSelected: (value) {
-            //       if (value == 1) {
-            //         setState(() {
-            //           isEditing = !isEditing;
-            //         });
-            //       }
-            //     },
-            //     itemBuilder: (context) => [
-            //       const PopupMenuItem(
-            //         value: 1,
-            //         child: Text(AppStrings.edit),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-          ],
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    item.productName ?? "N/A",
+                    // item["name"]?.toString() ?? "",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    quantity.toString(),
+                    // item["qty"]?.toString() ?? "",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    item.unit ?? "Kg",
+                    // item["unit"]?.toString() ?? "",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
+                ),
+              ),
+
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: FlutterSwitch(
+                    width: 80,
+                    height: 18,
+                    toggleSize: 15,
+                    borderRadius: 30,
+                    padding: 2,
+                    value: pendingController.availableList[index].keys.first,
+                    onToggle: (bool newValue) {
+                      appLogger(
+                          "after toggling, isAvailable: $newValue, index: $index");
+                      available = newValue;
+                      pendingController.availableList
+                          .insert(index, {available: price});
+                      setState(() {});
+                    },
+                    activeColor: Colors.green,
+                    inactiveColor: AppColors.red,
+                    inactiveToggleColor: Colors.white,
+                    showOnOff: true,
+                    valueFontSize: 8,
+                    activeText: "Yes",
+                    inactiveText: "No",
+                    activeTextFontWeight: FontWeight.w600,
+                    inactiveTextFontWeight: FontWeight.w600,
+                    activeTextColor: AppColors.white,
+                    inactiveTextColor: AppColors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                flex: 1,
+                child: pendingController.availableList[index].keys.first
+                    ? SizedBox(
+                        height: 30,
+                        width: 10,
+                        child: TextFormField(
+                          initialValue: price.toString(),
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(),
+                          ),
+                          enabled: true,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.onyxBlack,
+                          ),
+                          onChanged: (value) {
+                            if (value.isEmpty) {
+                              return;
+                            }
+                            setState(() {
+                              price = int.parse(value);
+                              pendingController.availableList
+                                  .insert(index, {available: price});
+
+                              totalPrice = (quantity * price);
+                            });
+                          },
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          price.toString(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.onyxBlack,
+                          ),
+                        ),
+                      ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    totalPrice.toString(),
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
+                ),
+              ),
+              // SizedBox(
+              //   width: 14,
+              //   child: PopupMenuButton(
+              //     padding: EdgeInsets.zero,
+              //     style: const ButtonStyle(
+              //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              //       padding: WidgetStatePropertyAll(EdgeInsets.zero),
+              //       visualDensity: VisualDensity.compact,
+              //     ),
+              //     icon: const Icon(
+              //       Icons.more_vert,
+              //       color: AppColors.black,
+              //       size: 18,
+              //     ),
+              //     color: AppColors.white,
+              //     onSelected: (value) {
+              //       if (value == 1) {
+              //         setState(() {
+              //           isEditing = !isEditing;
+              //         });
+              //       }
+              //     },
+              //     itemBuilder: (context) => [
+              //       const PopupMenuItem(
+              //         value: 1,
+              //         child: Text(AppStrings.edit),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
+          ),
         ),
       );
     }).toList();

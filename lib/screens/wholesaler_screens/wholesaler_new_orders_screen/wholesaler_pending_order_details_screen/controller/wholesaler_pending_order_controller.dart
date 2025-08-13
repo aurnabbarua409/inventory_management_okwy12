@@ -24,6 +24,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
   final RxString id = "".obs;
   final companyName = "".obs;
+
   void fetchData() {
     try {
       final arg = Get.arguments;
@@ -42,21 +43,23 @@ class WholesalerPendingOrderDetailController extends GetxController {
     for (int index = 0; index < products.length; index++) {
       appLogger(
           "id: ${products[index].id}, availability: ${products[index].availability}");
-      final updatedItem = UpdateProductModel(
+      final updatedItem = UpdateProductModel2(
           product: products[index].id ?? "",
           availability: products[index].availability ?? false,
-          price: products[index].price?.toDouble() ?? 0.0);
+          price: products[index].price?.toInt() ?? 0);
       updatedData.add(updatedItem.toJson());
     }
 
-    final url = Urls.updateProduct + id.value;
-    final response = await ApiService.patchApi(url, updatedData);
+    final url = Urls.updatePendingToConfirm + id.value;
+    final response = await ApiService.patchApi(url, {'product': updatedData});
     final isSuccess = response["success"] ?? false;
     appLogger(response);
     if (isSuccess) {
       Get.snackbar("Success", "Products updated successfully");
       Get.back();
+      Get.back();
       showSendOrderSuccessfulDialog(context);
+      Get.back();
     } else {
       appLogger("failed to update product");
       Get.snackbar("Error", "Failed to update product");
@@ -198,6 +201,8 @@ class WholesalerPendingOrderDetailController extends GetxController {
           child: IconButtonWidget(
             onTap: () {
               Get.back();
+              Get.back();
+              Get.back();
             },
             icon: AppIconsPath.closeIcon,
             size: 20,
@@ -231,6 +236,53 @@ class WholesalerPendingOrderDetailController extends GetxController {
           ),
         ),
         const SpaceWidget(spaceHeight: 20),
+      ],
+    );
+  }
+
+  void showProductDetailsDialog(BuildContext context, Product item) {
+    showCustomPopup(
+      context,
+      [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SpaceWidget(spaceWidth: 16),
+            const Center(
+              child: TextWidget(
+                text: AppStrings.productDetails,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontColor: AppColors.black,
+              ),
+            ),
+            IconButtonWidget(
+              onTap: () {
+                Get.back();
+              },
+              icon: AppIconsPath.closeIcon,
+              size: 16,
+              color: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 4),
+        const Divider(
+          color: AppColors.greyLight,
+          height: 1,
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        TextWidget(
+          text: item.productName ?? "N/A",
+          fontSize: 14,
+          fontColor: AppColors.black,
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        TextWidget(
+          text: item.additionalInfo ?? "N/A",
+          fontSize: 14,
+          fontColor: AppColors.black,
+        ),
       ],
     );
   }

@@ -30,7 +30,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
   // Observable quantity for increment and decrement
   var quantity = 1.obs;
   final RxList<Product> products = <Product>[].obs;
-  final RxList<Map<bool, double>> availableList = <Map<bool, double>>[].obs;
+  final RxList<Map<bool, int>> availableList = <Map<bool, int>>[].obs;
   final orderId = "".obs;
   final companyName = "".obs;
   void fetchData() {
@@ -53,17 +53,18 @@ class WholesalerNewOrderDetailsController extends GetxController {
       for (int index = 0; index < products.length; index++) {
         appLogger(
             "id: ${products[index].id}, availability: ${availableList[index].keys.first}");
-        final updatedItem = UpdateProductModel(
+        final updatedItem = UpdateProductModel2(
             product: products[index].id ?? "",
             availability: availableList[index].keys.first,
-            price: availableList[index].values.first);
+            price: (availableList[index].values.first.toInt()));
         updatedData.add(updatedItem.toJson());
       }
 
-      final url = Urls.updateProduct + orderId.value;
-      final response = await ApiService.patchApi(url, updatedData);
+      appLogger("data sending with update body: $updatedData");
+      final url = Urls.updateNewOrderToPending + orderId.value;
+      final response = await ApiService.patchApi(url, {'product': updatedData});
       final isSuccess = response["success"] ?? false;
-      appLogger(response);
+      appLogger("response after product updated: $response");
       if (isSuccess) {
         Get.snackbar("Success", "Products updated successfully");
       } else {
@@ -278,7 +279,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
   // }
 
   void setSelectedUnit(String? value) {
-    selectedUnit.value = value ?? 'Kg';
+    selectedUnit.value = value ?? 'pcs';
   }
 
   @override
@@ -288,7 +289,54 @@ class WholesalerNewOrderDetailsController extends GetxController {
     fetchData();
     availableList.value = List.generate(
       products.length,
-      (index) => {false: 0.0},
+      (index) => {false: 0},
+    );
+  }
+
+  void showProductDetailsDialog(BuildContext context, Product item) {
+    showCustomPopup(
+      context,
+      [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SpaceWidget(spaceWidth: 16),
+            const Center(
+              child: TextWidget(
+                text: AppStrings.productDetails,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontColor: AppColors.black,
+              ),
+            ),
+            IconButtonWidget(
+              onTap: () {
+                Get.back();
+              },
+              icon: AppIconsPath.closeIcon,
+              size: 16,
+              color: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 4),
+        const Divider(
+          color: AppColors.greyLight,
+          height: 1,
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        TextWidget(
+          text: item.productName ?? "N/A",
+          fontSize: 14,
+          fontColor: AppColors.black,
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        TextWidget(
+          text: item.additionalInfo ?? "N/A",
+          fontSize: 14,
+          fontColor: AppColors.black,
+        ),
+      ],
     );
   }
 

@@ -8,6 +8,7 @@ import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
+import '../../../utils/app_logger.dart';
 import 'controller/forgot_password_verification_code_screen_controller.dart';
 
 class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
@@ -101,6 +102,7 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 32),
                     ButtonWidget(
                       onPressed: () {
+                        appLogger("object");
                         if (_formKey.currentState?.validate() ?? false) {
                           controller.verifyOTP();
                         } else {
