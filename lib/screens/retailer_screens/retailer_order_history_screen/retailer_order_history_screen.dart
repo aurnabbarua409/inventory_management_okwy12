@@ -77,6 +77,7 @@ class _RetailerOrderHistoryScreenState
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   return OrdersTabView(
+                      onRefresh: () => controller.initalize(),
                       showDeleteOrderDialog: controller.showDeleteOrderDialog,
                       pendingInvoices: controller.pendingOrders.map((pending) {
                         return {

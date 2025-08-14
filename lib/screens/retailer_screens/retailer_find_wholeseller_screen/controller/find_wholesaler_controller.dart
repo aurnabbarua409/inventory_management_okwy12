@@ -298,8 +298,7 @@ class FindWholesalerController extends GetxController {
           children: [
             OutlinedButton(
               onPressed: () => Get.back(),
-              child: const Text("No",
-                  style: TextStyle(color: AppColors.primaryBlue)),
+              child: const Text("No", style: TextStyle(color: AppColors.red)),
             ),
             const SizedBox(width: 16),
             ElevatedButton(
@@ -307,7 +306,11 @@ class FindWholesalerController extends GetxController {
                 sendOrder(context);
                 showSendOrderSuccessfulDialog(context);
               },
-              child: const Text("Yes"),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue),
+              child: const Text(
+                "Yes",
+                style: TextStyle(color: AppColors.white),
+              ),
             ),
           ],
         ),

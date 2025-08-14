@@ -5,9 +5,12 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
+import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
+import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 import '../../widgets/space_widget/space_widget.dart';
@@ -15,16 +18,19 @@ import '../../widgets/space_widget/space_widget.dart';
 class WholesalerTabView extends StatefulWidget {
   final List<Map<String, dynamic>>? pendingInvoices;
   final List<Map<String, dynamic>>? receivedInvoices;
-  final List<Map<String, dynamic>> confirmedInvoices;
+  final List<Map<String, dynamic>>? confirmedInvoices;
   final int initialIndex;
   final void Function(BuildContext, String) showDeleteOrderDialog;
+  final void Function() onRefresh;
+
   const WholesalerTabView(
       {super.key,
       this.pendingInvoices = const [], // Default empty list
       this.receivedInvoices = const [], // Default empty list
       this.confirmedInvoices = const [], // Default empty list
       this.initialIndex = 0,
-      required this.showDeleteOrderDialog // Default to first tab
+      required this.showDeleteOrderDialog,
+      required this.onRefresh // Default to first tab
       });
 
   @override
@@ -124,7 +130,11 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                 children: [
                   buildInvoiceList(widget.pendingInvoices ?? []),
                   buildInvoiceList(widget.receivedInvoices ?? []),
-                  buildInvoiceList(widget.confirmedInvoices),
+                  BuildListWidgetConfirm(
+                    invoices: widget.confirmedInvoices ?? [],
+                    onRefresh: widget.onRefresh,
+                    showDeleteOrderDialog: widget.showDeleteOrderDialog,
+                  ),
                 ],
               ),
             ),
@@ -258,126 +268,524 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconWidget(height: 40, width: 40, icon: AppIconsPath.noOrderIcon),
+          ImageWidget(
+            height: 50,
+            width: 50,
+            imagePath: AppIconsPath.noOrderIcon,
+          ),
+          SpaceWidget(
+            spaceHeight: 10,
+          ),
           Text("No orders available"),
         ],
       ));
     }
-    return ListView.builder(
-      itemCount: invoices.length,
-      itemBuilder: (context, index) {
-        final invoice = invoices[index];
-        return Card(
-          color: AppColors.white,
-          elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          margin: EdgeInsets.symmetric(
-            horizontal:
-                ResponsiveUtils.width(16), // Responsive horizontal margin
-            vertical: ResponsiveUtils.height(6), // Responsive vertical margin
-          ),
-          child: Container(
-            padding: const EdgeInsets.only(top: 12, left: 12, bottom: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    invoice['logo'],
-                    const SpaceWidget(spaceWidth: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: ResponsiveUtils.width(150),
-                          child: TextWidget(
-                            text: invoice['company'],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            fontColor: AppColors.black,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlignment: TextAlign.start,
-                          ),
-                        ),
-                        TextWidget(
-                          text:
-                              "Invoice: ${invoice['id'].substring(0, 6) ?? "N/A"}",
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          fontColor: AppColors.onyxBlack,
-                        ),
-                        const SpaceWidget(spaceHeight: 2),
-                        if (currentIndex == 2)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 3, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: AppColors.green,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                            child: const Center(
-                              child: TextWidget(
-                                text: "Delivered",
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                fontColor: AppColors.white,
-                              ),
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        widget.onRefresh();
+      },
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: invoices.length,
+        itemBuilder: (context, index) {
+          final invoice = invoices[index];
+          return Card(
+            color: AppColors.white,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            margin: EdgeInsets.symmetric(
+              horizontal:
+                  ResponsiveUtils.width(16), // Responsive horizontal margin
+              vertical: ResponsiveUtils.height(6), // Responsive vertical margin
+            ),
+            child: Container(
+              padding: const EdgeInsets.only(top: 12, left: 12, bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      invoice['logo'],
+                      const SpaceWidget(spaceWidth: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: ResponsiveUtils.width(150),
+                            child: TextWidget(
+                              text: invoice['company'],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              fontColor: AppColors.black,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlignment: TextAlign.start,
                             ),
                           ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          width: ResponsiveUtils.width(70),
-                          child: TextWidget(
-                            text: invoice['date'] != null
-                                ? "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}"
-                                : null,
+                          TextWidget(
+                            text:
+                                "Invoice: ${invoice['id'].substring(0, 6) ?? "N/A"}",
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.onyxBlack,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlignment: TextAlign.right,
                           ),
+                          const SpaceWidget(spaceHeight: 2),
+                          if (currentIndex == 2)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 3, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: AppColors.green,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              child: const Center(
+                                child: TextWidget(
+                                  text: "Delivered",
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  fontColor: AppColors.white,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            width: ResponsiveUtils.width(70),
+                            child: TextWidget(
+                              text: invoice['date'] != null
+                                  ? "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}"
+                                  : null,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              fontColor: AppColors.onyxBlack,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlignment: TextAlign.right,
+                            ),
+                          ),
+                          const SpaceWidget(spaceHeight: 4),
+                          GestureDetector(
+                            onTap: () {
+                              appLogger("Details button clicked");
+                              int currentIndex =
+                                  DefaultTabController.of(context).index;
+                              appLogger(
+                                  "current index in order history: $currentIndex");
+                              if (currentIndex == 0) {
+                                Get.toNamed(
+                                    AppRoutes.wholesalerNewOrderDetailsScreen,
+                                    arguments: {
+                                      'products': invoice['product'],
+                                      'id': invoice['id'],
+                                      'company': invoice['company']
+                                    });
+                              } else if (currentIndex == 1) {
+                                // Get.to(WholesalerPendingOrderDetailsScreen( product: invoice["product"],));
+                                Get.toNamed(
+                                    AppRoutes
+                                        .wholesalerPendingOrderDetailsScreen,
+                                    arguments: {
+                                      'products': invoice['product'],
+                                      'id': invoice['id'],
+                                      'company': invoice['company']
+                                    });
+                              } else {
+                                Get.toNamed(
+                                    AppRoutes
+                                        .wholesalerConfirmedOrderDetailsScreen,
+                                    arguments: {
+                                      'products': invoice['product'],
+                                      'id': invoice['id']
+                                    });
+                              }
+                            },
+                            child: const TextWidget(
+                              text: AppStrings.details,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              fontColor: AppColors.primaryBlue,
+                            ),
+                          ),
+                        ],
+                      ),
+                      PopupMenuButton(
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
                         ),
-                        const SpaceWidget(spaceHeight: 4),
-                        GestureDetector(
-                          onTap: () {
-                            appLogger("Details button clicked");
-                            int currentIndex =
-                                DefaultTabController.of(context).index;
-                            appLogger(
-                                "current index in order history: $currentIndex");
-                            if (currentIndex == 0) {
-                              Get.toNamed(
-                                  AppRoutes.wholesalerNewOrderDetailsScreen,
-                                  arguments: {
-                                    'products': invoice['product'],
-                                    'id': invoice['id'],
-                                    'company': invoice['company']
-                                  });
-                            } else if (currentIndex == 1) {
-                              // Get.to(WholesalerPendingOrderDetailsScreen( product: invoice["product"],));
-                              Get.toNamed(
-                                  AppRoutes.wholesalerPendingOrderDetailsScreen,
-                                  arguments: {
-                                    'products': invoice['product'],
-                                    'id': invoice['id'],
-                                    'company': invoice['company']
-                                  });
-                            } else {
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                        ),
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: AppColors.black,
+                          size: 18,
+                        ),
+                        color: AppColors.white,
+                        onSelected: (value) {
+                          if (value == 1) {
+                            widget.showDeleteOrderDialog(
+                                context, invoice["id"]);
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text(AppStrings.delete),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // Widget buildInvoiceListConfirm(List<Map<String, dynamic>> invoices) {
+  //   int currentIndex = DefaultTabController.of(context).index;
+  //   bool isDelivered = false;
+  //   if (invoices.isEmpty) {
+  //     return const Center(
+  //         child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         ImageWidget(
+  //           height: 50,
+  //           width: 50,
+  //           imagePath: AppIconsPath.noOrderIcon,
+  //         ),
+  //         SpaceWidget(
+  //           spaceHeight: 10,
+  //         ),
+  //         Text("No orders available"),
+  //       ],
+  //     ));
+  //   }
+  //   return RefreshIndicator.adaptive(
+  //     onRefresh: () async {
+  //       widget.onRefresh();
+  //     },
+  //     child: ListView.builder(
+  //       physics: const AlwaysScrollableScrollPhysics(),
+  //       itemCount: invoices.length,
+  //       itemBuilder: (context, index) {
+  //         final invoice = invoices[index];
+  //         return Card(
+  //           color: AppColors.white,
+  //           elevation: 3,
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(4),
+  //           ),
+  //           margin: EdgeInsets.symmetric(
+  //             horizontal:
+  //                 ResponsiveUtils.width(16), // Responsive horizontal margin
+  //             vertical: ResponsiveUtils.height(6), // Responsive vertical margin
+  //           ),
+  //           child: Container(
+  //             padding: const EdgeInsets.only(top: 12, left: 12, bottom: 12),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Row(
+  //                   children: [
+  //                     invoice['logo'],
+  //                     const SpaceWidget(spaceWidth: 8),
+  //                     Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       mainAxisAlignment: MainAxisAlignment.start,
+  //                       children: [
+  //                         SizedBox(
+  //                           width: ResponsiveUtils.width(150),
+  //                           child: TextWidget(
+  //                             text: invoice['company'],
+  //                             fontSize: 12,
+  //                             fontWeight: FontWeight.w600,
+  //                             fontColor: AppColors.black,
+  //                             maxLines: 1,
+  //                             overflow: TextOverflow.ellipsis,
+  //                             textAlignment: TextAlign.start,
+  //                           ),
+  //                         ),
+  //                         TextWidget(
+  //                           text:
+  //                               "Invoice: ${invoice['id'].substring(0, 6) ?? "N/A"}",
+  //                           fontSize: 10,
+  //                           fontWeight: FontWeight.w500,
+  //                           fontColor: AppColors.onyxBlack,
+  //                         ),
+  //                         const SpaceWidget(spaceHeight: 2),
+  //                         if (currentIndex == 2)
+  //                           Container(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 horizontal: 3, vertical: 1),
+  //                             decoration: BoxDecoration(
+  //                               color: AppColors.green,
+  //                               borderRadius: BorderRadius.circular(2),
+  //                             ),
+  //                             child: Center(
+  //                               child: TextWidget(
+  //                                 text: isDelivered ? "Delivered" : "Confirmed",
+  //                                 fontSize: 10,
+  //                                 fontWeight: FontWeight.w500,
+  //                                 fontColor: AppColors.white,
+  //                               ),
+  //                             ),
+  //                           ),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 Row(
+  //                   children: [
+  //                     Column(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.end,
+  //                       children: [
+  //                         SizedBox(
+  //                           width: ResponsiveUtils.width(70),
+  //                           child: TextWidget(
+  //                             text: invoice['date'] != null
+  //                                 ? "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}"
+  //                                 : null,
+  //                             fontSize: 10,
+  //                             fontWeight: FontWeight.w500,
+  //                             fontColor: AppColors.onyxBlack,
+  //                             maxLines: 2,
+  //                             overflow: TextOverflow.ellipsis,
+  //                             textAlignment: TextAlign.right,
+  //                           ),
+  //                         ),
+  //                         const SpaceWidget(spaceHeight: 4),
+  //                         GestureDetector(
+  //                           onTap: () {
+  //                             Get.toNamed(
+  //                                 AppRoutes
+  //                                     .wholesalerConfirmedOrderDetailsScreen,
+  //                                 arguments: {
+  //                                   'products': invoice['product'],
+  //                                   'id': invoice['id']
+  //                                 });
+  //                           },
+  //                           child: const TextWidget(
+  //                             text: AppStrings.details,
+  //                             fontSize: 10,
+  //                             fontWeight: FontWeight.w500,
+  //                             fontColor: AppColors.primaryBlue,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     PopupMenuButton(
+  //                       constraints: const BoxConstraints(
+  //                         minWidth: 18,
+  //                         minHeight: 18,
+  //                       ),
+  //                       style: TextButton.styleFrom(
+  //                         padding: EdgeInsets.zero,
+  //                       ),
+  //                       icon: const Icon(
+  //                         Icons.more_vert,
+  //                         color: AppColors.black,
+  //                         size: 18,
+  //                       ),
+  //                       color: AppColors.white,
+  //                       onSelected: (value) async {
+  //                         if (value == 1) {
+  //                           widget.showDeleteOrderDialog(
+  //                               context, invoice["id"]);
+  //                         }
+  //                         if (value == 2) {
+  //                           setState(() {
+  //                             isDelivered = true;
+  //                           });
+  //                           final url = Urls.setDelivered + invoice["id"];
+  //                           await ApiService.patchApi(url, {});
+  //                         }
+  //                       },
+  //                       itemBuilder: (context) => [
+  //                         const PopupMenuItem(
+  //                           value: 1,
+  //                           child: Text(AppStrings.delete),
+  //                         ),
+  //                         const PopupMenuItem(
+  //                           value: 2,
+  //                           child: Text(AppStrings.deliver),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+}
+
+class BuildListWidgetConfirm extends StatefulWidget {
+  const BuildListWidgetConfirm(
+      {super.key,
+      required this.invoices,
+      required this.onRefresh,
+      required this.showDeleteOrderDialog});
+  final List<Map<String, dynamic>> invoices;
+  final void Function() onRefresh;
+  final void Function(BuildContext, String) showDeleteOrderDialog;
+  @override
+  State<BuildListWidgetConfirm> createState() => _BuildListWidgetConfirmState();
+}
+
+class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
+  List<bool> isDelivered = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isDelivered = List.generate(
+      widget.invoices.length,
+      (index) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int currentIndex = DefaultTabController.of(context).index;
+
+    if (widget.invoices.isEmpty) {
+      return const Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ImageWidget(
+            height: 50,
+            width: 50,
+            imagePath: AppIconsPath.noOrderIcon,
+          ),
+          SpaceWidget(
+            spaceHeight: 10,
+          ),
+          Text("No orders available"),
+        ],
+      ));
+    }
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        widget.onRefresh();
+      },
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: widget.invoices.length,
+        itemBuilder: (context, index) {
+          final invoice = widget.invoices[index];
+          return Card(
+            color: AppColors.white,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            margin: EdgeInsets.symmetric(
+              horizontal:
+                  ResponsiveUtils.width(16), // Responsive horizontal margin
+              vertical: ResponsiveUtils.height(6), // Responsive vertical margin
+            ),
+            child: Container(
+              padding: const EdgeInsets.only(top: 12, left: 12, bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      invoice['logo'],
+                      const SpaceWidget(spaceWidth: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: ResponsiveUtils.width(150),
+                            child: TextWidget(
+                              text: invoice['company'],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              fontColor: AppColors.black,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlignment: TextAlign.start,
+                            ),
+                          ),
+                          TextWidget(
+                            text:
+                                "Invoice: ${invoice['id'].substring(0, 6) ?? "N/A"}",
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            fontColor: AppColors.onyxBlack,
+                          ),
+                          const SpaceWidget(spaceHeight: 2),
+                          if (currentIndex == 2)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 3, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: AppColors.green,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              child: Center(
+                                child: TextWidget(
+                                  text: isDelivered[index]
+                                      ? "Delivered"
+                                      : "Confirmed",
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  fontColor: AppColors.white,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            width: ResponsiveUtils.width(70),
+                            child: TextWidget(
+                              text: invoice['date'] != null
+                                  ? "${formatDay(invoice['date'])}\n${formatDate(invoice['date'])}"
+                                  : null,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              fontColor: AppColors.onyxBlack,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlignment: TextAlign.right,
+                            ),
+                          ),
+                          const SpaceWidget(spaceHeight: 4),
+                          GestureDetector(
+                            onTap: () {
                               Get.toNamed(
                                   AppRoutes
                                       .wholesalerConfirmedOrderDetailsScreen,
@@ -385,50 +793,64 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                                     'products': invoice['product'],
                                     'id': invoice['id']
                                   });
-                            }
-                          },
-                          child: const TextWidget(
-                            text: AppStrings.details,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            fontColor: AppColors.primaryBlue,
+                            },
+                            child: const TextWidget(
+                              text: AppStrings.details,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              fontColor: AppColors.primaryBlue,
+                            ),
                           ),
+                        ],
+                      ),
+                      PopupMenuButton(
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
                         ),
-                      ],
-                    ),
-                    PopupMenuButton(
-                      constraints: const BoxConstraints(
-                        minWidth: 18,
-                        minHeight: 18,
-                      ),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                      ),
-                      icon: const Icon(
-                        Icons.more_vert,
-                        color: AppColors.black,
-                        size: 18,
-                      ),
-                      color: AppColors.white,
-                      onSelected: (value) {
-                        if (value == 1) {
-                          widget.showDeleteOrderDialog(context, invoice["id"]);
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: 1,
-                          child: Text(AppStrings.delete),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: AppColors.black,
+                          size: 18,
+                        ),
+                        color: AppColors.white,
+                        onSelected: (value) async {
+                          if (value == 1) {
+                            widget.showDeleteOrderDialog(
+                                context, invoice["id"]);
+                          }
+                          if (value == 2) {
+                            setState(() {
+                              isDelivered[index] = true;
+                            });
+
+                            final url = Urls.setDelivered + invoice["id"];
+                            await ApiService.patchApi(url, {});
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text(AppStrings.delete),
+                          ),
+                          if (!isDelivered[index])
+                            const PopupMenuItem(
+                              value: 2,
+                              child: Text(AppStrings.deliver),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

@@ -46,4 +46,6 @@ class Urls {
       "$baseUrl/products/all-product/received";
   static const updateNewOrderToPending = "$baseUrl/products/update-all/";
   static const updatePendingToConfirm = "$baseUrl/products/update-received/";
+  static const updatereceiveToConfirm = "$baseUrl/products/update-received/";
+  static const setDelivered = "$baseUrl/products/update-delivered/";
 }

@@ -9,19 +9,21 @@ class PrefsHelper extends GetxController {
   static bool isNotifications = true;
   static String userRole = ""; // Default role
   static String userId = "";
-  static String emailId = ""; 
+  static String emailId = "";
   static String myImage = "";
   static String myName = "";
   static String productId = ""; // Keep productId field here
   static String mySubscription = "shopping";
   static String localizationLanguageCode = 'en';
   static String localizationCountryCode = 'US';
+  static int totalOrders = 0;
+  static bool isSubscribed = false;
 
   // Save the selected product ID
   static Future<void> getAllPrefData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString("token") ?? "";
-    userId = preferences.getString("userId") ?? ""; 
+    userId = preferences.getString("userId") ?? "";
     emailId = preferences.getString("email") ?? "";
     myImage = preferences.getString("image") ?? "";
     myName = preferences.getString("name") ?? "";
@@ -34,6 +36,8 @@ class PrefsHelper extends GetxController {
         preferences.getString("localizationCountryCode") ?? "US";
     localizationLanguageCode =
         preferences.getString("localizationLanguageCode") ?? "en";
+    totalOrders = preferences.getInt('totalOrders') ?? 0;
+    isSubscribed = preferences.getBool('isSubscribed') ?? false;
 
     if (kDebugMode) {
       print("===============UserRole: $userRole====================");
@@ -55,11 +59,9 @@ class PrefsHelper extends GetxController {
 
   static Future<void> saveUserEmail(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', emailId); 
-    emailId = email; 
+    await prefs.setString('email', emailId);
+    emailId = email;
   }
-
-  
 
   // <<<======================== Get User ID =============================>>>
   // static Future<String?> get userId async {

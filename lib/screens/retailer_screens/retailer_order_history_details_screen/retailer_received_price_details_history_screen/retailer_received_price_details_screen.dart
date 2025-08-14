@@ -135,20 +135,16 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                     ],
                   )),
             ),
-            Row(
-              children: [
-                const Spacer(),
-                ButtonWidget(
-                    label: "Confirm",
-                    backgroundColor: AppColors.primaryBlue,
-                    onPressed: () {
-                      receivedController.send();
-                      Get.back();
-                    }),
-                const SpaceWidget(
-                  spaceWidth: 10,
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ButtonWidget(
+                  buttonWidth: double.infinity,
+                  label: "Confirm",
+                  backgroundColor: AppColors.primaryBlue,
+                  onPressed: () {
+                    receivedController.send();
+                    Get.back();
+                  }),
             ),
             const SpaceWidget(
               spaceHeight: 30,

@@ -31,6 +31,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final additionalInfoController = TextEditingController();
   final RxList<Product> products = <Product>[].obs;
   RxInt grandtotal = 0.obs;
+  final orderid = ''.obs;
   @override
   void onInit() {
     super.onInit();
@@ -78,6 +79,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   void fetchData() {
     final arg = Get.arguments;
     products.value = arg['products'];
+    orderid.value = arg['id'];
     appLogger(products);
   }
 
@@ -214,8 +216,8 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     }
     final updatedData = {"product": data};
     try {
-      final response =
-          await ApiService.patchApi(Urls.updateAllReceivedOrders, updatedData);
+      final url = Urls.updatereceiveToConfirm + orderid.value;
+      final response = await ApiService.patchApi(url, updatedData);
       appLogger(response);
       if (response != null) {
         Get.snackbar("Success", "Updated Successfully");
@@ -306,7 +308,8 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     selectedUnit.value = value ?? 'Kg';
   }
 
-  void updateGrandTotal() {    
+
+  void updateGrandTotal() {
     grandtotal.value = 0;
     for (int i = 0; i < products.length; i++) {
       grandtotal.value +=

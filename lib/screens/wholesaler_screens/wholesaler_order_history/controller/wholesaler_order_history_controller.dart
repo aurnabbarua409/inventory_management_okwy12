@@ -77,6 +77,7 @@ class WholesalerOrderHistoryController extends GetxController {
   // Fetch Confirmed Orders
   Future<void> fetchConfirmedOrders() async {
     update();
+    confirmedOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
       var response = await ApiService.getApi(Urls.confirmedOrderWholesaler);
@@ -197,9 +198,9 @@ class WholesalerOrderHistoryController extends GetxController {
   void onInit() {
     initialize();
     super.onInit();
-    refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      initialize(); // repeat fetch
-    });
+    // refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    //   initialize(); // repeat fetch
+    // });
   }
 
   @override

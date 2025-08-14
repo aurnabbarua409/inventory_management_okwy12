@@ -47,6 +47,8 @@ class RetailerHomeScreen extends StatelessWidget {
                               ? NetworkImage(
                                   "${Urls.socketUrl}${profileController.image.value}")
                               : const AssetImage(AppImagesPath.profileImage),
+                          onBackgroundImageError: (exception, stackTrace) =>
+                              const AssetImage(AppImagesPath.profileImage),
                           // child: ImageWidget(
                           //   height: 40,
                           //   width: 40,
@@ -69,6 +71,8 @@ class RetailerHomeScreen extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           Get.toNamed(AppRoutes.retailerNotification);
+                          NotificationsController.instance.unreadMessage.value =
+                              0;
                         },
                         icon: Obx(() {
                           return Badge(

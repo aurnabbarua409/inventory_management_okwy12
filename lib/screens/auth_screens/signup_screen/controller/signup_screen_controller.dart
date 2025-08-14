@@ -69,10 +69,10 @@ class SignupScreenController extends GetxController {
         if (signUpData!.success) {
           String userId = signUpData!.data.id.trim();
 
-          if (userId.isEmpty || userId.length != 24) {
-            Get.snackbar('Error', 'Invalid userId received from API.');
-            return;
-          }
+          // if (userId.isEmpty || userId.length != 24) {
+          //   Get.snackbar('Error', 'Invalid userId received from API.');
+          //   return;
+          // }
           await PrefsHelper.saveUserEmail(email);
           await PrefsHelper.setString('userId', userId);
 
@@ -88,7 +88,7 @@ class SignupScreenController extends GetxController {
           Get.snackbar('Error', signUpData?.message ?? 'Sign-up failed');
         }
       } else {
-        Get.snackbar('Error', 'Invalid response from server');
+        Get.snackbar('Error', 'Server is now down, please try again later');
       }
     } catch (e) {
       Get.snackbar('Error', 'Sign-up request failed. Please try again.');

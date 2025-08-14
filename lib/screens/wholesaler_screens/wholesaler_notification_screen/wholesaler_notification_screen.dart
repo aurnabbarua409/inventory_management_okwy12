@@ -46,33 +46,39 @@ class WholesalerNotificationScreen extends StatelessWidget {
           case Status.completed:
             return controller.notificationModel.isEmpty
                 ? const NoData()
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(ResponsiveUtils.width(16)),
-                          child: TextWidget(
-                            text: AppStrings.today,
-                            fontColor: AppColors.aquaBlue,
-                            fontSize: ResponsiveUtils.width(14),
-                            fontWeight: FontWeight.w600,
-                            maxLines: 1,
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      controller.getNotificationsRepo();
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(ResponsiveUtils.width(16)),
+                            child: TextWidget(
+                              text: AppStrings.today,
+                              fontColor: AppColors.aquaBlue,
+                              fontSize: ResponsiveUtils.width(14),
+                              fontWeight: FontWeight.w600,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
-                        ..._buildNotifications(controller, isToday: true),
-                        Padding(
-                          padding: EdgeInsets.all(ResponsiveUtils.width(16)),
-                          child: TextWidget(
-                            text: AppStrings.yesterday,
-                            fontColor: AppColors.aquaBlue,
-                            fontSize: ResponsiveUtils.width(14),
-                            fontWeight: FontWeight.w600,
-                            maxLines: 1,
+                          ..._buildNotifications(controller, isToday: true),
+                          Padding(
+                            padding: EdgeInsets.all(ResponsiveUtils.width(16)),
+                            child: TextWidget(
+                              text: AppStrings.yesterday,
+                              fontColor: AppColors.aquaBlue,
+                              fontSize: ResponsiveUtils.width(14),
+                              fontWeight: FontWeight.w600,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
-                        ..._buildNotifications(controller, isToday: false),
-                      ],
+                          ..._buildNotifications(controller, isToday: false),
+                        ],
+                      ),
                     ),
                   );
           default:

@@ -87,6 +87,7 @@ class _WholesalerOrderHistoryScreenState
                   ? const Center(child: CircularProgressIndicator())
                   : Obx(
                       () => WholesalerTabView(
+                        onRefresh: () => controller.initialize(),
                         showDeleteOrderDialog: controller.showDeleteOrderDialog,
                         pendingInvoices: controller.newOrders.map((order) {
                           return {

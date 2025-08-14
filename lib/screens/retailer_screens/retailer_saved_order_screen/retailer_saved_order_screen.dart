@@ -318,7 +318,7 @@ class RetailerSavedOrderScreen extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              "No orders available",
+              "No order created",
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),

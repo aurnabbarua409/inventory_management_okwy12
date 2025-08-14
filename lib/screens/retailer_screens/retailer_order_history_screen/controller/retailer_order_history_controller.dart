@@ -185,9 +185,9 @@ class RetailerOrderHistoryController extends GetxController {
 
     super.onInit();
 
-    refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      initalize(); // repeat fetch
-    });
+    // refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    //   initalize(); // repeat fetch
+    // });
   }
 
   @override

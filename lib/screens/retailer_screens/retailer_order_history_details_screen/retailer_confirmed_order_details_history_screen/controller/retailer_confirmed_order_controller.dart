@@ -166,6 +166,18 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
 
     final pw.MemoryImage currencyIcon =
         await _loadImageFromAssets("assets/images/currencyIcon.png");
+    List<List<dynamic>> tableData = [];
+    final product = confirmedData.value!.product!;
+    for (int i = 0; i < confirmedData.value!.product!.length; i++) {
+      tableData.add([
+        i + 1,
+        product[i].productName,
+        product[i].quantity,
+        product[i].unit,
+        product[i].price,
+        (product[i].price! * product[i].quantity!)
+      ]);
+    }
     try {
       pdf.addPage(pw.Page(
         build: (context) {
@@ -184,13 +196,18 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             pw.Row(children: [
               pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.retailer?.storeInformation?.businessname ?? "N/A",
+              pw.Text(
+                  confirmedData
+                          .value?.retailer?.storeInformation?.businessname ??
+                      "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.retailer?.storeInformation?.location ?? "N/A",
+              pw.Text(
+                  confirmedData.value?.retailer?.storeInformation?.location ??
+                      "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
@@ -209,13 +226,18 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             pw.Row(children: [
               pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.storeInformation?.businessname ?? "N/A",
+              pw.Text(
+                  confirmedData
+                          .value?.wholesaler?.storeInformation?.businessname ??
+                      "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.storeInformation?.location ?? "N/A",
+              pw.Text(
+                  confirmedData.value?.wholesaler?.storeInformation?.location ??
+                      "N/A",
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
@@ -225,43 +247,50 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
                   style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.SizedBox(height: 15),
-            pw.Container(
-                width: double.infinity,
-                color: PdfColors.grey300,
-                child: pw.Row(children: [
-                  pw.Text("SI", style: const pw.TextStyle(fontSize: 15)),
-                  pw.Spacer(),
-                  pw.Text("Product", style: const pw.TextStyle(fontSize: 15)),
-                  pw.Spacer(),
-                  pw.Text("Qty", style: const pw.TextStyle(fontSize: 15)),
-                  pw.Spacer(),
-                  pw.Text("Unit", style: const pw.TextStyle(fontSize: 15)),
-                  pw.Spacer(),
-                  pw.Text("Price", style: const pw.TextStyle(fontSize: 15)),
-                  pw.Spacer(),
-                  pw.Text("Total", style: const pw.TextStyle(fontSize: 15)),
-                ])),
-            for (int i = 0; i < confirmedData.value!.product!.length; i++)
-              pw.Row(children: [
-                pw.Text("${i + 1}", style: const pw.TextStyle(fontSize: 15)),
-                pw.Spacer(),
-                pw.Text(confirmedData.value?.product?[i].productName ?? "N/A",
-                    style: const pw.TextStyle(fontSize: 15)),
-                pw.Spacer(),
-                pw.Text(
-                    confirmedData.value?.product?[i].quantity.toString() ?? "0",
-                    style: const pw.TextStyle(fontSize: 15)),
-                pw.Spacer(),
-                pw.Text(confirmedData.value?.product?[i].unit ?? "Kg",
-                    style: const pw.TextStyle(fontSize: 15)),
-                pw.Spacer(),
-                pw.Text("${confirmedData.value?.product?[i].price ?? 0}",
-                    style: const pw.TextStyle(fontSize: 15)),
-                pw.Spacer(),
-                pw.Text(
-                    "${(confirmedData.value?.product![i].quantity ?? 0) * (confirmedData.value!.product![i].price ?? 0)}",
-                    style: const pw.TextStyle(fontSize: 15)),
-              ]),
+            pw.TableHelper.fromTextArray(
+                headers: ['SI', 'Product', 'Qty', 'Unit', 'Price', 'Total'],
+                data: tableData,
+                headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                headerDecoration:
+                    const pw.BoxDecoration(color: PdfColors.grey300),
+                cellAlignment: pw.Alignment.center),
+            // pw.Container(
+            //     width: double.infinity,
+            //     color: PdfColors.grey300,
+            //     child: pw.Row(children: [
+            //       pw.Text("SI", style: const pw.TextStyle(fontSize: 15)),
+            //       pw.Spacer(),
+            //       pw.Text("Product", style: const pw.TextStyle(fontSize: 15)),
+            //       pw.Spacer(),
+            //       pw.Text("Qty", style: const pw.TextStyle(fontSize: 15)),
+            //       pw.Spacer(),
+            //       pw.Text("Unit", style: const pw.TextStyle(fontSize: 15)),
+            //       pw.Spacer(),
+            //       pw.Text("Price", style: const pw.TextStyle(fontSize: 15)),
+            //       pw.Spacer(),
+            //       pw.Text("Total", style: const pw.TextStyle(fontSize: 15)),
+            //     ])),
+            // for (int i = 0; i < confirmedData.value!.product!.length; i++)
+            //   pw.Row(children: [
+            //     pw.Text("${i + 1}", style: const pw.TextStyle(fontSize: 15)),
+            //     pw.Spacer(),
+            //     pw.Text(confirmedData.value?.product?[i].productName ?? "N/A",
+            //         style: const pw.TextStyle(fontSize: 15)),
+            //     pw.Spacer(),
+            //     pw.Text(
+            //         confirmedData.value?.product?[i].quantity.toString() ?? "0",
+            //         style: const pw.TextStyle(fontSize: 15)),
+            //     pw.Spacer(),
+            //     pw.Text(confirmedData.value?.product?[i].unit ?? "Kg",
+            //         style: const pw.TextStyle(fontSize: 15)),
+            //     pw.Spacer(),
+            //     pw.Text("${confirmedData.value?.product?[i].price ?? 0}",
+            //         style: const pw.TextStyle(fontSize: 15)),
+            //     pw.Spacer(),
+            //     pw.Text(
+            //         "${(confirmedData.value?.product![i].quantity ?? 0) * (confirmedData.value!.product![i].price ?? 0)}",
+            //         style: const pw.TextStyle(fontSize: 15)),
+            //   ]),
             pw.SizedBox(height: 15),
             pw.Row(children: [
               pw.Text("Sub Total:", style: const pw.TextStyle(fontSize: 15)),

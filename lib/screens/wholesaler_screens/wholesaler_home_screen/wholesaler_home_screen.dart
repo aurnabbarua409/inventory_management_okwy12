@@ -34,7 +34,6 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
   }
 
   @override
@@ -43,10 +42,6 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
     final profileController = Get.put(WholesalerProfileScreenController());
 
     final controller = NotificationsController.instance;
-    if (kDebugMode) {
-      print("I am ");
-      print(PrefsHelper.myName);
-    }
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       body: Column(
@@ -60,14 +55,18 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
                   children: [
                     // Display image from controller dynamically
                     Obx(() {
-                      appLogger("here.............");
                       return CircleAvatar(
-                          radius: 20,
-                          backgroundImage: profileController
-                                  .image.value.isNotEmpty
-                              ? NetworkImage(
-                                  "${Urls.socketUrl}${profileController.image.value}")
-                              : const AssetImage(AppImagesPath.profileImage));
+                        radius: 20,
+                        backgroundImage: profileController
+                                .image.value.isNotEmpty
+                            ? NetworkImage(
+                                "${Urls.socketUrl}${profileController.image.value}")
+                            : const AssetImage(
+                                AppImagesPath.profileImage,
+                              ),
+                        onBackgroundImageError: (exception, stackTrace) =>
+                            const AssetImage(AppImagesPath.profileImage),
+                      );
                     }),
                     const TextWidget(
                       text: "",
@@ -78,6 +77,8 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
                     IconButton(
                       onPressed: () {
                         Get.toNamed(AppRoutes.wholesalerNotificationScreen);
+                        NotificationsController.instance.unreadMessage.value =
+                            0;
                       },
                       icon: Obx(() {
                         return Badge(

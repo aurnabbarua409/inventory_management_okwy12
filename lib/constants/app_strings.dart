@@ -26,7 +26,7 @@ class AppStrings {
   static const String welcome = "Welcome";
   static const String payMent = "Payment";
   static const String orderDate = "Date";
-  static const String forgetPw = "Forget Password";
+  static const String forgetPw = "Forgot Password";
   static const String noData = "No data found";
   static const String forgetPwDesc =
       "Enter your email address or phone number to reset password";
@@ -188,4 +188,5 @@ class AppStrings {
   static const String subTotal = "SubTotal";
   static const String deliveryCharge = "Delivery Charges";
   static const String grandTotal = "Grand Total";
+  static const String deliver = "Delivered";
 }

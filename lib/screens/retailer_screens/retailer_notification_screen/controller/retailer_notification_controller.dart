@@ -15,29 +15,41 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 class NotificationsController extends GetxController {
   RxList<NotificationModel> notificationModel = <NotificationModel>[].obs;
   RxInt unreadMessage = 0.obs;
+  String id = "";
   Rx<Status> status =
       Status.loading.obs; // Make status observable using Rx<Status>
-  Timer? refreshTimer;
+
+  void onAppInitial() {
+    try {
+      getNotificationsRepo();
+      listenToNewNotification();
+    } catch (e) {
+      appLogger("onAppInitial $e");
+    }
+  }
+
+  void onAppClose() {
+    try {} catch (e) {
+      appLogger("onAppClose");
+    }
+  }
+
   @override
   void onInit() {
-    super.onInit();    
-    getNotificationsRepo();
-    listenToNewNotification();
-    refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      getNotificationsRepo(); // repeat fetch
-    });
+    onAppInitial();
+    super.onInit();
   }
 
   @override
   void onClose() {
+    onAppClose();
     super.onClose();
   }
 
-
   // Listen to New Notifications via socket
   void listenToNewNotification() async {
-    String id = await PrefsHelper.getString(PrefsHelper.userId);
-    if (id.isEmpty) {
+    await PrefsHelper.getString(PrefsHelper.userId);
+    if (PrefsHelper.userId.isEmpty) {
       id = PrefsHelper.userId;
     }
 
@@ -49,7 +61,8 @@ class NotificationsController extends GetxController {
         appLogger("Socket Res=================>>>>>>>>>>>>>$data");
 
         if (data != null) {
-          SocketNotificationModel newNotification = SocketNotificationModel.fromJson(data);
+          SocketNotificationModel newNotification =
+              SocketNotificationModel.fromJson(data);
 
           debugPrint("New notification received: $newNotification");
 

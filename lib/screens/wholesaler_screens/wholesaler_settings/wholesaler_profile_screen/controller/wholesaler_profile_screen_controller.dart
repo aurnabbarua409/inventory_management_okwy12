@@ -72,7 +72,7 @@ class WholesalerProfileScreenController extends GetxController {
           url: Urls.userProfile, imagePath: imageFile.value?.path);
       fetchProfile();
       Get.back();
-    
+
       // if (response != null) {
       // Check the response and handle accordingly
       // if (response.statusCode == 200) {
@@ -237,6 +237,10 @@ class WholesalerProfileScreenController extends GetxController {
             response["data"]["storeInformation"]["location"] ?? "";
         phoneController.text = response["data"]["phone"] ?? "";
         image.value = response["data"]["image"] ?? "";
+        PrefsHelper.totalOrders = response['data']['order'];
+        PrefsHelper.isSubscribed = response['data']['isSubscribed'];
+        appLogger(
+            "total orders: ${PrefsHelper.totalOrders} and isSubscribed: ${PrefsHelper.isSubscribed}");
         appLogger(userName.value);
         // image.value = data.data.image;
         // appLogger("set username");

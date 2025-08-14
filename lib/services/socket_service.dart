@@ -1,4 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -53,7 +57,6 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 ///<------------------------- Socket Class ---------------->
 
-
 class SocketApi {
   factory SocketApi() {
     return _socketApi;
@@ -83,11 +86,20 @@ class SocketApi {
 
       socket.onConnect((_) {
         _isConnected = true;
-        debugPrint('==============>>>>>>> Socket Connected :$_isConnected ===============<<<<<<<');
+        debugPrint(
+          '==============>>>>>>> Socket Connected :$_isConnected ===============<<<<<<<',
+        );
       });
 
       socket.on('unauthorized', (dynamic data) {
         debugPrint('Unauthorized');
+      });
+      final userId = PrefsHelper.userId;
+      appLogger("in socket service, the user id: $userId");
+      socket.on('get-notification::$userId', (dynamic data) {
+        Get.find<NotificationsController>().unreadMessage.value += 1;
+        appLogger(
+            '============ Socket connected and getting values: $data ==============================');
       });
 
       socket.onError((dynamic error) {
@@ -105,12 +117,17 @@ class SocketApi {
     }
   }
 
-  static Future<void> connectWithRetry({int retryCount = 0, int maxRetries = 5}) async {
+  static Future<void> connectWithRetry({
+    int retryCount = 0,
+    int maxRetries = 5,
+  }) async {
     if (!_isConnected && retryCount < maxRetries) {
       debugPrint('Attempting to connect (retry $retryCount)...');
       socket.connect();
 
-      await Future.delayed(Duration(seconds: retryCount * 2 + 1)); // Exponential backoff
+      await Future.delayed(
+        Duration(seconds: retryCount * 2 + 1),
+      ); // Exponential backoff
 
       if (!_isConnected) {
         connectWithRetry(retryCount: retryCount + 1, maxRetries: maxRetries);
@@ -136,4 +153,3 @@ class SocketApi {
 
   static final SocketApi _socketApi = SocketApi._internal();
 }
-
