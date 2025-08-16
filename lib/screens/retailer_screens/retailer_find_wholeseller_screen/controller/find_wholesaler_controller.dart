@@ -108,8 +108,8 @@ class FindWholesalerController extends GetxController {
             await ApiService.getApi('${Urls.getWholesaler}?email=$query');
         _handleResponse(response);
       } else {
-        var response =
-            await ApiService.getApi('${Urls.getWholesaler}?name=$query');
+        var response = await ApiService.getApi(
+            '${Urls.getWholesaler}?businessName=$query');
         _handleResponse(response);
       }
     } catch (e) {
@@ -270,52 +270,55 @@ class FindWholesalerController extends GetxController {
     if (selectedCount == 0) {
       Get.snackbar("No Selection", "Hold the button to select wholesaler");
       return;
-    }
-
-    showCustomPopup(
-      context,
-      [
-        const Center(
-          child: Text(
-            "Are you sure?",
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primaryBlue),
-          ),
-        ),
-        const SizedBox(height: 8),
-        const Center(
-          child: Text(
-            "Do you want to send orders to selected wholesalers?",
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            OutlinedButton(
-              onPressed: () => Get.back(),
-              child: const Text("No", style: TextStyle(color: AppColors.red)),
+    } else {
+      showCustomPopup(
+        context,
+        [
+          const Center(
+            child: Text(
+              "Are you sure?",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primaryBlue),
             ),
-            const SizedBox(width: 16),
-            ElevatedButton(
-              onPressed: () {
-                sendOrder(context);
-                showSendOrderSuccessfulDialog(context);
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue),
-              child: const Text(
-                "Yes",
-                style: TextStyle(color: AppColors.white),
+          ),
+          const SizedBox(height: 8),
+          const Center(
+            child: Text(
+              "Do you want to send orders to selected wholesalers?",
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton(
+                onPressed: () => Get.back(),
+                child: const Text("No", style: TextStyle(color: AppColors.red)),
               ),
-            ),
-          ],
-        ),
-      ],
-    );
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {                  
+                  sendOrder(context);
+                  showSendOrderSuccessfulDialog(context);
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryBlue),
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(color: AppColors.white),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
   }
 
   void setSelectedProductIds(List<String> productIds) {

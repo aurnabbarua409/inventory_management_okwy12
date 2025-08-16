@@ -2,13 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/models/new_version/create_order_model.dart';
-import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
-import 'package:inventory_app/models/retailer/retailer_home/order_creation_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/retailer_saved_order_screen.dart';
 import 'package:inventory_app/services/api_service.dart';
-import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -120,6 +116,10 @@ class RetailerCreateNewOrderScreenController extends GetxController {
 
   /// Validate input and handle product creation API call
   Future<void> createItem() async {
+    if (productNameController.text.isEmpty) {
+      Get.snackbar('Error', "Please enter a product name");
+      return;
+    }
     isLoading.value = true;
     update();
     final createOrder = CreateOrderModel(

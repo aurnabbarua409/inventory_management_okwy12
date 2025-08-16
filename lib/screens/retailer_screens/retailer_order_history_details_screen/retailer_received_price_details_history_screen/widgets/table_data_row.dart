@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
@@ -146,10 +147,20 @@ class _TableDataRowState extends State<TableDataRow> {
                                         item.quantity = 0;
                                         return;
                                       }
-                                      item.quantity = int.parse(value);
-                                      quantity = item.quantity ?? 0;
-                                      total = quantity * price;
-                                      widget.controller.updateGrandTotal();
+
+                                      final quantity1 = int.parse(value);
+                                      if (quantity1 < 0) {
+                                        Get.snackbar('Error',
+                                            "Please write a valid quantity");
+                                        return;
+                                      }
+                                      if (quantity1 > 0) {
+                                        item.quantity = quantity1;
+                                        quantity = item.quantity ?? 0;
+                                        total = quantity * price;
+                                        widget.controller.updateGrandTotal();
+                                      }
+
                                       setState(() {});
                                     } catch (e) {
                                       appLogger(e);

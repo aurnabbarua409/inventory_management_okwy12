@@ -84,16 +84,15 @@ class WholesalerSettings extends StatelessWidget {
               onTap: controller.share,
             ),
             WholesalerSettingItem(
-              leading:
-                  SvgPicture.asset(AppIconsPath.logout, width: 24, height: 24),
-              title: AppStrings.logOut,
-              onTap: controller.logout,
-            ),
+                leading: SvgPicture.asset(AppIconsPath.logout,
+                    width: 24, height: 24),
+                title: AppStrings.logOut,
+                onTap: () {
+                  controller.logoutCOnfirm(context);
+                }),
           ],
         ),
       ),
     );
   }
-
-
 }

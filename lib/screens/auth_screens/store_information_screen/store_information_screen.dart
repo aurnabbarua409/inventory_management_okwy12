@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
@@ -159,7 +160,9 @@ class StoreInformationScreen extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                         ),
                         TextButtonWidget(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.retailerTerms);
+                          },
                           text: AppStrings.termsCondition,
                           textColor: AppColors.primaryBlue,
                           fontSize: 13,
@@ -172,7 +175,9 @@ class StoreInformationScreen extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                         ),
                         TextButtonWidget(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.retailerTerms);
+                          },
                           text: AppStrings.privacyPolicy,
                           textColor: AppColors.primaryBlue,
                           fontSize: 13,

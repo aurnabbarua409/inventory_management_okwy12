@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/constants/app_images_path.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
-import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
-import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
-import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
 import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
 
@@ -171,6 +166,7 @@ class _WholesalerPendingOrderDetailsScreenState
                       ),
                     ),
                     // Data Rows
+                    // WholesalerPendingRow(controller: pendingController),
                     ..._buildDataRows(),
                     const SpaceWidget(spaceHeight: 16),
                     ButtonWidget(
@@ -344,11 +340,31 @@ class _WholesalerPendingOrderDetailsScreenState
                               color: AppColors.onyxBlack,
                             ),
                             onChanged: (value) {
-                              setState(() {
-                                price = int.parse(value);
-                                pendingController.products[index].price = price;
-                                total = quantity * price;
-                              });
+                              try {
+                                if (value.isEmpty) {
+                                  return;
+                                }
+                                var temp = int.parse(value);
+                                if (temp <= 0) {
+                                  Get.closeAllSnackbars();
+                                  Get.snackbar(
+                                      'Error', 'Please write a valid price');
+                                  price = 0;
+                                  pendingController.products[index].price = 0;
+                                  total = quantity * price;
+                                  setState(() {});
+                                  return;
+                                }
+                                setState(() {
+                                  price = int.parse(value);
+
+                                  pendingController.products[index].price =
+                                      price;
+                                  total = quantity * price;
+                                });
+                              } catch (e) {
+                                appLogger(e);
+                              }
                             },
                           ),
                         )

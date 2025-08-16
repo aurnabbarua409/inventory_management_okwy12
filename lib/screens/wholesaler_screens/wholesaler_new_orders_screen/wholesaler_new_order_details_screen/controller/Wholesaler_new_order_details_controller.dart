@@ -30,7 +30,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
   // Observable quantity for increment and decrement
   var quantity = 1.obs;
   final RxList<Product> products = <Product>[].obs;
-  final RxList<Map<bool, int>> availableList = <Map<bool, int>>[].obs;
+  //final RxList<Map<bool, int>> availableList = <Map<bool, int>>[].obs;
   final orderId = "".obs;
   final companyName = "".obs;
   void fetchData() {
@@ -46,17 +46,21 @@ class WholesalerNewOrderDetailsController extends GetxController {
     }
   }
 
-  void sendData() async {
+  void sendData(BuildContext context) async {
     try {
       List<Map<String, dynamic>> updatedData = [];
       appLogger("Data is now updating");
       for (int index = 0; index < products.length; index++) {
-        appLogger(
-            "id: ${products[index].id}, availability: ${availableList[index].keys.first}");
+        var price = products[index].price ?? 0;
+        if (price < 0) {
+          price = 0;
+        }
+        // appLogger(
+        //     "id: ${products[index].id}, availability: ${availableList[index].keys.first}");
         final updatedItem = UpdateProductModel2(
             product: products[index].id ?? "",
-            availability: availableList[index].keys.first,
-            price: (availableList[index].values.first.toInt()));
+            availability: products[index].availability ?? false,
+            price: price);
         updatedData.add(updatedItem.toJson());
       }
 
@@ -66,10 +70,12 @@ class WholesalerNewOrderDetailsController extends GetxController {
       final isSuccess = response["success"] ?? false;
       appLogger("response after product updated: $response");
       if (isSuccess) {
+        Get.back();
         Get.snackbar("Success", "Products updated successfully");
+        showSendOrderSuccessfulDialog(context);
       } else {
         appLogger("failed to update product");
-        Get.snackbar("Error", "Failed to update product");
+        Get.snackbar("Error", response['message'] ?? "Failed to update");
       }
     } catch (e) {
       appLogger("Error in update new order: $e");
@@ -136,9 +142,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
                 flex: 1,
                 child: ButtonWidget(
                   onPressed: () {
-                    sendData();
-                    Get.back();
-                    showSendOrderSuccessfulDialog(context);
+                    sendData(context);
                   },
                   label: AppStrings.yes,
                   backgroundColor: AppColors.primaryBlue,
@@ -287,10 +291,10 @@ class WholesalerNewOrderDetailsController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     fetchData();
-    availableList.value = List.generate(
-      products.length,
-      (index) => {false: 0},
-    );
+    // availableList.value = List.generate(
+    //   products.length,
+    //   (index) => {false: 0},
+    // );
   }
 
   void showProductDetailsDialog(BuildContext context, Product item) {

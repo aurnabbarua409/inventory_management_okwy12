@@ -158,13 +158,7 @@ class SubscriptionScreen extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: ButtonWidget(
-                        onPressed: () {
-                          final control = Get.put(PaymentController());
-                          control.createPaymentPackage();
-                          Get.to(() => PaymentWebViewPage(
-                                controller: control,
-                              ));
-                        },
+                        onPressed: () {},
                         label: 'You\'re a Premium Member!',
                         fontSize: 18,
                         backgroundColor: AppColors.primaryBlue,

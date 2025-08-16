@@ -75,29 +75,38 @@ class RetailerSavedOrderScreenController extends GetxController {
     update();
 
     try {
-      String deleteUrl = "${Urls.deleteOrder}/$id";
+      String deleteUrl = "${Urls.deleteProduct}/$id";
       var response = await ApiService.deleteApi(deleteUrl, {});
+      int indexToRemove = orders.indexWhere((order) => order.id == id);
+      selectedOrderProducts
+          .removeWhere((item) => item['orderId'] == orders[indexToRemove].id);
+      selectedProducts
+          .assignAll(List.generate(orders.length, (index) => false));
+      appLogger("after deleted: ${response.body}");
+      fetchOrders();
+      // String deleteUrl = "${Urls.deleteOrder}/$id";
+      // var response = await ApiService.deleteApi(deleteUrl, {});
 
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        MDeleteOrder deleteResponse = MDeleteOrder.fromJson(data);
+      // if (response.statusCode == 200) {
+      //   var data = jsonDecode(response.body);
+      //   MDeleteOrder deleteResponse = MDeleteOrder.fromJson(data);
 
-        if (deleteResponse.success) {
-          int indexToRemove = orders.indexWhere((order) => order.id == id);
-          if (indexToRemove != -1) {
-            orders.removeAt(indexToRemove);
-          }
-          selectedProducts
-              .assignAll(List.generate(orders.length, (index) => false));
-          Get.snackbar('Success', deleteResponse.message);
-        } else {
-          Get.snackbar('Error', deleteResponse.message);
-        }
-      } else {
-        Get.snackbar('Error', 'Failed to delete order: ${response.statusCode}');
-      }
+      //   if (deleteResponse.success) {
+      //     int indexToRemove = orders.indexWhere((order) => order.id == id);
+      //     if (indexToRemove != -1) {
+      //       orders.removeAt(indexToRemove);
+      //     }
+      //     selectedProducts
+      //         .assignAll(List.generate(orders.length, (index) => false));
+      //     Get.snackbar('Success', deleteResponse.message);
+      //   } else {
+      //     Get.snackbar('Error', deleteResponse.message);
+      //   }
+      // } else {
+      //   Get.snackbar('Error', 'Failed to delete order: ${response.statusCode}');
+      // }
     } catch (e) {
-      debugPrint("Error deleting order: $e");
+      appLogger("Error deleting order: $e");
       Get.snackbar('Error', 'An error occurred while deleting the order');
     } finally {
       deleteIsLoading(false);

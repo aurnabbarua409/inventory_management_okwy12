@@ -6,12 +6,13 @@ class TextWidget extends StatelessWidget {
   final String? text;
   final FontWeight fontWeight;
   final double fontSize;
-  
+
   final FontStyle fontStyle;
   final Color fontColor;
   final TextOverflow? overflow;
   final int? maxLines;
-  final TextAlign textAlignment; // Renamed from 'textAlignment' to 'textAlign' for consistency
+  final TextAlign
+      textAlignment; // Renamed from 'textAlignment' to 'textAlign' for consistency
   final String? fontFamily;
   final bool underline;
   final Color? underlineColor;
@@ -39,10 +40,11 @@ class TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
     return Text(
-      text ?? '',  // Ensure text is not null to avoid errors
+      text ?? '', // Ensure text is not null to avoid errors
       overflow: overflow,
       maxLines: maxLines,
-      textAlign: textAlignment,  // Set the text alignment
+      textAlign: textAlignment,
+       // Set the text alignment
       style: TextStyle(
         fontWeight: fontWeight,
         fontSize: ResponsiveUtils.width(fontSize),

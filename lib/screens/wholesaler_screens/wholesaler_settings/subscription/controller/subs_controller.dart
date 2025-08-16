@@ -75,6 +75,7 @@ class PaymentController extends GetxController {
   void _handlePageFinished(String url) {
     if (url.contains('payment-success')) {
       debugPrint('Payment successful!');
+      Get.back();
       String? transactionId = _extractTransactionId(url);
       if (transactionId != null) {
         verifyTransaction(transactionId);

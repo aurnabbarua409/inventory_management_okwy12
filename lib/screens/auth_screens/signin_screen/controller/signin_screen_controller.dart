@@ -52,10 +52,10 @@ class SignInScreenController extends GetxController {
       appLogger(response);
 
       // Null check for response before proceeding
-      if (response == null) {
-        Get.snackbar('Error', 'Login request failed. Please try again.');
-        return;
-      }
+      // if (response == null) {
+      //   Get.snackbar('Error', 'Login request failed. Please try again.');
+      //   return;
+      // }
 
       if (response['success'] != null && response['success']) {
         await _saveUserDataAndNavigate(response);
@@ -64,7 +64,7 @@ class SignInScreenController extends GetxController {
             'Error', response['message'] ?? 'Login failed. Please try again.');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Login request failed. Please try again.');
+      // Get.snackbar('Error', 'Login request failed. Please try again.');
       debugPrint("SignIn Error: $e");
     } finally {
       isLoading.value = false;
@@ -122,7 +122,7 @@ class SignInScreenController extends GetxController {
     } else {
       throw Exception('Unknown role detected.');
     }
-
+    Get.snackbar('Success', 'Logged in Succesfully');
     Get.offAllNamed(AppRoutes.bottomNavBar,
         arguments: {'userRole': role, 'userId': userId});
 

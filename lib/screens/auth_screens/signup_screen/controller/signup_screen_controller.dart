@@ -83,12 +83,10 @@ class SignupScreenController extends GetxController {
           });
 
           Get.snackbar('Success',
-              'User created successfully. Please check your email for verification.');
+              signUpData?.message ?? "Please fully fill up your information");
         } else {
           Get.snackbar('Error', signUpData?.message ?? 'Sign-up failed');
         }
-      } else {
-        Get.snackbar('Error', 'Server is now down, please try again later');
       }
     } catch (e) {
       Get.snackbar('Error', 'Sign-up request failed. Please try again.');

@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
-import 'package:inventory_app/routes/app_routes.dart';
-import 'package:inventory_app/screens/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
-import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
-import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_icons_path.dart';
-import '../../../../constants/app_images_path.dart';
 import '../../../../constants/app_strings.dart';
 import '../../../../widgets/appbar_widget/main_appbar_widget.dart';
-import '../../../../widgets/image_widget/image_widget.dart';
-import '../../../../widgets/outlined_button_widget/outlined_button_widget.dart';
-import '../../../../widgets/popup_widget/popup_widget.dart';
 import '../../../../widgets/space_widget/space_widget.dart';
 import '../../../../widgets/text_widget/text_widgets.dart';
 import 'controller/Wholesaler_new_order_details_controller.dart';
@@ -94,6 +84,7 @@ class _WholesalerNewOrderDetailsScreenState
                       ),
                     ),
                     // Data Rows
+                    // WholesalerNewOrderRows(controller: pendingController),
                     ..._buildDataRows(),
                     const SpaceWidget(spaceHeight: 16),
 
@@ -140,10 +131,10 @@ class _WholesalerNewOrderDetailsScreenState
       final index = entry.key;
       final item = entry.value;
       // bool isPriceNotZero = item. != 0;
-      int price = pendingController.availableList[index].values.first;
+      int price = item.price ?? 0;
       int quantity = item.quantity ?? 0;
       int totalPrice = price * quantity;
-      bool available = pendingController.availableList[index].keys.first;
+      bool available = item.availability ?? false;
 
       return GestureDetector(
         onTap: () {
@@ -228,13 +219,12 @@ class _WholesalerNewOrderDetailsScreenState
                     toggleSize: 15,
                     borderRadius: 30,
                     padding: 2,
-                    value: pendingController.availableList[index].keys.first,
+                    value: item.availability ?? false,
                     onToggle: (bool newValue) {
                       appLogger(
                           "after toggling, isAvailable: $newValue, index: $index");
                       available = newValue;
-                      pendingController.availableList
-                          .insert(index, {available: price});
+                      pendingController.products[index].availability = newValue;
                       setState(() {});
                     },
                     activeColor: Colors.green,
@@ -254,7 +244,7 @@ class _WholesalerNewOrderDetailsScreenState
               const SizedBox(width: 15),
               Expanded(
                 flex: 1,
-                child: pendingController.availableList[index].keys.first
+                child: item.availability ?? false
                     ? SizedBox(
                         height: 30,
                         width: 10,
@@ -271,16 +261,33 @@ class _WholesalerNewOrderDetailsScreenState
                             color: AppColors.onyxBlack,
                           ),
                           onChanged: (value) {
-                            if (value.isEmpty) {
-                              return;
-                            }
-                            setState(() {
-                              price = int.parse(value);
-                              pendingController.availableList
-                                  .insert(index, {available: price});
+                            try {
+                              if (value.isEmpty) {
+                                return;
+                              }
+                              var temp = int.parse(value);
+                              if (temp <= 0) {
+                                Get.closeAllSnackbars();
+                                Get.snackbar(
+                                    'Error', 'Please write a valid price');
+                                price = 0;
 
-                              totalPrice = (quantity * price);
-                            });
+                                pendingController.products[index].price = price;
+
+                                totalPrice = (quantity * price);
+                                setState(() {});
+                                return;
+                              }
+                              setState(() {
+                                price = int.parse(value);
+
+                                pendingController.products[index].price = price;
+
+                                totalPrice = (quantity * price);
+                              });
+                            } catch (e) {
+                              appLogger(e);
+                            }
                           },
                         ),
                       )

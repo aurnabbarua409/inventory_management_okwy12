@@ -100,7 +100,7 @@ class AppStrings {
   static const String aboutUs = "About Us";
   static const String notify = "Notifications";
   static const String profile = "Profile";
-  static const String notification = "Notification";
+  static const String notification = "Notifications";
   static const String today = "Today";
   static const String yesterday = "Yesterday";
   static const String details = "Details";

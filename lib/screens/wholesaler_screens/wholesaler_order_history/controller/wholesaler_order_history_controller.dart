@@ -37,6 +37,7 @@ class WholesalerOrderHistoryController extends GetxController {
 
       // var data = await retailerRepo.getRetailers();
       appLogger("fetching new order from wholesaler: $response");
+
       for (var element in response["data"]) {
         newOrders.add(GetPendingOrderModel.fromJson(element));
       }

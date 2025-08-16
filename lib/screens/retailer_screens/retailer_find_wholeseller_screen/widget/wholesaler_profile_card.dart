@@ -74,15 +74,17 @@ class WholesalerProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInfoRow(AppIconsPath.buildingIcon,
-                        wholesaler.storeInformation.businessName),
+                        wholesaler.storeInformation.businessName, context),
                     const SpaceWidget(spaceHeight: 6),
-                    _buildInfoRow(AppIconsPath.telephoneIcon, wholesaler.email),
+                    _buildInfoRow(
+                        AppIconsPath.telephoneIcon, wholesaler.phone, context),
                     const SpaceWidget(spaceHeight: 6),
-                    _buildInfoRow(AppIconsPath.mailIcon, wholesaler.email,
+                    _buildInfoRow(
+                        AppIconsPath.mailIcon, wholesaler.email, context,
                         width: 170),
                     const SpaceWidget(spaceHeight: 6),
                     _buildInfoRow(AppIconsPath.locationIcon,
-                        wholesaler.storeInformation.location,
+                        wholesaler.storeInformation.location, context,
                         width: 170, maxLines: 2),
                   ],
                 ),
@@ -104,21 +106,33 @@ class WholesalerProfileCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String icon, String text,
+  Widget _buildInfoRow(String icon, String text, BuildContext context,
       {double width = double.infinity, int maxLines = 1}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         IconWidget(height: 14, width: 14, icon: icon),
         const SpaceWidget(spaceWidth: 8),
-        TextWidget(
-          text: text,
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-          fontColor: AppColors.onyxBlack,
-          overflow: TextOverflow.ellipsis,
-          maxLines: maxLines,
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Text(
+            text,
+            softWrap: true,
+            maxLines: null,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: AppColors.onyxBlack,
+            ),
+          ),
         ),
+        // TextWidget(
+        //   text: text,
+        //   fontSize: 12,
+        //   fontWeight: FontWeight.w400,
+        //   fontColor: AppColors.onyxBlack,
+        //   maxLines: null,
+        // ),
       ],
     );
   }

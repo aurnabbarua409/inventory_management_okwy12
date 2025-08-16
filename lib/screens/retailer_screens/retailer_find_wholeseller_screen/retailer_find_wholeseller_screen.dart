@@ -63,7 +63,7 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                   Expanded(
                     child: SearchBarWidget(
                       controller: controller.searchController,
-                      hintText: 'Search by name, email or phone number',
+                      hintText: 'Search by name or email',
                       maxLines: 1,
                       onChanged: (query) {
                         controller.filterWholesalers(query);
@@ -171,6 +171,11 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                                   color: Colors.white)
                               : ButtonWidget(
                                   onPressed: () {
+                                    if (controller.selectedProductIds.isEmpty) {
+                                      Get.snackbar('No product selected',
+                                          'Please select the product');
+                                      return;
+                                    }
                                     controller.showSendOrderDialog(context);
                                   },
                                   label: "Send",

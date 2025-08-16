@@ -78,6 +78,16 @@ class _WholesalerOrderHistoryScreenState
                       fontColor: AppColors.white,
                     ),
                   ),
+                  if (controller.newOrders.isEmpty ||
+                      controller.pendingOrders.isEmpty ||
+                      controller.confirmedOrders.isEmpty)
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                            onPressed: () {
+                              controller.initialize();
+                            },
+                            icon: const Icon(Icons.refresh)))
                 ],
               ),
             ),
@@ -131,7 +141,8 @@ class _WholesalerOrderHistoryScreenState
                             "product": order.product ?? []
                           };
                         }).toList(),
-                        confirmedInvoices: controller.confirmedOrders.map((order) {
+                        confirmedInvoices:
+                            controller.confirmedOrders.map((order) {
                           return {
                             "company": order
                                     .retailer?.storeInformation?.businessname ??
@@ -152,8 +163,6 @@ class _WholesalerOrderHistoryScreenState
                             "product": order
                           };
                         }).toList(),
-                          
-                       
 
                         initialIndex: widget
                             .initialTabIndex, // Passing initialTabIndex here

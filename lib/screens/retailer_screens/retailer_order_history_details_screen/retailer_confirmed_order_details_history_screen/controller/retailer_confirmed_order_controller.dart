@@ -163,7 +163,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
 
     final ttfRegular = pw.Font.ttf(fontRegular);
     final ttfBold = pw.Font.ttf(fontBold);
-
+    var totalPrice = 0;
     final pw.MemoryImage currencyIcon =
         await _loadImageFromAssets("assets/images/currencyIcon.png");
     List<List<dynamic>> tableData = [];
@@ -177,6 +177,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
         product[i].price,
         (product[i].price! * product[i].quantity!)
       ]);
+      totalPrice += (product[i].price! * product[i].quantity!);
     }
     try {
       pdf.addPage(pw.Page(
@@ -296,8 +297,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
               pw.Text("Sub Total:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
               pw.Image(currencyIcon, height: 12, width: 12),
-              pw.Text("${totalPrice.value}",
-                  style: const pw.TextStyle(fontSize: 15))
+              pw.Text("$totalPrice", style: const pw.TextStyle(fontSize: 15))
             ]),
             pw.Row(children: [
               pw.Text("Delivery Charge:",

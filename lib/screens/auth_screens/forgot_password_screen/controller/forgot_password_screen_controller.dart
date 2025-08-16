@@ -4,8 +4,8 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
-
 
 class ForgotPasswordScreenController extends GetxController {
   final emailController = TextEditingController();
@@ -34,7 +34,8 @@ class ForgotPasswordScreenController extends GetxController {
           Get.snackbar("Error", response["message"]);
         }
       } catch (e) {
-        Get.snackbar("Error", AppStrings.somethingWentWrong);
+        // Get.snackbar("Error", AppStrings.somethingWentWrong);
+        appLogger("Error from forgot password: $e");
       }
     }
   }

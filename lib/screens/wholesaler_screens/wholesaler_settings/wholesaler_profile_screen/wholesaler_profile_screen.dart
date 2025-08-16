@@ -231,7 +231,7 @@ class WholesalerProfileScreen extends StatelessWidget {
                     onPressed: () {
                       controller.updateProfileRepo();
                       Get.back();
-                      Get.back();
+                      //  Get.back();
                     },
                     label: AppStrings.updatePassword,
                     backgroundColor: AppColors.primaryBlue,

@@ -66,6 +66,16 @@ class _RetailerOrderHistoryScreenState
                     fontColor: AppColors.white,
                   ),
                 ),
+                if (controller.receivedOrders.isEmpty ||
+                    controller.pendingOrders.isEmpty ||
+                    controller.confirmedOrders.isEmpty)
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                          onPressed: () {
+                            controller.initalize();
+                          },
+                          icon: const Icon(Icons.refresh)))
               ]),
             ),
             SizedBox(height: ResponsiveUtils.height(16)),

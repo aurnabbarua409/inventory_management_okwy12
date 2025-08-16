@@ -86,7 +86,7 @@ class ProfileScreenController extends GetxController {
           response["data"]["storeInformation"]["location"] ?? "";
       phoneController.text = response["data"]["phone"] ?? "";
       image.value = response["data"]["image"] ?? "";
-      
+
       appLogger(image.value);
     } catch (e) {
       // Get.snackbar("Error", "An error occurred: $e");

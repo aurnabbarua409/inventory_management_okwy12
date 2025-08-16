@@ -6,6 +6,7 @@ class MGetWholesalers {
   bool success;
   int total;
   String message;
+  Pagination? pagination;
   List<WholeSalerDetails> data;
 
   MGetWholesalers({
@@ -13,13 +14,17 @@ class MGetWholesalers {
     required this.total,
     required this.message,
     required this.data,
+    this.pagination,
   });
 
   factory MGetWholesalers.fromJson(Map<String, dynamic> json) =>
       MGetWholesalers(
-        success: json["success"],
-        total: json["Total"],
-        message: json["message"],
+        success: json["success"] ?? false,
+        total: json["Total"] ?? 0,
+        message: json["message"] ?? "",
+        pagination: json["pagination"] != null
+            ? Pagination.fromJson(json["pagination"])
+            : null,
         data: List<WholeSalerDetails>.from(
             json["data"].map((x) => WholeSalerDetails.fromJson(x))),
       );
@@ -28,6 +33,7 @@ class MGetWholesalers {
         "success": success,
         "Total": total,
         "message": message,
+        "pagination": pagination?.toJson(),
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
       };
 }
@@ -69,7 +75,7 @@ class WholeSalerDetails {
 
   factory WholeSalerDetails.fromJson(Map<String, dynamic> json) =>
       WholeSalerDetails(
-        storeInformation: json["storeInformation"] != null
+        storeInformation:  json["storeInformation"] != null
             ? StoreInformation.fromJson(json["storeInformation"])
             : StoreInformation(
                 businessName: "",
@@ -154,13 +160,41 @@ class Authentication {
 
   factory Authentication.fromJson(Map<String, dynamic> json) => Authentication(
         isResetPassword: json["isResetPassword"] ?? false,
-        oneTimeCode: json["oneTimeCode"],
-        expireAt: json["expireAt"],
+        oneTimeCode: json["oneTimeCode"] ?? '',
+        expireAt: json["expireAt"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
         "isResetPassword": isResetPassword,
         "oneTimeCode": oneTimeCode,
         "expireAt": expireAt,
+      };
+}
+
+class Pagination {
+  int page;
+  int limit;
+  int totalPage;
+  int total;
+
+  Pagination({
+    required this.page,
+    required this.limit,
+    required this.totalPage,
+    required this.total,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+        page: json["page"] ?? 0,
+        limit: json["limit"] ?? 0,
+        totalPage: json["totalPage"] ?? 0,
+        total: json["total"] ?? 0,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "page": page,
+        "limit": limit,
+        "totalPage": totalPage,
+        "total": total,
       };
 }

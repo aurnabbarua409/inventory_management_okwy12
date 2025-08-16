@@ -38,31 +38,39 @@ class WholesalerPendingOrderDetailController extends GetxController {
   }
 
   void sendData(BuildContext context) async {
-    List<Map<String, dynamic>> updatedData = [];
-    appLogger("Data is now updating");
-    for (int index = 0; index < products.length; index++) {
-      appLogger(
-          "id: ${products[index].id}, availability: ${products[index].availability}");
-      final updatedItem = UpdateProductModel2(
-          product: products[index].id ?? "",
-          availability: products[index].availability ?? false,
-          price: products[index].price?.toInt() ?? 0);
-      updatedData.add(updatedItem.toJson());
-    }
+    try {
+      List<Map<String, dynamic>> updatedData = [];
+      appLogger("Data is now updating");
+      for (int index = 0; index < products.length; index++) {
+        if (products[index].price! < 0) {
+          products[index].price = 0;
+        }
+        appLogger(
+            "id: ${products[index].id}, availability: ${products[index].availability}");
 
-    final url = Urls.updatePendingToConfirm + id.value;
-    final response = await ApiService.patchApi(url, {'product': updatedData});
-    final isSuccess = response["success"] ?? false;
-    appLogger(response);
-    if (isSuccess) {
-      Get.snackbar("Success", "Products updated successfully");
-      Get.back();
-      Get.back();
-      showSendOrderSuccessfulDialog(context);
-      Get.back();
-    } else {
-      appLogger("failed to update product");
-      Get.snackbar("Error", "Failed to update product");
+        final updatedItem = UpdateProductModel2(
+            product: products[index].id ?? "",
+            availability: products[index].availability ?? false,
+            price: products[index].price?.toInt() ?? 0);
+        updatedData.add(updatedItem.toJson());
+      }
+
+      final url = Urls.updateNewOrderToPending + id.value;
+      final response = await ApiService.patchApi(url, {'product': updatedData});
+      final isSuccess = response["success"] ?? false;
+      appLogger(response);
+      if (isSuccess) {
+        Get.snackbar("Success", "Products updated successfully");
+        Get.back();
+        // Get.back();
+        showSendOrderSuccessfulDialog(context);
+        // Get.back();
+      } else {
+        appLogger("failed to update product");
+        Get.snackbar("Error", response['message'] ?? "Failed to update product");
+      }
+    } catch (e) {
+      appLogger(e);
     }
     // final response = await ApiService.patchApi(url, body)
   }

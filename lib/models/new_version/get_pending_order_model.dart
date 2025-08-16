@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class GetPendingOrderModel {
   final String? id;
   final List<Product>? product;
@@ -7,17 +9,26 @@ class GetPendingOrderModel {
   final String? createAt;
   final String? updatedAt;
 
-  GetPendingOrderModel(this.id, this.product, this.status, this.retailer,
-      this.wholesaler, this.createAt, this.updatedAt);
+  GetPendingOrderModel({
+    this.id,
+    this.product,
+    this.status,
+    this.retailer,
+    this.wholesaler,
+    this.createAt,
+    this.updatedAt,
+  });
   factory GetPendingOrderModel.fromJson(Map<String, dynamic> json) =>
       GetPendingOrderModel(
-          json['_id'] ?? "N/A",
-          List<Product>.from(json['product'].map((x) => Product.fromJson(x))),
-          json['status'] ?? "pending",
-          Retailer.fromJson(json['retailer'] ?? {}),
-          Wholesaler.fromJson(json['wholesaler'] ?? {}),
-          json['createdAt'].toString(),
-          json['updatedAt'].toString());
+        id: json['_id'] ?? "N/A",
+        product:
+            List<Product>.from(json['product'].map((x) => Product.fromJson(x))),
+        status: json['status'] ?? "pending",
+        retailer: Retailer.fromJson(json['retailer'] ?? {}),
+        wholesaler: Wholesaler.fromJson(json['wholesaler'] ?? {}),
+        createAt: json['createdAt'].toString(),
+        updatedAt: json['updatedAt'].toString(),
+      );
 }
 
 class Product {
@@ -33,6 +44,7 @@ class Product {
   final int? v;
   bool? availability;
   int? price;
+  TextEditingController? textEditingController;
 
   Product(
       {required this.id,
@@ -46,6 +58,7 @@ class Product {
       required this.updatedAt,
       this.availability = false,
       this.price = 0,
+      this.textEditingController,
       required this.v});
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -60,7 +73,8 @@ class Product {
       updatedAt: json['updatedAt'].toString(),
       availability: json['availability'] ?? false,
       price: json['price'] ?? 0,
-      v: json['__v'] ?? 0);
+      v: json['__v'] ?? 0,
+      textEditingController: TextEditingController());
 }
 
 class Retailer {
@@ -119,5 +133,7 @@ class StoreInformation {
   StoreInformation({required this.businessname, this.location = ""});
 
   factory StoreInformation.fromJson(Map<String, dynamic> json) =>
-      StoreInformation(businessname: json['businessName'] ?? "", location: json['location'] ?? "");
+      StoreInformation(
+          businessname: json['businessName'] ?? "",
+          location: json['location'] ?? "");
 }

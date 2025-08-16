@@ -308,12 +308,13 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     selectedUnit.value = value ?? 'Kg';
   }
 
-
   void updateGrandTotal() {
     grandtotal.value = 0;
     for (int i = 0; i < products.length; i++) {
-      grandtotal.value +=
-          ((products[i].price ?? 0) * (products[i].quantity ?? 1));
+      if (products[i].availability ?? false) {
+        grandtotal.value +=
+            ((products[i].price ?? 0) * (products[i].quantity ?? 1));
+      }
     }
   }
 }

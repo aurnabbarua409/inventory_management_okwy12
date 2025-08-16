@@ -71,7 +71,7 @@ class RetailerChangePasswordScreen extends StatelessWidget {
                 maxLines: 1,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
+                    return 'Please enter your password';
                   }
                   return null;
                 },
@@ -91,7 +91,7 @@ class RetailerChangePasswordScreen extends StatelessWidget {
                 maxLines: 1,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please  your password';
+                    return 'Please enter your password';
                   }
                   if (controller.newPasswordController.text != value) {
                     return 'Password mismatched';

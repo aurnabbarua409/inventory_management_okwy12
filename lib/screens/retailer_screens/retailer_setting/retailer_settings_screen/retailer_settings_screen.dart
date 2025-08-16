@@ -81,7 +81,9 @@ class RetailerSettingsScreen extends StatelessWidget {
             RetailerSettingItem(
               leading: AppIconsPath.logout,
               title: AppStrings.logOut,
-              onTap: controller.logout,
+              onTap: () {
+                controller.logoutCOnfirm(context);
+              },
             ),
           ],
         ),
