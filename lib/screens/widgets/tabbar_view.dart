@@ -197,7 +197,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                           const SpaceWidget(spaceHeight: 4),
                           TextWidget(
                             text:
-                                "Invoice: ${invoice['id'].substring(0, 6) ?? 'N/A'}", // Add null check
+                                "Invoice: ${invoice['id'].substring(invoice['id'].length - 6) ?? 'N/A'}",
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.onyxBlack,

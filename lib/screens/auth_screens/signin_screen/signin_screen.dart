@@ -43,7 +43,7 @@ class SigninScreen extends StatelessWidget {
                     const SpaceWidget(spaceHeight: 12),
                     TextFieldWidget(
                       controller: controller.emailController,
-                      hintText: 'Enter your email or phone number',
+                      hintText: 'Enter your email address',
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -82,8 +82,8 @@ class SigninScreen extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
                         }
-                        if (value.length < 6) {
-                          return "Password should be atleast 6 character";
+                        if (value.length < 4) {
+                          return "Password should be atleast 4 character";
                         }
                         return null;
                       },

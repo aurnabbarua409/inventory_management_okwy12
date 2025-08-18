@@ -105,6 +105,9 @@ class _RetailerPendingOrderDetailsHistoryScreenState
           hintText: 'Enter product name',
           maxLines: 1,
           suffixIcon: AppIconsPath.voiceIcon,
+          onTapSuffix: () {
+            pendingController.startVoiceRecognition(true);
+          },
         ),
         const SpaceWidget(spaceHeight: 14),
         const TextWidget(
@@ -175,7 +178,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
         Row(
           children: [
             ItemCount(
-              initialValue: 0,
+              initialValue: pendingController.quantity.value,
               minValue: 0,
               onChanged: (value) {
                 // Handle value change
@@ -197,6 +200,9 @@ class _RetailerPendingOrderDetailsHistoryScreenState
           hintText: 'Add any instructions for your wholesaler',
           maxLines: 4,
           suffixIcon: AppIconsPath.voiceIcon,
+          onTapSuffix: () {
+            pendingController.startVoiceRecognition(false);
+          },
         ),
         const SpaceWidget(spaceHeight: 16),
         Row(
@@ -206,6 +212,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               onPressed: () {
                 pendingController.updateProduct(id);
                 Get.back();
+                // setState(() {});
               },
               label: AppStrings.update,
               backgroundColor: AppColors.white,
@@ -504,7 +511,13 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                         onTap: () {
                           pendingController.productNameController.text =
                               item.productName!;
+                          pendingController.selectedUnit.value =
+                              item.unit ?? pendingController.selectedUnit.value;
+                          pendingController.additionalInfoController.text =
+                              item.additionalInfo ?? '';
+                          pendingController.quantity.value = item.quantity ?? 0;
                           showProductEditDialog(context, item.id!);
+                          setState(() {});
                         },
                       ),
                     ],

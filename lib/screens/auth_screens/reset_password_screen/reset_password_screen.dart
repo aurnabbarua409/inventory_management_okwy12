@@ -15,7 +15,7 @@ class ResetPasswordScreen extends StatelessWidget {
 
   final ResetPasswordScreenController controller =
       Get.put(ResetPasswordScreenController());
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +42,15 @@ class ResetPasswordScreen extends StatelessWidget {
                     controller: controller.newPasswordController,
                     hintText: 'Enter password',
                     maxLines: 1,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      if (value.length < 4) {
+                        return "Password should be atleast 4 character";
+                      }
+                      return null;
+                    },
                     suffixIcon: AppIconsPath.visibleOffIcon,
                   ),
                   const SpaceWidget(spaceHeight: 24),
@@ -56,6 +65,18 @@ class ResetPasswordScreen extends StatelessWidget {
                     controller: controller.confirmPasswordController,
                     hintText: 'Enter password',
                     maxLines: 1,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      if (value.length < 4) {
+                        return "Password should be atleast 4 character";
+                      }
+                      if (value != controller.newPasswordController.text) {
+                        return 'Password mismatched error';
+                      }
+                      return null;
+                    },
                     suffixIcon: AppIconsPath.visibleOffIcon,
                   ),
                   const SpaceWidget(spaceHeight: 40),

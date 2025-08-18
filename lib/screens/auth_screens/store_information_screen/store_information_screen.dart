@@ -27,13 +27,17 @@ class StoreInformationScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const AuthAppbarWidget(text: AppStrings.storeInformation),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AuthAppbarWidget(text: AppStrings.storeInformation),
+            Container(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 24,
+              ),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -202,8 +206,8 @@ class StoreInformationScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

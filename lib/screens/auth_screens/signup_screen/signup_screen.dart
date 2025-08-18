@@ -26,13 +26,13 @@ class SignupScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       body: Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AuthAppbarWidget(text: AppStrings.signup),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AuthAppbarWidget(text: AppStrings.signup),
+              Container(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -161,6 +161,9 @@ class SignupScreen extends StatelessWidget {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your password';
                                   }
+                                  if (value.length < 4) {
+                                    return "Password should be atleast 4 character";
+                                  }
                                   return null;
                                 },
                                 suffixIcon: AppIconsPath.visibleOffIcon,
@@ -181,6 +184,12 @@ class SignupScreen extends StatelessWidget {
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please confirm your password';
+                                  }
+                                  if (value.length < 4) {
+                                    return "Password should be atleast 4 character";
+                                  }
+                                  if (value != controller.passwordController.text) {
+                                    return 'Password mismatch error';
                                   }
                                   return null;
                                 },
@@ -271,8 +280,8 @@ class SignupScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

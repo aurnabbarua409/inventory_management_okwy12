@@ -265,13 +265,8 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
         const SpaceWidget(
           spaceHeight: 10,
         ),
+
         SummaryItemWidget(title: AppStrings.grandTotal, price: grandTotal),
-        SummaryItemWidget(
-            title: AppStrings.deliveryCharge,
-            price: confirmedController.deliveryCharge),
-        SummaryItemWidget(
-            title: AppStrings.grandTotal,
-            price: grandTotal + confirmedController.deliveryCharge),
         SizedBox(height: ResponsiveUtils.height(24)),
         // Download Button
         SizedBox(

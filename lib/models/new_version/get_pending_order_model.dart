@@ -33,10 +33,10 @@ class GetPendingOrderModel {
 
 class Product {
   final String? id;
-  final String? productName;
+  String? productName;
   String? unit;
   int? quantity;
-  final String? additionalInfo;
+  String? additionalInfo;
   final String? retailer;
   final bool? status;
   final String? createAt;

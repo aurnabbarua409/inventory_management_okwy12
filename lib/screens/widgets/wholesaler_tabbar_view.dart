@@ -327,7 +327,7 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
                           ),
                           TextWidget(
                             text:
-                                "Invoice: ${invoice['id'].substring(0, 6) ?? "N/A"}",
+                                "Invoice: ${invoice['id'].substring(invoice['id'].length - 6) ?? "N/A"}",
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.onyxBlack,

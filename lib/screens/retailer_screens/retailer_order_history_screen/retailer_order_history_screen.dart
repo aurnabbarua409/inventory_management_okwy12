@@ -28,6 +28,13 @@ class _RetailerOrderHistoryScreenState
   final controller = Get.put(RetailerOrderHistoryController());
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.initalize();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context); // Initialize the screen dimensions
 
@@ -75,6 +82,7 @@ class _RetailerOrderHistoryScreenState
                           onPressed: () {
                             controller.initalize();
                           },
+                          color: AppColors.bgColor,
                           icon: const Icon(Icons.refresh)))
               ]),
             ),

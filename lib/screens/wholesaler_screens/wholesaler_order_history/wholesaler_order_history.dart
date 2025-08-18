@@ -30,6 +30,14 @@ class WholesalerOrderHistoryScreen extends StatefulWidget {
 class _WholesalerOrderHistoryScreenState
     extends State<WholesalerOrderHistoryScreen> {
   final controller = Get.put(WholesalerOrderHistoryController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context); // Initialize the screen dimensions
@@ -87,16 +95,17 @@ class _WholesalerOrderHistoryScreenState
                             onPressed: () {
                               controller.initialize();
                             },
+                            color: AppColors.bgColor,
                             icon: const Icon(Icons.refresh)))
                 ],
               ),
             ),
             SizedBox(height: ResponsiveUtils.height(16)), // Responsive spacing
             Expanded(
-              child: controller.isLoading.value
-                  ? const Center(child: CircularProgressIndicator())
-                  : Obx(
-                      () => WholesalerTabView(
+              child: Obx(
+                () => controller.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : WholesalerTabView(
                         onRefresh: () => controller.initialize(),
                         showDeleteOrderDialog: controller.showDeleteOrderDialog,
                         pendingInvoices: controller.newOrders.map((order) {
@@ -167,7 +176,7 @@ class _WholesalerOrderHistoryScreenState
                         initialIndex: widget
                             .initialTabIndex, // Passing initialTabIndex here
                       ),
-                    ),
+              ),
             )
           ],
         ),

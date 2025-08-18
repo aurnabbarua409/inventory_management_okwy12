@@ -142,8 +142,12 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                   label: "Confirm",
                   backgroundColor: AppColors.primaryBlue,
                   onPressed: () {
-                    receivedController.send();
-                    Get.back();
+                    if (receivedController.formKey.currentState!.validate()) {
+                      receivedController.send();
+                      Get.back();
+                    } else {
+                      Get.snackbar('Error', 'Please enter valid quantities');
+                    }
                   }),
             ),
             const SpaceWidget(

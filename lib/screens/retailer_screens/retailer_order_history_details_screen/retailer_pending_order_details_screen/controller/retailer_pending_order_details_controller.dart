@@ -11,13 +11,16 @@ import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class RetailerPendingOrderDetailsHistoryController extends GetxController {
   var token = ''.obs;
   var selectAll = false.obs;
   var isLoading = true.obs;
   var deleteIsLoading = false.obs;
-
+  var isListening = false.obs;
+  var lastWords = ''.obs;
   // Update orders list type to match the new model
   RxList<MPendingOrders> orders = <MPendingOrders>[].obs;
 
@@ -40,22 +43,22 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
     products.value = arg['products'];
   }
 
-  void updateData(
-      {required List<UpdateProductModel> product,
-      required String orderId}) async {
-    try {
-      final url = Urls.updateProduct + orderId;
-      final response = await ApiService.patchApi(url, product.first.toJson());
-      final success = response["success"] ?? false;
-      if (success) {
-        Get.snackbar("Success", "Product updated successfully");
-      } else {
-        Get.snackbar("Error", "Failed to update product");
-      }
-    } catch (e) {
-      appLogger("error in update data from pending order: $e");
-    }
-  }
+  // void updateData(
+  //     {required List<UpdateProductModel> product,
+  //     required String orderId}) async {
+  //   try {
+  //     final url = Urls.updateProduct + orderId;
+  //     final response = await ApiService.patchApi(url, product.first.toJson());
+  //     final success = response["success"] ?? false;
+  //     if (success) {
+  //       Get.snackbar("Success", "Product updated successfully");
+  //     } else {
+  //       Get.snackbar("Error", "Failed to update product");
+  //     }
+  //   } catch (e) {
+  //     appLogger("error in update data from pending order: $e");
+  //   }
+  // }
 
   // Fetch orders from the API
   // Future<void> fetchPending() async {
@@ -208,13 +211,23 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
 
   void updateProduct(String id) async {
     try {
-      final url = Urls.updateProduct + id;
+      final url = Urls.updateSingleProduct + id;
       final response = await ApiService.patchApi(url, {
-        // "name": productNameController.text,
-        // "unit": unitController.text,
+        "productName": productNameController.text,
+        "unit": selectedUnit.value,
         "quantity": quantity.value,
         "additionalInfo": additionalInfoController.text
       });
+      final index = products.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        products[index].productName = productNameController.text;
+        products[index].unit = selectedUnit.value;
+        products[index].quantity = quantity.value;
+        products[index].additionalInfo = additionalInfoController.text;
+        // update();
+        products.refresh();
+      }
+
       appLogger(response);
       //fetchPending();
       update();
@@ -229,6 +242,55 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
     }
   }
 
+  Future<void> startVoiceRecognition(bool isProduct) async {
+    var status = await Permission.microphone.request();
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+      return;
+    }
+
+    if (status.isGranted) {
+      stt.SpeechToText speechToText = stt.SpeechToText();
+      String currentLocaleId = 'en_US';
+      bool available = await speechToText.initialize(
+        onStatus: (status) {
+          debugPrint('Speech status: $status');
+          isListening.value = speechToText.isListening;
+        },
+        onError: (error) {
+          debugPrint('Speech error: $error');
+          isListening.value = false;
+        },
+      );
+
+      if (available) {
+        isListening.value = true;
+        speechToText.listen(
+          onResult: (result) {
+            lastWords.value = result.recognizedWords;
+            isProduct
+                ? productNameController.text = lastWords.value
+                : additionalInfoController.text = lastWords.value;
+          },
+          listenFor:
+              const Duration(seconds: 60), // ⬅ Increase the duration here
+          pauseFor: const Duration(seconds: 3),
+          localeId: currentLocaleId,
+        );
+      } else {
+        isListening.value = false;
+        stt.SpeechToText().stop();
+        debugPrint("The user has denied the use of speech recognition.");
+      }
+    } else {
+      debugPrint("Microphone permission denied.");
+    }
+  }
+
+  void stopVoiceRecognition() {
+    isListening.value = false;
+    stt.SpeechToText().stop();
+  }
   // void showDeleteOrderDialog(BuildContext context, String orderId) {
   //   showCustomPopup(
   //     context,

@@ -25,7 +25,7 @@ class _WholesalerNewOrderDetailsScreenState
     extends State<WholesalerNewOrderDetailsScreen> {
   final WholesalerNewOrderDetailsController pendingController =
       Get.put(WholesalerNewOrderDetailsController());
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,40 +64,47 @@ class _WholesalerNewOrderDetailsScreenState
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListView(
-                  children: [
-                    // Header Row
-                    Container(
-                      color: AppColors.headerColor,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          _buildHeaderCell("Sl", flex: 0),
-                          _buildHeaderCell("Product", flex: 2),
-                          _buildHeaderCell("Qty", flex: 1),
-                          _buildHeaderCell("Unit", flex: 1),
-                          _buildHeaderCell("Avail", flex: 1),
-                          _buildHeaderCell("Price", flex: 1),
-                          _buildHeaderCell("Total", flex: 1),
-                          const SpaceWidget(spaceWidth: 8),
-                        ],
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    children: [
+                      // Header Row
+                      Container(
+                        color: AppColors.headerColor,
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          children: [
+                            _buildHeaderCell("Sl", flex: 0),
+                            _buildHeaderCell("Product", flex: 2),
+                            _buildHeaderCell("Qty", flex: 1),
+                            _buildHeaderCell("Unit", flex: 1),
+                            _buildHeaderCell("Avail", flex: 1),
+                            _buildHeaderCell("Price", flex: 1),
+                            _buildHeaderCell("Total", flex: 1),
+                            const SpaceWidget(spaceWidth: 8),
+                          ],
+                        ),
                       ),
-                    ),
-                    // Data Rows
-                    // WholesalerNewOrderRows(controller: pendingController),
-                    ..._buildDataRows(),
-                    const SpaceWidget(spaceHeight: 16),
+                      // Data Rows
+                      // WholesalerNewOrderRows(controller: pendingController),
+                      ..._buildDataRows(),
+                      const SpaceWidget(spaceHeight: 16),
 
-                    ButtonWidget(
-                      onPressed: () {
-                        pendingController.showSendOrderDialog(context);
-                      },
-                      label: AppStrings.send,
-                      backgroundColor: AppColors.primaryBlue,
-                      buttonHeight: 45,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ],
+                      ButtonWidget(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            pendingController.showSendOrderDialog(context);
+                          } else {
+                            Get.snackbar('Error', 'Please enter a valid price');
+                          }
+                        },
+                        label: AppStrings.send,
+                        backgroundColor: AppColors.primaryBlue,
+                        buttonHeight: 45,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -260,24 +267,22 @@ class _WholesalerNewOrderDetailsScreenState
                             fontSize: 10,
                             color: AppColors.onyxBlack,
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '';
+                            }
+                            final parsedValue = int.tryParse(value);
+                            if (parsedValue == null || parsedValue < 0) {
+                              return '';
+                            }
+                            return null;
+                          },
                           onChanged: (value) {
                             try {
                               if (value.isEmpty) {
                                 return;
                               }
-                              var temp = int.parse(value);
-                              if (temp <= 0) {
-                                Get.closeAllSnackbars();
-                                Get.snackbar(
-                                    'Error', 'Please write a valid price');
-                                price = 0;
 
-                                pendingController.products[index].price = price;
-
-                                totalPrice = (quantity * price);
-                                setState(() {});
-                                return;
-                              }
                               setState(() {
                                 price = int.parse(value);
 

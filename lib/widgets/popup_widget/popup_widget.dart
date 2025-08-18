@@ -40,7 +40,10 @@ void showCustomPopup(BuildContext context, List<Widget> children) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return CustomPopupWidget(children: children);
+      return Center(
+        child:
+            SingleChildScrollView(child: CustomPopupWidget(children: children)),
+      );
     },
   );
 }

@@ -20,13 +20,10 @@ class BuildSummarySectionWidget extends StatelessWidget {
         const SpaceWidget(
           spaceHeight: 10,
         ),
-        SummaryItemWidget(title: AppStrings.subTotal, price: grandTotal),
-        SummaryItemWidget(
-            title: AppStrings.deliveryCharge,
-            price: confirmedController.deliveryCharge),
+        // SummaryItemWidget(title: AppStrings.subTotal, price: grandTotal),
         SummaryItemWidget(
             title: AppStrings.grandTotal,
-            price: grandTotal + confirmedController.deliveryCharge),
+            price: grandTotal),
         SizedBox(height: ResponsiveUtils.height(24)),
         // Download Button
         SizedBox(

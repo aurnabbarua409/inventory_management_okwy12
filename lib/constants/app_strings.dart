@@ -14,7 +14,7 @@ class AppStrings {
   static const String createAnAccount = "Create an account";
   static const String signInToYourAccount = "Sign in to your account";
   static const String enterLoginDetails = "Enter your login details";
-  static const String emailPhoneNumber = "Email or Phone Number";
+  static const String emailPhoneNumber = "Email";
   static const String hintnumber = "Enter phone number";
   static const String emailhint = "Enter email";
   static const String nameHint = "Full name";
@@ -29,7 +29,7 @@ class AppStrings {
   static const String forgetPw = "Forgot Password";
   static const String noData = "No data found";
   static const String forgetPwDesc =
-      "Enter your email address or phone number to reset password";
+      "Enter your email address to reset password";
   static const String continueText = "Continue";
   static const String enterVerificationCode = "Enter Verification Code";
   static const String sentACode = "We’ve sent a code to ";

@@ -12,125 +12,24 @@ import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
-import '../../../constants/app_images_path.dart';
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
-import '../../../widgets/image_widget/image_widget.dart';
-import '../../../widgets/outlined_button_widget/outlined_button_widget.dart';
-import '../../../widgets/popup_widget/popup_widget.dart';
 
-class RetailerSavedOrderScreen extends StatelessWidget {
-  RetailerSavedOrderScreen({super.key});
+class RetailerSavedOrderScreen extends StatefulWidget {
+  const RetailerSavedOrderScreen({super.key});
 
+  @override
+  State<RetailerSavedOrderScreen> createState() =>
+      _RetailerSavedOrderScreenState();
+}
+
+class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
   final controller = Get.put(RetailerSavedOrderScreenController());
 
-  void showDeleteOrderDialog(BuildContext context, String orderId) {
-    showCustomPopup(
-      context,
-      [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButtonWidget(
-            onTap: () => Get.back(),
-            icon: AppIconsPath.closeIcon,
-            size: 20,
-            color: AppColors.black,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 16),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.areYouSure,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            fontColor: AppColors.primaryBlue,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 2),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.deleteDesc,
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            fontColor: AppColors.onyxBlack,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: OutlinedButtonWidget(
-                  onPressed: () => Get.back(),
-                  label: AppStrings.no,
-                  backgroundColor: AppColors.white,
-                  buttonWidth: 120,
-                  buttonHeight: 36,
-                  textColor: AppColors.primaryBlue,
-                  borderColor: AppColors.primaryBlue,
-                  fontSize: 14,
-                ),
-              ),
-              const SpaceWidget(spaceWidth: 16),
-              Expanded(
-                flex: 1,
-                child: ButtonWidget(
-                  onPressed: () {
-                    Get.back();
-                    controller.deleteRow(orderId);
-                  },
-                  label: AppStrings.yes,
-                  backgroundColor: AppColors.primaryBlue,
-                  buttonWidth: 120,
-                  buttonHeight: 36,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-      ],
-    );
-  }
-
-  void showDeleteOrderSuccessfulDialog(BuildContext context) {
-    showCustomPopup(
-      context,
-      [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButtonWidget(
-            onTap: () {
-              Get.back();
-            },
-            icon: AppIconsPath.closeIcon,
-            size: 20,
-            color: AppColors.black,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 16),
-        const Center(
-          child: ImageWidget(
-            height: 64,
-            width: 64,
-            imagePath: AppImagesPath.checkImage,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-        const Center(
-          child: TextWidget(
-            text: AppStrings.deleteSuccessfulDesc,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            fontColor: AppColors.onyxBlack,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-      ],
-    );
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.fetchOrders();
   }
 
   @override
@@ -182,53 +81,36 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (showButtons) // Only show Delete and Send buttons if any checkbox is selected
-                          Row(
-                            children: [
-                              // Delete Button on the left
-                              IconButton(
-                                onPressed: () async {
-                                  if (controller.selectedProducts
-                                      .contains(true)) {
-                                    List<String> selectedOrderIds = [];
-                                    for (int i = 0;
-                                        i < controller.selectedProducts.length;
-                                        i++) {
-                                      if (controller.selectedProducts[i]) {
-                                        selectedOrderIds
-                                            .add(controller.orders[i].id!);
-                                      }
-                                    }
-
-                                    if (selectedOrderIds.isNotEmpty) {
-                                      for (String id in selectedOrderIds) {
-                                        await controller.deleteRow(id);
-                                      }
-                                    }
-                                  } else {
-                                    Get.snackbar('No Selection',
-                                        'Please select an order to delete');
-                                  }
-                                },
-                                icon: const IconWidget(
-                                  height: 38,
-                                  width: 28,
-                                  icon: AppIconsPath.delete,
-                                ),
-                              ),
-
-                              // Send Button on the right
-                              ButtonWidget(
-                                onPressed: controller.shareSelection,
-                                label: 'Send',
-                                fontWeight: FontWeight.w500,
-                                backgroundColor: AppColors.primaryBlue,
-                                buttonWidth: 80,
-                                buttonHeight: 40,
-                              ),
-                            ],
+                        if (showButtons) ...[
+                          // Only show Delete and Send buttons if any checkbox is selected
+                          IconButton(
+                            onPressed: () async {
+                              if (controller.selectedProducts.contains(true)) {
+                                controller.showDeleteOrderDialog(
+                                  context,
+                                );
+                              } else {
+                                Get.snackbar('No Selection',
+                                    'Please select an order to delete');
+                              }
+                            },
+                            icon: const IconWidget(
+                              height: 38,
+                              width: 28,
+                              icon: AppIconsPath.delete,
+                            ),
                           ),
 
+                          // Send Button on the right
+                          ButtonWidget(
+                            onPressed: controller.shareSelection,
+                            label: 'Send',
+                            fontWeight: FontWeight.w500,
+                            backgroundColor: AppColors.primaryBlue,
+                            buttonWidth: 80,
+                            buttonHeight: 40,
+                          ),
+                        ],
                         // Add Item button in the center when no checkbox is selected
                         if (!showButtons)
                           Center(
@@ -254,7 +136,9 @@ class RetailerSavedOrderScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: RefreshIndicator(
-                      onRefresh: controller.fetchOrders,
+                      onRefresh: () async {
+                        controller.fetchOrders();
+                      },
                       child: ListView(
                         children: [
                           // Header Row
@@ -311,7 +195,9 @@ class RetailerSavedOrderScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildDataRows(List<GetAllOrderModel> orders) {
+  List<Widget> _buildDataRows(
+    List<GetAllOrderModel> orders,
+  ) {
     if (orders.isEmpty) {
       return [
         const Center(

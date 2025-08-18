@@ -1,5 +1,4 @@
 class Urls {
-  
   static const baseUrl = "http://75.119.138.163:5006/api/v1";
   // static const baseUrl = "http://10.10.7.46:5006/api/v1";
   //"http://10.0.70.188:5006/api/v1";
@@ -50,4 +49,5 @@ class Urls {
   static const updatereceiveToConfirm = "$baseUrl/products/update-received/";
   static const setDelivered = "$baseUrl/products/update-delivered/";
   static const deleteProduct = "$baseUrl/new-order/";
+  static const updateSingleProduct = "$baseUrl/new-order/";
 }

@@ -37,10 +37,12 @@ class WholesalerOrderHistoryController extends GetxController {
 
       // var data = await retailerRepo.getRetailers();
       appLogger("fetching new order from wholesaler: $response");
-
-      for (var element in response["data"]) {
-        newOrders.add(GetPendingOrderModel.fromJson(element));
+      if (response['data'] != null && response['data'] is List) {
+        for (var element in response["data"]) {
+          newOrders.add(GetPendingOrderModel.fromJson(element));
+        }
       }
+      appLogger("Succesfully fetched new orders: $newOrders");
     } catch (e) {
       appLogger("error from fetching new order: $e");
     } finally {
@@ -61,8 +63,10 @@ class WholesalerOrderHistoryController extends GetxController {
       final isSuccess = response['success'] ?? false;
 
       if (isSuccess) {
-        for (var element in response["data"]) {
-          pendingOrders.insert(0, GetPendingOrderModel.fromJson(element));
+        if (response['data'] != null && response['data'] is List) {
+          for (var element in response["data"]) {
+            pendingOrders.insert(0, GetPendingOrderModel.fromJson(element));
+          }
         }
       }
       // var recievedData = await retailerRepo.getRecieved();
@@ -86,8 +90,10 @@ class WholesalerOrderHistoryController extends GetxController {
       final isSuccess = response['success'] ?? false;
 
       if (isSuccess) {
-        for (var element in response["data"]) {
-          confirmedOrders.add(GetPendingOrderModel.fromJson(element));
+        if (response['data'] != null && response['data'] is List) {
+          for (var element in response["data"]) {
+            confirmedOrders.add(GetPendingOrderModel.fromJson(element));
+          }
         }
       }
     } catch (e) {
@@ -193,15 +199,6 @@ class WholesalerOrderHistoryController extends GetxController {
     fetchNewOrders();
     fetchPendingOrders();
     fetchConfirmedOrders();
-  }
-
-  @override
-  void onInit() {
-    initialize();
-    super.onInit();
-    // refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-    //   initialize(); // repeat fetch
-    // });
   }
 
   @override

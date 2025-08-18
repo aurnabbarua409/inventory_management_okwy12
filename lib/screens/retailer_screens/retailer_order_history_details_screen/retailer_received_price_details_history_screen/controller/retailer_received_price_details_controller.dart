@@ -32,6 +32,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
   RxInt grandtotal = 0.obs;
   final orderid = ''.obs;
+  final formKey = GlobalKey<FormState>();
   @override
   void onInit() {
     super.onInit();

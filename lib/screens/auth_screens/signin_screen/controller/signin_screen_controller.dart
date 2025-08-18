@@ -25,11 +25,12 @@ class SignInScreenController extends GetxController {
       // emailController.text = 'j2f8ctwkgx@jkotypc.com'; //retailer production
 
       // emailController.text = 'bk1mlihfgi@zudpck.com'; //whole saler production
-      emailController.text = "codob27286@forexru.com"; //retailer local
+      // emailController.text = "codob27286@forexru.com"; //retailer local
       // emailController.text = "f2dm2rcm0a@zudpck.com"; // wholesaler for local
       // whole saler: bk1mlihfgi@zudpck.com
       // retailer: j2f8ctwkgx@jkotypc.com
-
+      emailController.text = 'royofaw944@mardiek.com'; //retailer business
+      // emailController.text = 'bekajor273@mardiek.com'; // wholesaler business
       passwordController.text = '12345678';
     }
     //hilaryonyenkem@yahoo.com hoyevi9323@calmpros.com  bewir47352@erapk.com

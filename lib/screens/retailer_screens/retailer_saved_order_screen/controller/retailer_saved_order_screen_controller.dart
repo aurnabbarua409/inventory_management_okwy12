@@ -1,15 +1,23 @@
-import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_icons_path.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/new_version/get_all_order_model.dart';
-import 'package:inventory_app/models/retailer/retailer_home/delete_order_model.dart';
-import 'package:inventory_app/models/retailer/retailer_home/get_orders_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
+import 'package:inventory_app/widgets/button_widget/button_widget.dart';
+import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:inventory_app/widgets/image_widget/image_widget.dart';
+import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
+import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
+import 'package:inventory_app/widgets/space_widget/space_widget.dart';
+import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 class RetailerSavedOrderScreenController extends GetxController {
   var selectedProducts = <bool>[].obs;
@@ -20,14 +28,8 @@ class RetailerSavedOrderScreenController extends GetxController {
   var orders = <GetAllOrderModel>[].obs;
   var selectedOrderProducts = <Map<String, String>>[].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchOrders();
-  }
-
   // Fetch orders from the API
-  Future<void> fetchOrders() async {
+  void fetchOrders() async {
     try {
       // Retrieve the token from the preferences
       String? token = await PrefsHelper.getToken();
@@ -83,6 +85,7 @@ class RetailerSavedOrderScreenController extends GetxController {
       selectedProducts
           .assignAll(List.generate(orders.length, (index) => false));
       appLogger("after deleted: ${response.body}");
+
       fetchOrders();
       // String deleteUrl = "${Urls.deleteOrder}/$id";
       // var response = await ApiService.deleteApi(deleteUrl, {});
@@ -179,5 +182,126 @@ class RetailerSavedOrderScreenController extends GetxController {
 
     Get.toNamed(AppRoutes.retailerFindWholeSellerScreen,
         arguments: {'selectedProductIds': selectedProductIds});
+  }
+
+  void showDeleteOrderDialog(BuildContext context) {
+    showCustomPopup(
+      context,
+      [
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButtonWidget(
+            onTap: () => Get.back(),
+            icon: AppIconsPath.closeIcon,
+            size: 20,
+            color: AppColors.black,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        const Center(
+          child: TextWidget(
+            text: AppStrings.areYouSure,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontColor: AppColors.primaryBlue,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 2),
+        const Center(
+          child: TextWidget(
+            text: 'Do you want to delete the selected products?',
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            fontColor: AppColors.onyxBlack,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: OutlinedButtonWidget(
+                  onPressed: () => Get.back(),
+                  label: AppStrings.no,
+                  backgroundColor: AppColors.white,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  textColor: AppColors.primaryBlue,
+                  borderColor: AppColors.primaryBlue,
+                  fontSize: 14,
+                ),
+              ),
+              const SpaceWidget(spaceWidth: 16),
+              Expanded(
+                flex: 1,
+                child: ButtonWidget(
+                  onPressed: () async {
+                    Get.back();
+                    List<String> selectedOrderIds = [];
+                    for (int i = 0; i < selectedProducts.length; i++) {
+                      if (selectedProducts[i]) {
+                        selectedOrderIds.add(orders[i].id!);
+                      }
+                    }
+
+                    if (selectedOrderIds.isNotEmpty) {
+                      for (String id in selectedOrderIds) {
+                        await deleteRow(id);
+                      }
+                    }
+                  },
+                  label: AppStrings.yes,
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+      ],
+    );
+  }
+
+  void showDeleteOrderSuccessfulDialog(BuildContext context) {
+    showCustomPopup(
+      context,
+      [
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButtonWidget(
+            onTap: () {
+              Get.back();
+            },
+            icon: AppIconsPath.closeIcon,
+            size: 20,
+            color: AppColors.black,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        const Center(
+          child: ImageWidget(
+            height: 64,
+            width: 64,
+            imagePath: AppImagesPath.checkImage,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+        const Center(
+          child: TextWidget(
+            text: AppStrings.deleteSuccessfulDesc,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            fontColor: AppColors.onyxBlack,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+      ],
+    );
   }
 }

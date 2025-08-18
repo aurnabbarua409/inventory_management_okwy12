@@ -181,14 +181,14 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                                   label: "Send",
                                   backgroundColor: AppColors.white,
                                   textColor: AppColors.primaryBlue,
-                                  buttonHeight: 36,
+                                  buttonHeight: 40,
                                   buttonWidth: 140,
                                 )),
                         ],
                       ),
                     )
                   : const SizedBox.shrink();
-            })
+            }),
           ],
         ),
       ),

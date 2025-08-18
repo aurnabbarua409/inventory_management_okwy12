@@ -16,7 +16,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
   RxBool isLoading = false.obs;
 
   // var confirmedData = <Confirmed>[].obs;
-  final deliveryCharge = 5.00;
+  //  final deliveryCharge = 5.00;
   final RxDouble totalPrice = 0.0.obs;
   final Rxn<GetPendingOrderModel> confirmedData = Rxn<GetPendingOrderModel>();
   @override
@@ -293,26 +293,12 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             //         style: const pw.TextStyle(fontSize: 15)),
             //   ]),
             pw.SizedBox(height: 15),
-            pw.Row(children: [
-              pw.Text("Sub Total:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Image(currencyIcon, height: 12, width: 12),
-              pw.Text("$totalPrice", style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.Row(children: [
-              pw.Text("Delivery Charge:",
-                  style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Image(currencyIcon, height: 12, width: 12),
-              pw.Text("$deliveryCharge",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
+
             pw.Row(children: [
               pw.Text("Grand Total:", style: const pw.TextStyle(fontSize: 15)),
               pw.SizedBox(width: 10),
               pw.Image(currencyIcon, height: 12, width: 12),
-              pw.Text("${totalPrice + deliveryCharge}",
-                  style: const pw.TextStyle(fontSize: 15))
+              pw.Text("$totalPrice", style: const pw.TextStyle(fontSize: 15))
             ]),
           ]);
         },
