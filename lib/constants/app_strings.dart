@@ -189,4 +189,5 @@ class AppStrings {
   static const String deliveryCharge = "Delivery Charges";
   static const String grandTotal = "Grand Total";
   static const String deliver = "Delivered";
+  static const String savedHistory = 'Saved History';
 }

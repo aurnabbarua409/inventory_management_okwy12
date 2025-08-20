@@ -41,4 +41,7 @@ class AppIconsPath {
   static const String moreIcon = 'assets/icons/moreIcon.svg';
   static const String noInternetIcon = 'assets/icons/no-wifi.png';
   static const String noOrderIcon = "assets/icons/checkout.png";
+  static const String deleteIcon2 = 'assets/icons/delete_icon2.svg';
+  static const String restoreIcon = 'assets/icons/restore_icon.svg';
+  static const String restoreIcon2 = 'assets/icons/restore_icon2.svg';
 }

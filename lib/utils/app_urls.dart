@@ -50,4 +50,5 @@ class Urls {
   static const setDelivered = "$baseUrl/products/update-delivered/";
   static const deleteProduct = "$baseUrl/new-order/";
   static const updateSingleProduct = "$baseUrl/new-order/";
+  static const inviteLink = "$baseUrl/invite-link/";
 }

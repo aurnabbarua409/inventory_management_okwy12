@@ -4,26 +4,25 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/new_version/get_all_order_model.dart';
-import 'package:inventory_app/routes/app_routes.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_history_screen/controller/retailer_saved_order_screen_history_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
-import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
 
-class RetailerSavedOrderScreen extends StatefulWidget {
-  const RetailerSavedOrderScreen({super.key});
+class RetailerSavedOrderHistoryScreen extends StatefulWidget {
+  const RetailerSavedOrderHistoryScreen({super.key});
 
   @override
-  State<RetailerSavedOrderScreen> createState() =>
+  State<RetailerSavedOrderHistoryScreen> createState() =>
       _RetailerSavedOrderScreenState();
 }
 
-class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
-  final controller = Get.put(RetailerSavedOrderScreenController());
+class _RetailerSavedOrderScreenState
+    extends State<RetailerSavedOrderHistoryScreen> {
+  final controller = Get.put(RetailerSavedOrderScreenHistoryController());
 
   @override
   void initState() {
@@ -59,7 +58,7 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                           size: 22,
                         ),
                         const TextWidget(
-                          text: AppStrings.orderSaved,
+                          text: AppStrings.savedHistory,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           fontColor: AppColors.white,
@@ -102,59 +101,15 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                           ),
 
                           // Send Button on the right
-                          ButtonWidget(
-                            onPressed: controller.shareSelection,
-                            label: 'Send',
-                            fontWeight: FontWeight.w500,
-                            backgroundColor: AppColors.primaryBlue,
-                            buttonWidth: 80,
-                            buttonHeight: 40,
-                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: const IconWidget(
+                                height: 38,
+                                width: 38,
+                                icon: AppIconsPath.restoreIcon2),
+                          )
                         ],
                         // Add Item button in the center when no checkbox is selected
-                        if (!showButtons) ...[
-                          ButtonWidget(
-                            onPressed: () {
-                              Get.toNamed(
-                                  AppRoutes.retailerCreateNewOrderScreen);
-                            },
-                            label: 'Add New Item',
-                            fontWeight: FontWeight.w500,
-                            backgroundColor: AppColors.primaryBlue,
-                            buttonWidth: 175,
-                            buttonHeight: 40,
-                            icon: Icons.add,
-                          ),
-                          InkWell(
-                            onTap: () => Get.toNamed(
-                                AppRoutes.retailerSavedOrderHistoryScreen),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.primaryBlue, width: 2),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.history,
-                                    color: AppColors.primaryBlue,
-                                  ),
-                                  SpaceWidget(
-                                    spaceWidth: 3,
-                                  ),
-                                  Text(
-                                    'History',
-                                    style: TextStyle(
-                                        color: AppColors.primaryBlue,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ]
                       ],
                     );
                   }),
@@ -263,7 +218,7 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                       },
                     ),
                   )
-                : SizedBox()), // Prevents index out of range
+                : const SizedBox()), // Prevents index out of range
             Expanded(
               flex: 3,
               child: Padding(
@@ -307,23 +262,28 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
               ),
             ),
             Expanded(
-              flex: 1,
-              child: IconButton(
-                onPressed: () {
-                  controller.productNameController.text =
-                      item.productName ?? "";
-                  controller.selectedUnit.value = item.unit ?? 'pcs';
-                  controller.quantity.value = item.quantity ?? 0;
-                  controller.additionalInfoController.text =
-                      item.additionalInfo ?? "";
-                  controller.showProductEditDialog(context, item.id ?? '-1');
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  size: 15,
-                ),
-              ),
-            )
+                flex: 1,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: const IconWidget(
+                          height: 18,
+                          width: 18,
+                          icon: AppIconsPath.restoreIcon),
+                    ),
+                    const SpaceWidget(
+                      spaceWidth: 5,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: const IconWidget(
+                          height: 18,
+                          width: 18,
+                          icon: AppIconsPath.deleteIcon2),
+                    ),
+                  ],
+                ))
           ],
         ),
       );

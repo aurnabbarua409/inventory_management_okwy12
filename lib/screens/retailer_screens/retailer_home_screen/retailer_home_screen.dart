@@ -11,6 +11,9 @@ import 'package:inventory_app/screens/retailer_screens/retailer_notification_scr
 import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
+import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_invitelink.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
@@ -18,6 +21,7 @@ import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RetailerHomeScreen extends StatelessWidget {
   const RetailerHomeScreen({super.key});
@@ -172,11 +176,8 @@ class RetailerHomeScreen extends StatelessWidget {
                         ),
                         const SpaceWidget(spaceWidth: 4),
                         TextButtonWidget(
-                          onPressed: () {
-                            Share.share(
-                              AppStrings.shareAppFromRetailer,
-                              subject: 'Flutter Share Example',
-                            );
+                          onPressed: () async {
+                            AppInvitelink.invite();
                           },
                           text: AppStrings.clickHere,
                           textColor: AppColors.primaryBlue,

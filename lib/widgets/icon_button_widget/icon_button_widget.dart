@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:inventory_app/constants/app_colors.dart';
 
 import '../../utils/app_size.dart';
 
 class IconButtonWidget extends StatelessWidget {
   final VoidCallback onTap;
   final String icon; // Path to the SVG asset
-  final Color color;
+  final Color? color;
   final double size;
 
   const IconButtonWidget({
     super.key,
     required this.onTap,
     required this.icon,
-    required this.color,
+    this.color,
     required this.size,
   });
 
@@ -27,7 +28,7 @@ class IconButtonWidget extends StatelessWidget {
       style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
       icon: SvgPicture.asset(
         icon, // SVG asset path
-        color: color,
+        color: color ?? AppColors.primaryBlue,
         width: ResponsiveUtils.width(size),
         height: ResponsiveUtils.width(size),
       ),

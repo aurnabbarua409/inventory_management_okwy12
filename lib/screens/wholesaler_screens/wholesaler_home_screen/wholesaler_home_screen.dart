@@ -8,11 +8,14 @@ import 'package:inventory_app/screens/retailer_screens/retailer_notification_scr
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/wholesaler_order_history.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_profile_screen/controller/wholesaler_profile_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
+import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_invitelink.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_icons_path.dart';
@@ -173,12 +176,7 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
                       const SpaceWidget(spaceWidth: 4),
                       TextButtonWidget(
                         onPressed: () {
-                          Share.share(
-                            AppStrings
-                                .shareAppFromWholesaler, //'Check out this amazing content!',
-                            subject: AppStrings
-                                .fluttershare, // 'Flutter Share Example',
-                          );
+                          AppInvitelink.invite();
                         },
                         text: AppStrings.clickHere,
                         textColor: AppColors.primaryBlue,

@@ -23,7 +23,7 @@ import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
-class RetailerSavedOrderScreenController extends GetxController {
+class RetailerSavedOrderScreenHistoryController extends GetxController {
   var selectedProducts = <bool>[].obs;
   var token = ''.obs;
   var selectAll = false.obs;

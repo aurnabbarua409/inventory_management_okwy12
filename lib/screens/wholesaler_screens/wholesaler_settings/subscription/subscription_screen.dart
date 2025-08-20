@@ -23,7 +23,7 @@ class SubscriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // final PaymentController paymentController = Get.put(PaymentController());
     final isSubscribed = PrefsHelper.isSubscribed;
-    final totalOrders = PrefsHelper.totalOrders;
+    final totalOrders =  PrefsHelper.totalOrders;
     return Scaffold(
       appBar: AppbarWidget(
         text: AppStrings.subscription,
@@ -57,7 +57,7 @@ class SubscriptionScreen extends StatelessWidget {
                         lineHeight: 10.0,
                         animationDuration: 2000,
                         percent:
-                            totalOrders / 10, // Adjust percentage as needed
+                             totalOrders / 10, // Adjust percentage as needed
                         // ignore: deprecated_member_use
                         linearStrokeCap: LinearStrokeCap.roundAll,
                         progressColor: AppColors.primaryBlue,
