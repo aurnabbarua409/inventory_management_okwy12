@@ -30,11 +30,13 @@ class RetailerOrderHistoryController extends GetxController {
   // RxList<Confirmed> confirmedOrders = <Confirmed>[].obs;
   RxList<GetPendingOrderModel> confirmedOrders = <GetPendingOrderModel>[].obs;
   Timer? refreshTimer;
+
   Future<void> fetchPendingOrders() async {
     update();
     pendingOrders.clear();
     appLogger("trying to fetch orders");
     isLoading.value = true; // Show loading indicator
+
     try {
       var data = await retailerRepo.getRetailers();
       appLogger("fetching pending order: $data");
@@ -173,7 +175,7 @@ class RetailerOrderHistoryController extends GetxController {
     );
   }
 
-  Future initalize() async {
+  Future<void> initalize() async {
     fetchPendingOrders();
     fetchReceivedOrders();
     fetchConfirmedOrders();

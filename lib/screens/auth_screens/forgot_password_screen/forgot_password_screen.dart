@@ -20,14 +20,14 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(width: ResponsiveUtils.width(28)),
-          const AuthAppbarWidget(text: AppStrings.forgetPw),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(width: ResponsiveUtils.width(28)),
+            const AuthAppbarWidget(text: AppStrings.forgetPw),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -84,8 +84,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

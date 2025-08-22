@@ -184,7 +184,7 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                                         },
                                       ),
                                     )),
-                                _buildHeaderCell("Name", flex: 3),
+                                _buildHeaderCell("Name", flex: 2),
                                 _buildHeaderCell("Qty", flex: 1),
                                 _buildHeaderCell("Unit", flex: 1),
                                 _buildHeaderCell("Action", flex: 1),
@@ -265,7 +265,7 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                   )
                 : SizedBox()), // Prevents index out of range
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(

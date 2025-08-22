@@ -213,7 +213,11 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     //need to implement later
     List<Map<String, dynamic>> data = [];
     for (int i = 0; i < products.length; i++) {
-      data.add({"_id": products[i].id, "quantity": products[i].quantity ?? 0});
+      if (products[i].availability ?? false) {
+        data.add(
+            {"_id": products[i].id, "quantity": products[i].quantity ?? 0});
+      }
+      appLogger('added data: $data');
     }
     final updatedData = {"product": data};
     try {

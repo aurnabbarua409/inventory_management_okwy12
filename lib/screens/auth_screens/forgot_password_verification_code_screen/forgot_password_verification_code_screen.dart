@@ -25,13 +25,14 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       body: Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AuthAppbarWidget(text: AppStrings.enterVerificationCode),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AuthAppbarWidget(text: AppStrings.enterVerificationCode),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -151,9 +152,9 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
                     }),
                   ],
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

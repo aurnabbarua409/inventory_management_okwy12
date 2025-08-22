@@ -50,15 +50,15 @@ class _RetailerOrderHistoryScreenState
                   alignment: Alignment.centerLeft,
                   child: IconButtonWidget(
                     onTap: () {
-                      // final control = Get.find<BottomNavbarController>();
-                      // control.changeIndex(0);
-                      final userId = PrefsHelper.userId;
-                      final role = PrefsHelper.userRole;
-                      Get.offAllNamed(AppRoutes.retailerHomeScreen,
-                          arguments: {'userId': userId});
-                      Get.offAllNamed(AppRoutes.bottomNavBar,
-                          arguments: {'userRole': role, 'userId': userId});
-                      // Get.back();
+                      final control = Get.find<BottomNavbarController>();
+                      control.changeIndex(0);
+                      // final userId = PrefsHelper.userId;
+                      // final role = PrefsHelper.userRole;
+                      // Get.offAllNamed(AppRoutes.retailerHomeScreen,
+                      //     arguments: {'userId': userId});
+                      // Get.offAllNamed(AppRoutes.bottomNavBar,
+                      //     arguments: {'userRole': role, 'userId': userId});
+                      // // Get.back();
                     },
                     icon: AppIconsPath.backIcon,
                     color: AppColors.white,

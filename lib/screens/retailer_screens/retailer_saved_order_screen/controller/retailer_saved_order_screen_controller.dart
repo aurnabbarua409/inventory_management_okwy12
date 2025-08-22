@@ -9,6 +9,7 @@ import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/new_version/get_all_order_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
 import 'package:inventory_app/services/api_service.dart';
@@ -64,29 +65,43 @@ class RetailerSavedOrderScreenController extends GetxController {
         Get.snackbar("Error", "User is not authenticated.");
         return;
       }
-
+      orders.clear();
       update();
+      int page = 1;
+      bool hasmore = true;
+      while (hasmore) {
+        final url = "${Urls.getAllOrders}?page=$page";
+        appLogger(url);
+        var response = await ApiService.getApi(url);
+        appLogger(response);
+        if (response != null) {
+          final List<dynamic> data = response["data"];
+          if (data.isEmpty) {
+            hasmore = false;
+          }
+          // GetAllOrderModel orderResponse = GetAllOrderModel.fromJson(response);
 
-      var response = await ApiService.getApi(Urls.getAllOrders);
-
-      if (response != null) {
-        final List<dynamic> data = response["data"];
-
-        // GetAllOrderModel orderResponse = GetAllOrderModel.fromJson(response);
-
-        if (response['success'] ?? false) {
-          // orders.assignAll(data);
-          orders.value = data
-              .map((e) => GetAllOrderModel.fromJson(e as Map<String, dynamic>))
-              .toList();
-          appLogger("fetching saved order: $orders");
-          selectedProducts
-              .assignAll(List<bool>.generate(orders.length, (index) => false));
+          if (response['success'] ?? false) {
+            // orders.assignAll(data);
+            for (int i = 0; i < data.length; i++) {
+              orders.add(GetAllOrderModel.fromJson(data[i]));
+            }
+            // orders.add(data
+            //     .map(
+            //         (e) => GetAllOrderModel.fromJson(e as Map<String, dynamic>))
+            //     ;
+            appLogger("fetching saved order: $orders");
+            selectedProducts.assignAll(
+                List<bool>.generate(orders.length, (index) => false));
+          } else {
+            Get.snackbar('Error', response['message']);
+            break;
+          }
         } else {
-          Get.snackbar('Error', response['message']);
+          Get.snackbar('Error', 'Failed to load orders');
+          break;
         }
-      } else {
-        Get.snackbar('Error', 'Failed to load orders');
+        page++;
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while fetching orders');
@@ -207,6 +222,8 @@ class RetailerSavedOrderScreenController extends GetxController {
 
     Get.toNamed(AppRoutes.retailerFindWholeSellerScreen,
         arguments: {'selectedProductIds': selectedProductIds});
+    Get.find<BottomNavbarController>().changeIndex(1);
+    Get.toNamed(AppRoutes.bottomNavBar);
   }
 
   void showDeleteOrderDialog(BuildContext context) {

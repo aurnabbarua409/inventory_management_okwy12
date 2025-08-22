@@ -6,7 +6,6 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
-import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/controller/subs_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/payment_webview_page.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
@@ -23,7 +22,7 @@ class SubscriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // final PaymentController paymentController = Get.put(PaymentController());
     final isSubscribed = PrefsHelper.isSubscribed;
-    final totalOrders =  PrefsHelper.totalOrders;
+    final totalOrders = PrefsHelper.totalOrders;
     return Scaffold(
       appBar: AppbarWidget(
         text: AppStrings.subscription,
@@ -56,8 +55,9 @@ class SubscriptionScreen extends StatelessWidget {
                         animation: true,
                         lineHeight: 10.0,
                         animationDuration: 2000,
-                        percent:
-                             totalOrders / 10, // Adjust percentage as needed
+                        percent: totalOrders > 10
+                            ? 1
+                            : totalOrders / 10, // Adjust percentage as needed
                         // ignore: deprecated_member_use
                         linearStrokeCap: LinearStrokeCap.roundAll,
                         progressColor: AppColors.primaryBlue,

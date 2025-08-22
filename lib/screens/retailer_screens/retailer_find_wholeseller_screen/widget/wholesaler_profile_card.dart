@@ -33,7 +33,7 @@ class WholesalerProfileCard extends StatelessWidget {
     print(
         "Wholesaler Card: ${wholesaler.storeInformation.businessName}, isSelected: $isSelected");
     return GestureDetector(
-      onLongPress: () => onLongPress(!isSelected),
+      onTap: () => onLongPress(!isSelected),
       onDoubleTap: () => onDoubleTap(false),
       child: Container(
         width: double.infinity,
@@ -93,7 +93,7 @@ class WholesalerProfileCard extends StatelessWidget {
             const SpaceWidget(spaceHeight: 16),
             if (!isSelected) // Hide button if selected
               ButtonWidget(
-                onPressed: onTap,
+                onPressed: () => onLongPress(!isSelected),
                 label: AppStrings.sendOrder,
                 backgroundColor: AppColors.primaryBlue,
                 buttonWidth: double.infinity,

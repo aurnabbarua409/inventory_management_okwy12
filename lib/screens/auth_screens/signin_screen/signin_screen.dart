@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
@@ -142,6 +143,33 @@ class SigninScreen extends StatelessWidget {
                 ),
               ),
             ),
+            if (kDebugMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: ButtonWidget(
+                      label: 'Retailer',
+                      onPressed: () {
+                        controller.emailController.text =
+                            'royofaw944@mardiek.com';
+                        controller.passwordController.text = '12345678';
+                        controller.signInUser();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: ButtonWidget(
+                      label: 'Wholesaler',
+                      onPressed: () {
+                        controller.emailController.text =
+                            'bekajor273@mardiek.com';
+                        controller.passwordController.text = '12345678';
+                        controller.signInUser();
+                      },
+                    ),
+                  ),
+                ],
+              )
           ],
         ),
       ),

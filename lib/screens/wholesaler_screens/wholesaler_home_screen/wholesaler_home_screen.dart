@@ -153,7 +153,10 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
                   const SpaceWidget(spaceHeight: 16),
                   CustomContainerWidget(
                     onTap: () {
-                      Get.to(WholesalerOrderHistoryScreen(initialTabIndex: 2));
+                      Get.to(const WholesalerOrderHistoryScreen(
+                          initialTabIndex: 2));
+                      final control = Get.find<BottomNavbarController>();
+                      control.changeIndex(2);
                     },
                     containerColor: AppColors.purpleLight,
                     icon: AppIconsPath.orderHistoryIcon,

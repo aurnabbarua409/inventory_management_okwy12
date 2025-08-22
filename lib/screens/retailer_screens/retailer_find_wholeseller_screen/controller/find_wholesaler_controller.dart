@@ -8,6 +8,7 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/find_wholesaler/get_wholesaler_model.dart';
 import 'package:inventory_app/models/retailer/send_product_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
@@ -100,16 +101,16 @@ class FindWholesalerController extends GetxController {
 
         _handleResponse(response);
 
-        if (filteredWholesalers.isEmpty) {
-          _showShareAppDialog(query);
-        }
+        // if (filteredWholesalers.isEmpty) {
+        //   _showShareAppDialog(query);
+        // }
       } else if (_isValidEmail(query)) {
         var response =
             await ApiService.getApi('${Urls.getWholesaler}?email=$query');
         _handleResponse(response);
       } else {
         var response = await ApiService.getApi(
-            '${Urls.getWholesaler}?businessName=$query');
+            '${Urls.getWholesaler}?storeInformation.businessName=$query');
         _handleResponse(response);
       }
     } catch (e) {
@@ -267,58 +268,53 @@ class FindWholesalerController extends GetxController {
 
   void showSendOrderDialog(BuildContext context) {
     int selectedCount = selectedItems.where((item) => item).length;
-    if (selectedCount == 0) {
-      Get.snackbar("No Selection", "Hold the button to select wholesaler");
-      return;
-    } else {
-      showCustomPopup(
-        context,
-        [
-          const Center(
-            child: Text(
-              "Are you sure?",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryBlue),
+
+    showCustomPopup(
+      context,
+      [
+        const Center(
+          child: Text(
+            "Are you sure?",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryBlue),
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Center(
+          child: Text(
+            "Do you want to send orders to selected wholesalers?",
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton(
+              onPressed: () => Get.back(),
+              child: const Text("No", style: TextStyle(color: AppColors.red)),
             ),
-          ),
-          const SizedBox(height: 8),
-          const Center(
-            child: Text(
-              "Do you want to send orders to selected wholesalers?",
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black),
+            const SizedBox(width: 16),
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+                sendOrder(context);
+                showSendOrderSuccessfulDialog(context);
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryBlue),
+              child: const Text(
+                "Yes",
+                style: TextStyle(color: AppColors.white),
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OutlinedButton(
-                onPressed: () => Get.back(),
-                child: const Text("No", style: TextStyle(color: AppColors.red)),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {                  
-                  sendOrder(context);
-                  showSendOrderSuccessfulDialog(context);
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBlue),
-                child: const Text(
-                  "Yes",
-                  style: TextStyle(color: AppColors.white),
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-    }
+          ],
+        ),
+      ],
+    );
   }
 
   void setSelectedProductIds(List<String> productIds) {
@@ -449,7 +445,10 @@ class FindWholesalerController extends GetxController {
         const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            Get.offNamed(AppRoutes.retailerOrderHistoryScreen);
+            Get.back();
+            // Get.offNamed(AppRoutes.retailerOrderHistoryScreen);
+            Get.find<BottomNavbarController>().changeIndex(2);
+            Get.toNamed(AppRoutes.bottomNavBar);
           },
           child: const Center(child: Text("Go to Order History")),
         ),

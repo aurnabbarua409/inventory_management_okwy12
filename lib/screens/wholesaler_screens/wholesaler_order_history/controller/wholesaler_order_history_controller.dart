@@ -32,15 +32,24 @@ class WholesalerOrderHistoryController extends GetxController {
     update();
     newOrders.clear();
     isLoading.value = true; // Show loading indicator
+    int page = 1;
+    bool hasmore = true;
     try {
-      final response = await ApiService.getApi(Urls.newPendingOrder);
-
-      // var data = await retailerRepo.getRetailers();
-      appLogger("fetching new order from wholesaler: $response");
-      if (response['data'] != null && response['data'] is List) {
-        for (var element in response["data"]) {
-          newOrders.add(GetPendingOrderModel.fromJson(element));
+      while (hasmore) {
+        final url = "${Urls.newPendingOrder}?page=$page";
+        final response = await ApiService.getApi(url);
+        List<dynamic> data = response['data'];
+        if (data.isEmpty) {
+          hasmore = false;
         }
+        // var data = await retailerRepo.getRetailers();
+        appLogger("fetching new order from wholesaler: $response");
+        if (response['data'] != null && response['data'] is List) {
+          for (var element in response["data"]) {
+            newOrders.add(GetPendingOrderModel.fromJson(element));
+          }
+        }
+        page++;
       }
       appLogger("Succesfully fetched new orders: $newOrders");
     } catch (e) {

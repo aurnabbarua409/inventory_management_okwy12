@@ -170,21 +170,21 @@ class _WholesalerPendingOrderDetailsScreenState
                       // Data Rows
                       // WholesalerPendingRow(controller: pendingController),
                       ..._buildDataRows(),
-                      const SpaceWidget(spaceHeight: 16),
-                      ButtonWidget(
-                        onPressed: () {
-                          // Show dialog to send order (implement functionality)
-                          if (_formKey.currentState!.validate()) {
-                            showSendOrderDialog(context);
-                          } else {
-                            Get.snackbar('Error', 'Please enter a valid price');
-                          }
-                        },
-                        label: AppStrings.send,
-                        backgroundColor: AppColors.primaryBlue,
-                        buttonHeight: 45,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      // const SpaceWidget(spaceHeight: 16),
+                      // ButtonWidget(
+                      //   onPressed: () {
+                      //     // Show dialog to send order (implement functionality)
+                      //     if (_formKey.currentState!.validate()) {
+                      //       showSendOrderDialog(context);
+                      //     } else {
+                      //       Get.snackbar('Error', 'Please enter a valid price');
+                      //     }
+                      //   },
+                      //   label: AppStrings.send,
+                      //   backgroundColor: AppColors.primaryBlue,
+                      //   buttonHeight: 45,
+                      //   fontWeight: FontWeight.w500,
+                      // ),
                     ],
                   ),
                 ),
@@ -223,6 +223,7 @@ class _WholesalerPendingOrderDetailsScreenState
       int price = item.price ?? 0;
       int quantity = item.quantity ?? 1;
       int total = price * quantity;
+      final isAvailable = item.availability ?? false;
       return GestureDetector(
         onTap: () {
           pendingController.showProductDetailsDialog(context, item);
@@ -296,93 +297,29 @@ class _WholesalerPendingOrderDetailsScreenState
               ),
               // Availability Switch
               Expanded(
-                  flex: 1,
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                      child: FlutterSwitch(
-                        width: 80,
-                        height: 18,
-                        toggleSize: 15,
-                        borderRadius: 30,
-                        padding: 2,
-                        value: item.availability ?? false,
-                        onToggle: (bool newValue) {
-                          // pendingController.updateProductData(index, 0,
-                          //     availability: newValue);
-                          pendingController.products[index].availability =
-                              newValue;
-                          setState(() {});
-                        },
-                        activeColor: Colors.green,
-                        inactiveColor: AppColors.red,
-                        inactiveToggleColor: Colors.white,
-                        showOnOff: true,
-                        valueFontSize: 8,
-                        activeText: "Yes",
-                        inactiveText: "No",
-                        activeTextFontWeight: FontWeight.w600,
-                        inactiveTextFontWeight: FontWeight.w600,
-                        activeTextColor: AppColors.white,
-                        inactiveTextColor: AppColors.white,
-                      ))),
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Icon(
+                    isAvailable ? Icons.check_circle : Icons.cancel,
+                    size: 14,
+                    color: isAvailable ? Colors.green : Colors.red,
+                  ),
+                ),
+              ),
               // Price
               Expanded(
                 flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: item.availability ?? false
-                      ? SizedBox(
-                          height: 30,
-                          width: 10,
-                          child: TextFormField(
-                            initialValue: price.toString(),
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(8),
-                              border: OutlineInputBorder(),
-                            ),
-                            enabled: true,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: AppColors.onyxBlack,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '';
-                              }
-                              final parsedValue = int.tryParse(value);
-                              if (parsedValue == null || parsedValue < 0) {
-                                return '';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              try {
-                                if (value.isEmpty) {
-                                  return;
-                                }
-
-                                setState(() {
-                                  price = int.parse(value);
-
-                                  pendingController.products[index].price =
-                                      price;
-                                  total = quantity * price;
-                                });
-                              } catch (e) {
-                                appLogger(e);
-                              }
-                            },
-                          ),
-                        )
-                      : Text(
-                          price.toString(),
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: AppColors.onyxBlack,
-                          ),
-                        ),
+                  child: Text(
+                    price.toString(),
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.onyxBlack,
+                    ),
+                  ),
                 ),
               ),
               // Total

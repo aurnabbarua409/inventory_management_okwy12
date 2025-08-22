@@ -81,7 +81,6 @@ class _RetailerSavedOrderScreenState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (showButtons) ...[
-                          // Only show Delete and Send buttons if any checkbox is selected
                           IconButton(
                             onPressed: () async {
                               if (controller.selectedProducts.contains(true)) {
@@ -102,7 +101,16 @@ class _RetailerSavedOrderScreenState
 
                           // Send Button on the right
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if (controller.selectedProducts.contains(true)) {
+                                controller.showHistoryOrderDialog(
+                                  context,
+                                );
+                              } else {
+                                Get.snackbar('No Selection',
+                                    'Please select an order to restore');
+                              }
+                            },
                             child: const IconWidget(
                                 height: 38,
                                 width: 38,
@@ -139,7 +147,7 @@ class _RetailerSavedOrderScreenState
                                         },
                                       ),
                                     )),
-                                _buildHeaderCell("Name", flex: 3),
+                                _buildHeaderCell("Name", flex: 2),
                                 _buildHeaderCell("Qty", flex: 1),
                                 _buildHeaderCell("Unit", flex: 1),
                                 _buildHeaderCell("Action", flex: 1),
@@ -220,7 +228,7 @@ class _RetailerSavedOrderScreenState
                   )
                 : const SizedBox()), // Prevents index out of range
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
@@ -264,23 +272,15 @@ class _RetailerSavedOrderScreenState
             Expanded(
                 flex: 1,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () => controller.showHistoryOrderSingleDialog(
+                          context, item.id ?? '0', item.productName ?? ""),
                       child: const IconWidget(
                           height: 18,
                           width: 18,
                           icon: AppIconsPath.restoreIcon),
-                    ),
-                    const SpaceWidget(
-                      spaceWidth: 5,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: const IconWidget(
-                          height: 18,
-                          width: 18,
-                          icon: AppIconsPath.deleteIcon2),
                     ),
                   ],
                 ))

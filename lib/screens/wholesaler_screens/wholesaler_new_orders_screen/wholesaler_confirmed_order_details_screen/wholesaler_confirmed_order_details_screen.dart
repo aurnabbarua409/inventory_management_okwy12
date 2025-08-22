@@ -72,81 +72,87 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
-                    child: Column(
-                      children: [
-                        if (confirmedController.confirmedData.value != null)
-                          // Order Details Section
-                          const SpaceWidget(
-                            spaceHeight: 20,
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          if (confirmedController.confirmedData.value != null)
+                            // Order Details Section
+
+                            _buildDetailsList(
+                              title: AppStrings.retailerDetails,
+                              details: [
+                                {
+                                  AppStrings.name: confirmedController
+                                          .confirmedData
+                                          .value
+                                          ?.retailer
+                                          ?.storeInformation
+                                          ?.businessname ??
+                                      '',
+                                },
+                                {
+                                  AppStrings.address: confirmedController
+                                          .confirmedData
+                                          .value
+                                          ?.retailer
+                                          ?.storeInformation
+                                          ?.location ??
+                                      "",
+                                },
+                                {
+                                  AppStrings.phone: confirmedController
+                                          .confirmedData
+                                          .value
+                                          ?.retailer
+                                          ?.phone ??
+                                      ""
+                                },
+                              ],
+                            ),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
+
+                          // Wholesaler Details Section
+                          _buildDetailsList(
+                            title: AppStrings.wholesalerDetails,
+                            details: [
+                              {
+                                AppStrings.name: confirmedController
+                                        .confirmedData
+                                        .value
+                                        ?.wholesaler
+                                        ?.storeInformation
+                                        ?.businessname ??
+                                    '',
+                              },
+                              {
+                                AppStrings.address: confirmedController
+                                        .confirmedData
+                                        .value
+                                        ?.wholesaler
+                                        ?.storeInformation
+                                        ?.location ??
+                                    '',
+                              },
+                              {
+                                AppStrings.phone: confirmedController
+                                        .confirmedData
+                                        .value
+                                        ?.wholesaler
+                                        ?.phone ??
+                                    ''
+                              },
+                            ],
                           ),
-                        _buildDetailsList(
-                          title: AppStrings.retailerDetails,
-                          details: [
-                            {
-                              AppStrings.name: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.retailer
-                                      ?.storeInformation
-                                      ?.businessname ??
-                                  '',
-                            },
-                            {
-                              AppStrings.address: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.retailer
-                                      ?.storeInformation
-                                      ?.location ??
-                                  "",
-                            },
-                            {
-                              AppStrings.phone: confirmedController
-                                      .confirmedData.value?.retailer?.phone ??
-                                  ""
-                            },
-                          ],
-                        ),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
 
-                        // Wholesaler Details Section
-                        _buildDetailsList(
-                          title: AppStrings.wholesalerDetails,
-                          details: [
-                            {
-                              AppStrings.name: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.storeInformation
-                                      ?.businessname ??
-                                  '',
-                            },
-                            {
-                              AppStrings.address: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.storeInformation
-                                      ?.location ??
-                                  '',
-                            },
-                            {
-                              AppStrings.phone: confirmedController
-                                      .confirmedData.value?.wholesaler?.phone ??
-                                  ''
-                            },
-                          ],
-                        ),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
+                          // Invoice Table
+                          _buildInvoiceTable(),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
 
-                        // Invoice Table
-                        _buildInvoiceTable(),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
-
-                        // Summary and Download Button
-                        _buildSummarySection(),
-                      ],
+                          // Summary and Download Button
+                          _buildSummarySection(),
+                        ],
+                      ),
                     ),
                   );
                 }),

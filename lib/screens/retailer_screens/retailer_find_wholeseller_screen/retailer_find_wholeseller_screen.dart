@@ -35,7 +35,6 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                     onTap: () {
                       final control = Get.find<BottomNavbarController>();
                       control.changeIndex(0);
-                      Get.back();
                     },
                     icon: AppIconsPath.backIcon,
                     color: AppColors.white,
@@ -63,7 +62,7 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                   Expanded(
                     child: SearchBarWidget(
                       controller: controller.searchController,
-                      hintText: 'Search by name or email',
+                      hintText: 'Search by name, email or phone',
                       maxLines: 1,
                       onChanged: (query) {
                         controller.filterWholesalers(query);
@@ -151,8 +150,8 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                   controller.selectedItems.where((item) => item).length;
               return selectedCount > 0
                   ? Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 10, bottom: 10),
                       decoration: const BoxDecoration(
                         color: AppColors.primaryBlue,
                         borderRadius:

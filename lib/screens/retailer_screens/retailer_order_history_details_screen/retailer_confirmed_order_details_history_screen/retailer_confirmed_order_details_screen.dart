@@ -36,109 +36,119 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
         backgroundColor: AppColors.whiteLight,
         body: GetBuilder(
           init: ConfirmedOrderDetailsHistoryController(),
-          builder: (confirmedController) => Column(
-            children: [
-              MainAppbarWidget(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButtonWidget(
-                      onTap: () {
-                        Get.back();
-                      },
-                      icon: AppIconsPath.backIcon,
-                      color: AppColors.white,
-                      size: 22,
-                    ),
-                    const TextWidget(
-                      text: AppStrings.orderDetails,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      fontColor: AppColors.white,
-                    ),
-                    const SpaceWidget(spaceWidth: 28),
-                  ],
+          builder: (confirmedController) => SingleChildScrollView(
+            child: Column(
+              children: [
+                MainAppbarWidget(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButtonWidget(
+                        onTap: () {
+                          Get.back();
+                        },
+                        icon: AppIconsPath.backIcon,
+                        color: AppColors.white,
+                        size: 22,
+                      ),
+                      const TextWidget(
+                        text: AppStrings.orderDetails,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontColor: AppColors.white,
+                      ),
+                      const SpaceWidget(spaceWidth: 28),
+                    ],
+                  ),
                 ),
-              ),
-              SingleChildScrollView(
-                child: Obx(() {
+                Obx(() {
                   return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 20),
-                    child: Column(
-                      children: [
-                        if (confirmedController.confirmedData.value != null)
-                          // Order Details Section
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          if (confirmedController.confirmedData.value != null)
+                            // Order Details Section
+                            BuildDetailsListWidget(
+                              title: AppStrings.retailerDetails,
+                              details: [
+                                {
+                                  AppStrings.name: confirmedController
+                                          .confirmedData
+                                          .value
+                                          ?.retailer
+                                          ?.storeInformation
+                                          ?.businessname ??
+                                      'Someone',
+                                },
+                                {
+                                  AppStrings.address: confirmedController
+                                          .confirmedData
+                                          .value
+                                          ?.retailer
+                                          ?.storeInformation
+                                          ?.location ??
+                                      'N/A',
+                                },
+                                {
+                                  AppStrings.phone: confirmedController
+                                          .confirmedData
+                                          .value
+                                          ?.retailer
+                                          ?.phone ??
+                                      "N/A",
+                                },
+                              ],
+                            ),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
+
+                          // Wholesaler Details Section
                           BuildDetailsListWidget(
-                            title: AppStrings.retailerDetails,
+                            title: AppStrings.wholesalerDetails,
                             details: [
                               {
                                 AppStrings.name: confirmedController
                                         .confirmedData
                                         .value
-                                        ?.retailer
-                                        ?.storeInformation
-                                        ?.businessname ??
-                                    'Someone',
+                                        ?.wholesaler
+                                        ?.name ??
+                                    'N/A',
                               },
                               {
                                 AppStrings.address: confirmedController
                                         .confirmedData
                                         .value
-                                        ?.retailer
+                                        ?.wholesaler
                                         ?.storeInformation
                                         ?.location ??
                                     'N/A',
                               },
                               {
                                 AppStrings.phone: confirmedController
-                                        .confirmedData.value?.retailer?.phone ??
+                                        .confirmedData
+                                        .value
+                                        ?.wholesaler
+                                        ?.phone ??
                                     "N/A",
                               },
                             ],
                           ),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
 
-                        // Wholesaler Details Section
-                        BuildDetailsListWidget(
-                          title: AppStrings.wholesalerDetails,
-                          details: [
-                            {
-                              AppStrings.name: confirmedController
-                                      .confirmedData.value?.wholesaler?.name ??
-                                  'N/A',
-                            },
-                            {
-                              AppStrings.address: confirmedController
-                                      .confirmedData
-                                      .value
-                                      ?.wholesaler
-                                      ?.storeInformation
-                                      ?.location ??
-                                  'N/A',
-                            },
-                            {
-                              AppStrings.phone: confirmedController
-                                      .confirmedData.value?.wholesaler?.phone ??
-                                  "N/A",
-                            },
-                          ],
-                        ),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
+                          // Invoice Table
+                          BuildInvoiceTableWidget(
+                              confirmedController: confirmedController),
+                          SizedBox(height: ResponsiveUtils.height(16.0)),
 
-                        // Invoice Table
-                        BuildInvoiceTableWidget(
-                            confirmedController: confirmedController),
-                        SizedBox(height: ResponsiveUtils.height(16.0)),
-
-                        // Summary and Download Button
-                        BuildSummarySectionWidget(confirmedController),
-                      ],
+                          // Summary and Download Button
+                          BuildSummarySectionWidget(confirmedController),
+                        ],
+                      ),
                     ),
                   );
                 }),
-              ),
-            ],
+              ],
+            ),
           ),
         ));
   }

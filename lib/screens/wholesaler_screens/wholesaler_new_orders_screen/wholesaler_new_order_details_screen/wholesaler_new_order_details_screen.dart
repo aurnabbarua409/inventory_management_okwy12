@@ -231,6 +231,8 @@ class _WholesalerNewOrderDetailsScreenState
                       appLogger(
                           "after toggling, isAvailable: $newValue, index: $index");
                       available = newValue;
+                      price = 0;
+                      pendingController.products[index].price = 0;
                       pendingController.products[index].availability = newValue;
                       setState(() {});
                     },

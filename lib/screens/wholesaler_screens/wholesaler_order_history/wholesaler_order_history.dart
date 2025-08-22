@@ -169,6 +169,7 @@ class _WholesalerOrderHistoryScreenState
                               ),
                             ),
                             "id": order.id ?? "N/A",
+                            "status": order.status,
                             "product": order
                           };
                         }).toList(),

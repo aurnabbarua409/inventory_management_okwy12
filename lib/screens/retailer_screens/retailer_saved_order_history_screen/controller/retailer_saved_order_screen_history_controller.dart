@@ -64,29 +64,38 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
         Get.snackbar("Error", "User is not authenticated.");
         return;
       }
-
+      orders.clear();
       update();
+      int page = 1;
+      bool hasmore = true;
+      while (hasmore) {
+        final url = "${Urls.getAllHistory}?page=$page";
+        var response = await ApiService.getApi(url);
 
-      var response = await ApiService.getApi(Urls.getAllOrders);
+        if (response != null) {
+          final List<dynamic> data = response["data"];
+          if (data.isEmpty) {
+            hasmore = false;
+          }
+          // GetAllOrderModel orderResponse = GetAllOrderModel.fromJson(response);
 
-      if (response != null) {
-        final List<dynamic> data = response["data"];
-
-        // GetAllOrderModel orderResponse = GetAllOrderModel.fromJson(response);
-
-        if (response['success'] ?? false) {
-          // orders.assignAll(data);
-          orders.value = data
-              .map((e) => GetAllOrderModel.fromJson(e as Map<String, dynamic>))
-              .toList();
-          appLogger("fetching saved order: $orders");
-          selectedProducts
-              .assignAll(List<bool>.generate(orders.length, (index) => false));
+          if (response['success'] ?? false) {
+            // orders.assignAll(data);
+            for (int i = 0; i < data.length; i++) {
+              orders.add(GetAllOrderModel.fromJson(data[i]));
+            }
+            appLogger("fetching saved order: $orders");
+            selectedProducts.assignAll(
+                List<bool>.generate(orders.length, (index) => false));
+          } else {
+            Get.snackbar('Error', response['message']);
+            break;
+          }
         } else {
-          Get.snackbar('Error', response['message']);
+          Get.snackbar('Error', 'Failed to load orders');
+          break;
         }
-      } else {
-        Get.snackbar('Error', 'Failed to load orders');
+        page++;
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while fetching orders');
@@ -293,6 +302,181 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
     );
   }
 
+  void showHistoryOrderDialog(BuildContext context) {
+    showCustomPopup(
+      context,
+      [
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButtonWidget(
+            onTap: () => Get.back(),
+            icon: AppIconsPath.closeIcon,
+            size: 20,
+            color: AppColors.black,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        const Center(
+          child: TextWidget(
+            text: AppStrings.areYouSure,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontColor: AppColors.primaryBlue,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 2),
+        const Center(
+          child: TextWidget(
+            text: 'Do you want to restore the selected products?',
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            fontColor: AppColors.onyxBlack,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: OutlinedButtonWidget(
+                  onPressed: () => Get.back(),
+                  label: AppStrings.no,
+                  backgroundColor: AppColors.white,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  textColor: AppColors.primaryBlue,
+                  borderColor: AppColors.primaryBlue,
+                  fontSize: 14,
+                ),
+              ),
+              const SpaceWidget(spaceWidth: 16),
+              Expanded(
+                flex: 1,
+                child: ButtonWidget(
+                  onPressed: () async {
+                    Get.back();
+                    bool success = false;
+                    List<String> selectedOrderIds = [];
+                    for (int i = 0; i < selectedProducts.length; i++) {
+                      if (selectedProducts[i]) {
+                        selectedOrderIds.add(orders[i].id!);
+                      }
+                    }
+
+                    if (selectedOrderIds.isNotEmpty) {
+                      for (String id in selectedOrderIds) {
+                        success = await updateProduct(id);
+                      }
+                    }
+                    if (success) {
+                      Get.snackbar(
+                          'Success: $success', 'Product restored successfully');
+                    } else {
+                      Get.snackbar(
+                          'Success: $success', 'Failed to restore product');
+                    }
+                  },
+                  label: AppStrings.yes,
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+      ],
+    );
+  }
+
+  void showHistoryOrderSingleDialog(
+      BuildContext context, String id, String name) {
+    showCustomPopup(
+      context,
+      [
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButtonWidget(
+            onTap: () => Get.back(),
+            icon: AppIconsPath.closeIcon,
+            size: 20,
+            color: AppColors.black,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        const Center(
+          child: TextWidget(
+            text: AppStrings.areYouSure,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontColor: AppColors.primaryBlue,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 2),
+        Center(
+          child: TextWidget(
+            text: 'Do you really want to restore the product: $name?',
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            fontColor: AppColors.onyxBlack,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: OutlinedButtonWidget(
+                  onPressed: () => Get.back(),
+                  label: AppStrings.no,
+                  backgroundColor: AppColors.white,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  textColor: AppColors.primaryBlue,
+                  borderColor: AppColors.primaryBlue,
+                  fontSize: 14,
+                ),
+              ),
+              const SpaceWidget(spaceWidth: 16),
+              Expanded(
+                flex: 1,
+                child: ButtonWidget(
+                  onPressed: () async {
+                    Get.back();
+                    bool success = false;
+
+                    success = await updateProduct(id);
+                    if (success) {
+                      Get.snackbar(
+                          'Success: $success', 'Product restored successfully');
+                    } else {
+                      Get.snackbar(
+                          'Success: $success', 'Failed to restore product');
+                    }
+                  },
+                  label: AppStrings.yes,
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+      ],
+    );
+  }
+
   void showDeleteOrderSuccessfulDialog(BuildContext context) {
     showCustomPopup(
       context,
@@ -463,19 +647,25 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
     );
   }
 
-  Future<void> updateProduct(String id) async {
-    final url = Urls.updateSingleProduct + id;
-    final body = {
-      'quantity': quantity.value,
-      'unit': selectedUnit.value,
-      'productName': productNameController.text,
-      'additionalInfo': additionalInfoController.text
-    };
-    final response = await ApiService.patchApi(url, body);
-    fetchOrders();
-    final success = response['success'];
-    Get.snackbar('Success: $success', response['message']);
-    appLogger(response);
+  Future<bool> updateProduct(String id) async {
+    try {
+      final url = Urls.updateSingleProduct + id;
+      final body = {"status": false};
+      final response = await ApiService.patchApi(url, body);
+      fetchOrders();
+      final success = response['success'] ?? false;
+
+      // if (success) {
+      //   Get.snackbar('Success: $success', 'Product restored successfully');
+      // } else {
+      //   Get.snackbar('Success: $success', 'Failed to restore product');
+      // }
+      appLogger(response);
+      return success;
+    } catch (e) {
+      appLogger(e);
+      return false;
+    }
   }
 
   @override

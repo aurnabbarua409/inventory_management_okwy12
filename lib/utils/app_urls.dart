@@ -13,7 +13,7 @@ class Urls {
   static const verifyingOTP = "$baseUrl/user/verify-otp";
   static const signIn = "$baseUrl/auth/login";
   static const createOrders = "$baseUrl/new-order/create";
-  static const getAllOrders = "$baseUrl/new-order/all";
+  static const getAllOrders = "$baseUrl/new-order/all/";
   static const deleteOrder = "$baseUrl/products/";
   static const getWholesaler = "$baseUrl/wholesalers"; //?search=Rakib
   static const sendOrder = "$baseUrl/products/send";
@@ -51,4 +51,5 @@ class Urls {
   static const deleteProduct = "$baseUrl/new-order/";
   static const updateSingleProduct = "$baseUrl/new-order/";
   static const inviteLink = "$baseUrl/invite-link/";
+  static const getAllHistory = "$baseUrl/new-order/all-history";
 }

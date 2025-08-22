@@ -4,6 +4,7 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -655,15 +656,11 @@ class BuildListWidgetConfirm extends StatefulWidget {
 }
 
 class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
-  List<bool> isDelivered = [];
+  // List<bool> isDelivered = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    isDelivered = List.generate(
-      widget.invoices.length,
-      (index) => false,
-    );
   }
 
   @override
@@ -696,6 +693,7 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
         itemCount: widget.invoices.length,
         itemBuilder: (context, index) {
           final invoice = widget.invoices[index];
+          var status = invoice['status'];
           return Card(
             color: AppColors.white,
             elevation: 3,
@@ -750,9 +748,7 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                               ),
                               child: Center(
                                 child: TextWidget(
-                                  text: isDelivered[index]
-                                      ? "Delivered"
-                                      : "Confirmed",
+                                  text: status,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500,
                                   fontColor: AppColors.white,
@@ -824,11 +820,14 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                           }
                           if (value == 2) {
                             setState(() {
-                              isDelivered[index] = true;
+                              status = 'delivered';
                             });
 
                             final url = Urls.setDelivered + invoice["id"];
                             await ApiService.patchApi(url, {});
+                            Get.snackbar(
+                                'Successfully updated the status to delivered',
+                                'Now please refresh again to see the updated status');
                           }
                         },
                         itemBuilder: (context) => [
@@ -836,7 +835,7 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                             value: 1,
                             child: Text(AppStrings.delete),
                           ),
-                          if (!isDelivered[index])
+                          if (status == 'confirm')
                             const PopupMenuItem(
                               value: 2,
                               child: Text(AppStrings.deliver),

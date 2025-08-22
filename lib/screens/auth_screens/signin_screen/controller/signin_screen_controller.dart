@@ -29,9 +29,9 @@ class SignInScreenController extends GetxController {
       // emailController.text = "f2dm2rcm0a@zudpck.com"; // wholesaler for local
       // whole saler: bk1mlihfgi@zudpck.com
       // retailer: j2f8ctwkgx@jkotypc.com
-      emailController.text = 'royofaw944@mardiek.com'; //retailer business
+      // emailController.text = 'royofaw944@mardiek.com'; //retailer business
       // emailController.text = 'bekajor273@mardiek.com'; // wholesaler business
-      passwordController.text = '12345678';
+      // passwordController.text = '12345678';
       // vecex56005@fursee.com -> wholesaler
     }
     //hilaryonyenkem@yahoo.com hoyevi9323@calmpros.com  bewir47352@erapk.com

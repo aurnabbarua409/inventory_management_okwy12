@@ -143,6 +143,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
                 child: ButtonWidget(
                   onPressed: () {
                     sendData(context);
+                    Get.back();
                   },
                   label: AppStrings.yes,
                   backgroundColor: AppColors.primaryBlue,

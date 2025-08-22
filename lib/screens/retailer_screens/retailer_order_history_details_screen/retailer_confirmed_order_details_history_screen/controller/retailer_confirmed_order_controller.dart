@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
 
 import 'package:inventory_app/utils/app_logger.dart';
@@ -67,6 +68,9 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
       final args = Get.arguments;
       appLogger("in confirmed data: $args");
       confirmedData.value = args['products'];
+      for (int i = 0; i < (confirmedData.value?.product?.length ?? 0); i++) {
+        confirmedData.value!.product!.removeAt(i);
+      }
       appLogger(
           "After coming confirm data: ${confirmedData.value!.wholesaler!.name}");
     } catch (e) {
@@ -187,6 +191,13 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
                 textAlign: pw.TextAlign.center,
                 style:
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 25)),
+            pw.Row(children: [
+              pw.Spacer(),
+              pw.Text(confirmedData.value!.updatedAt != null
+                  ? DateFormat('yyyy-MM-dd EEE hh:mm a').format(
+                      DateTime.parse(confirmedData.value!.updatedAt.toString()))
+                  : "N/A")
+            ]),
             pw.SizedBox(height: 20),
             pw.Container(
                 width: double.infinity,
