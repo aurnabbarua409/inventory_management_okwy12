@@ -48,10 +48,11 @@ class NotificationsController extends GetxController {
 
   // Listen to New Notifications via socket
   void listenToNewNotification() async {
-    await PrefsHelper.getString(PrefsHelper.userId);
-    if (PrefsHelper.userId.isEmpty) {
-      id = PrefsHelper.userId;
-    }
+    // await PrefsHelper.getString(PrefsHelper.userId);
+    // if (PrefsHelper.userId.isEmpty) {
+    //   id = PrefsHelper.userId;
+    // }
+    id = PrefsHelper.userId;
 
     appLogger(
         "===================================Notification userId : $id==============================================");

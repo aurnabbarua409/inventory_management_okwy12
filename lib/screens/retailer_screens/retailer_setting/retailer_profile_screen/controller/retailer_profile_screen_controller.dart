@@ -56,6 +56,10 @@ class ProfileScreenController extends GetxController {
         Get.snackbar("Error", "Failed to load profile");
         return;
       }
+      if (response['message'] == "Session Expired") {
+        Get.toNamed(AppRoutes.signinScreen);
+        return;
+      }
       if (kDebugMode) {
         print(
             "====================================     response       ======================");

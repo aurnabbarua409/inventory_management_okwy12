@@ -20,6 +20,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
   //  final deliveryCharge = 5.00;
   final RxDouble totalPrice = 0.0.obs;
   final Rxn<GetPendingOrderModel> confirmedData = Rxn<GetPendingOrderModel>();
+  final List<Product> product = [];
   @override
   void onInit() {
     super.onInit();
@@ -68,9 +69,15 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
       final args = Get.arguments;
       appLogger("in confirmed data: $args");
       confirmedData.value = args['products'];
-      for (int i = 0; i < (confirmedData.value?.product?.length ?? 0); i++) {
-        confirmedData.value!.product!.removeAt(i);
+      var temp = confirmedData.value?.product ?? [];
+      for (int i = 0; i < temp.length; i++) {
+        if (temp[i].availability ?? false) {
+          product.add(temp[i]);
+        }
       }
+      // for (int i = 0; i < (confirmedData.value?.product?.length ?? 0); i++) {
+      //   confirmedData.value!.product!.removeAt(i);
+      // }
       appLogger(
           "After coming confirm data: ${confirmedData.value!.wholesaler!.name}");
     } catch (e) {
@@ -171,8 +178,8 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
     final pw.MemoryImage currencyIcon =
         await _loadImageFromAssets("assets/images/currencyIcon.png");
     List<List<dynamic>> tableData = [];
-    final product = confirmedData.value!.product!;
-    for (int i = 0; i < confirmedData.value!.product!.length; i++) {
+
+    for (int i = 0; i < product.length; i++) {
       tableData.add([
         i + 1,
         product[i].productName,
@@ -193,10 +200,13 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 25)),
             pw.Row(children: [
               pw.Spacer(),
-              pw.Text(confirmedData.value!.updatedAt != null
-                  ? DateFormat('yyyy-MM-dd EEE hh:mm a').format(
-                      DateTime.parse(confirmedData.value!.updatedAt.toString()))
-                  : "N/A")
+              pw.Text(
+                  confirmedData.value!.updatedAt != null
+                      ? DateFormat('yyyy-MM-dd EEE hh:mm a').format(
+                          DateTime.parse(
+                              confirmedData.value!.updatedAt.toString()))
+                      : "N/A",
+                  style: pw.TextStyle(fontStyle: pw.FontStyle.italic))
             ]),
             pw.SizedBox(height: 20),
             pw.Container(

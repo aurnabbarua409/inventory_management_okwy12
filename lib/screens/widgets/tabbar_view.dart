@@ -239,7 +239,8 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                                         .retailerReceivedPriceDetailsHistoryScreen,
                                     arguments: {
                                       'products': invoice['products'],
-                                      'id': invoice['id']
+                                      'id': invoice['id'],
+                                      'wholesaler': invoice['wholesaler']
                                     });
                               } else {
                                 Get.toNamed(

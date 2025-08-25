@@ -101,7 +101,7 @@ class WholesalerOrderHistoryController extends GetxController {
       if (isSuccess) {
         if (response['data'] != null && response['data'] is List) {
           for (var element in response["data"]) {
-            confirmedOrders.add(GetPendingOrderModel.fromJson(element));
+            confirmedOrders.insert(0, GetPendingOrderModel.fromJson(element));
           }
         }
       }

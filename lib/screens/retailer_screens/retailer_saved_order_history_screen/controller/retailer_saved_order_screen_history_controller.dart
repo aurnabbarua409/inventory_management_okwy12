@@ -373,7 +373,8 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
                     }
                     if (success) {
                       Get.snackbar(
-                          'Success: $success', 'Product restored successfully');
+                          'Success: $success', 'Product restored successfully',
+                          snackPosition: SnackPosition.BOTTOM);
                     } else {
                       Get.snackbar(
                           'Success: $success', 'Failed to restore product');

@@ -33,7 +33,7 @@ class RetailerOrderHistoryController extends GetxController {
 
   Future<void> fetchPendingOrders() async {
     update();
-    pendingOrders.clear();
+    // pendingOrders.clear();
     appLogger("trying to fetch orders");
     isLoading.value = true; // Show loading indicator
 
@@ -51,7 +51,7 @@ class RetailerOrderHistoryController extends GetxController {
   // Fetch Received Orders
   Future<void> fetchReceivedOrders() async {
     update();
-    receivedOrders.clear();
+    //  receivedOrders.clear();
     isLoading.value = true; // Show loading indicator
     try {
       var recievedData = await retailerRepo.getRecieved();

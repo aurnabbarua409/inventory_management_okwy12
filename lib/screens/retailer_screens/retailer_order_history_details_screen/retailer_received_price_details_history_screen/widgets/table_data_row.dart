@@ -110,15 +110,16 @@ class _TableDataRowState extends State<TableDataRow> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: isEditing[index]
                               ? SizedBox(
-                                  width: 30,
+                                  width: 40,
                                   height: 20,
                                   child: TextFormField(
+                                    initialValue: quantity.toString(),
                                     keyboardType: TextInputType.number,
-                                    controller: TextEditingController(
-                                        text: item.quantity.toString()),
+                                    // controller: TextEditingController(
+                                    //     text: item.quantity.toString()),
                                     decoration: InputDecoration(
                                       enabledBorder: const OutlineInputBorder(
                                         borderSide: BorderSide(
@@ -128,6 +129,17 @@ class _TableDataRowState extends State<TableDataRow> {
                                       disabledBorder: const OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Colors.transparent,
+                                        ),
+                                      ),
+                                      errorBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      focusedErrorBorder:
+                                          const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.grey,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -151,7 +163,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                       }
                                       final parsedValue = int.tryParse(value);
                                       if (parsedValue == null ||
-                                          parsedValue < 0) {
+                                          parsedValue <= 0) {
                                         return '';
                                       }
                                       return null;
@@ -178,7 +190,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                 )
                               : Text(
                                   item.quantity.toString(),
-                                  textAlign: TextAlign.left,
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontSize: 10,
                                     color: AppColors.onyxBlack,
@@ -285,6 +297,16 @@ class _TableDataRowState extends State<TableDataRow> {
                                     'Error', 'Please write a valid quantity');
                               }
                             }
+                            if (value == 2) {
+                              final url = Urls.deleteProduct + item.id!;
+                              final response =
+                                  await ApiService.deleteApi(url, {});
+                              appLogger(response);
+                              widget.productsReceived
+                                  .removeWhere((id) => item.id == id.id);
+
+                              setState(() {});
+                            }
                           },
                           itemBuilder: (context) => [
                             PopupMenuItem(
@@ -292,6 +314,10 @@ class _TableDataRowState extends State<TableDataRow> {
                               child: Text(isEditing[index]
                                   ? AppStrings.save
                                   : AppStrings.edit),
+                            ),
+                            const PopupMenuItem(
+                              value: 2,
+                              child: Text(AppStrings.delete),
                             ),
                           ],
                         ),

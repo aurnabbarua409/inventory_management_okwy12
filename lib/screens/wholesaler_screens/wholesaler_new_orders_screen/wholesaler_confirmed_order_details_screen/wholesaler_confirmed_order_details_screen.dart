@@ -298,10 +298,12 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
         padding: EdgeInsets.symmetric(horizontal: ResponsiveUtils.width(8.0)),
         child: Text(
           text,
+          softWrap: true,
+          maxLines: null,
           style: TextStyle(
-              fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-              fontSize: 12,
-              overflow: TextOverflow.ellipsis),
+            fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+            fontSize: 12,
+          ),
           textAlign: TextAlign.left,
         ),
       ),

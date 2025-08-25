@@ -159,6 +159,7 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
     'Gal',
     'Bag',
     'Pkt',
+    'Cup',
     'Other',
   ];
 

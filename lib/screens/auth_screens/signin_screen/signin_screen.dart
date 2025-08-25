@@ -162,7 +162,7 @@ class SigninScreen extends StatelessWidget {
                       label: 'Wholesaler',
                       onPressed: () {
                         controller.emailController.text =
-                            'bekajor273@mardiek.com';
+                            'cabemog361@aperiol.com';
                         controller.passwordController.text = '12345678';
                         controller.signInUser();
                       },

@@ -214,7 +214,7 @@ class WholesalerProfileScreenController extends GetxController {
     print("$userRole selected. Navigating to $route.");
   }
 
-  void fetchProfile() async {
+  Future<void> fetchProfile() async {
     try {
       final response = await ApiService.getApi(Urls.userProfile,
           header: {"Authorization": "Bearer ${PrefsHelper.token}"});

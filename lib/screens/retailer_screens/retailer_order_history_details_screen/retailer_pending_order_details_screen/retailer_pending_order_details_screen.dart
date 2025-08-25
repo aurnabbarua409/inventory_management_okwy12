@@ -210,6 +210,17 @@ class _RetailerPendingOrderDetailsHistoryScreenState
           children: [
             OutlinedButtonWidget(
               onPressed: () {
+                if (pendingController.productNameController.text.isEmpty) {
+                  Get.snackbar(
+                      'No Product Name', 'Please write a product name');
+                  return;
+                }
+                if (pendingController.quantity.value == 0) {
+                  Get.snackbar('Quantity can not be 0',
+                      'Please set a qauntity greater than 0');
+                  return;
+                }
+
                 pendingController.updateProduct(id);
                 Get.back();
                 // setState(() {});

@@ -8,6 +8,8 @@ import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/controller/subs_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/payment_webview_page.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_profile_screen/controller/wholesaler_profile_screen_controller.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
@@ -15,14 +17,33 @@ import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class SubscriptionScreen extends StatelessWidget {
+class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
+
+  @override
+  State<SubscriptionScreen> createState() => _SubscriptionScreenState();
+}
+
+class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  var isSubscribed;
+  var totalOrders;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final control = Get.find<WholesalerProfileScreenController>();
+    control.fetchProfile();
+    isSubscribed = PrefsHelper.isSubscribed;
+    totalOrders = PrefsHelper.totalOrders;
+    appLogger("$isSubscribed subscribe, total order: $totalOrders");
+  }
 
   @override
   Widget build(BuildContext context) {
     // final PaymentController paymentController = Get.put(PaymentController());
-    final isSubscribed = PrefsHelper.isSubscribed;
-    final totalOrders = PrefsHelper.totalOrders;
+    // var isSubscribed = PrefsHelper.isSubscribed;
+    // var totalOrders = PrefsHelper.totalOrders;
+    appLogger("$isSubscribed subscribe, total order: $totalOrders");
     return Scaffold(
       appBar: AppbarWidget(
         text: AppStrings.subscription,
@@ -33,6 +54,16 @@ class SubscriptionScreen extends StatelessWidget {
             Get.back();
           },
         ),
+        // action: IconButton(
+        //     onPressed: () async {
+        //       final control = Get.find<WholesalerProfileScreenController>();
+        //       await control.fetchProfile();
+        //       isSubscribed = PrefsHelper.isSubscribed;
+        //       totalOrders = PrefsHelper.totalOrders;
+        //       appLogger("$isSubscribed subscribe, total order: $totalOrders");
+        //       setState(() {});
+        //     },
+        //     icon: const Icon(Icons.refresh)),
       ),
       body: Column(
         children: [
@@ -55,9 +86,9 @@ class SubscriptionScreen extends StatelessWidget {
                         animation: true,
                         lineHeight: 10.0,
                         animationDuration: 2000,
-                        percent: totalOrders > 10
+                        percent: totalOrders > 50
                             ? 1
-                            : totalOrders / 10, // Adjust percentage as needed
+                            : totalOrders / 50, // Adjust percentage as needed
                         // ignore: deprecated_member_use
                         linearStrokeCap: LinearStrokeCap.roundAll,
                         progressColor: AppColors.primaryBlue,
@@ -66,7 +97,7 @@ class SubscriptionScreen extends StatelessWidget {
                     ),
                     const SpaceWidget(spaceHeight: 16),
                     TextWidget(
-                      text: "$totalOrders/10 Orders Used", //$orderNo
+                      text: "$totalOrders/50 Orders Used", //$orderNo
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       fontColor: AppColors.black,

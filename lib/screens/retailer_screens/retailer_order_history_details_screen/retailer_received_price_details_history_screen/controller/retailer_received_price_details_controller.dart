@@ -3,18 +3,19 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
-import 'package:inventory_app/models/new_version/update_product_model.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
+// import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
+import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
 import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   var token = ''.obs;
@@ -32,56 +33,26 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
   RxInt grandtotal = 0.obs;
   final orderid = ''.obs;
+  final Rxn<Wholesaler> wholesaler = Rxn<Wholesaler>();
+
   final formKey = GlobalKey<FormState>();
   @override
   void onInit() {
     super.onInit();
     fetchData();
     updateGrandTotal();
-    // fetchReceived();
-    // if (kDebugMode) {
-    //   ordersReceived.add(Received(
-    //       id: "1",
-    //       retailer: Retailer(
-    //           id: "1",
-    //           name: "Someone",
-    //           email: "some@email.com",
-    //           storeInformation: StoreInformation(
-    //               businessName: "May be",
-    //               businessCategory: "sos",
-    //               location: "Dhaka")),
-    //       product: [
-    //         ProductReceived(
-    //             productId: ReceivedProductId(
-    //                 id: "1",
-    //                 name: "keyboard",
-    //                 unit: "pics",
-    //                 quantity: 1,
-    //                 additionalInfo: "best"),
-    //             availability: false,
-    //             price: 1200,
-    //             id: "2")
-    //       ],
-    //       wholeSeller: WholeSeller(
-    //           id: "1",
-    //           name: "Codeb",
-    //           email: "codeb@email.com",
-    //           storeInformation: StoreInformation(
-    //               businessName: "cofo",
-    //               businessCategory: "busi",
-    //               location: "Dhaka")),
-    //       status: "pending",
-    //       createdAt: DateTime.now(),
-    //       updatedAt: DateTime.now(),
-    //       v: 1));
-    // }
   }
 
   void fetchData() {
-    final arg = Get.arguments;
-    products.value = arg['products'];
-    orderid.value = arg['id'];
-    appLogger(products);
+    try {
+      final arg = Get.arguments;
+      products.value = arg['products'];
+      orderid.value = arg['id'];
+      wholesaler.value = arg['wholesaler'];
+      appLogger(products);
+    } catch (e) {
+      appLogger(e);
+    }
   }
 
   void showProductDetailsDialog(BuildContext context, Product item) {
@@ -208,6 +179,89 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   //     isLoading(false);
   //   }
   // }
+  Future<void> showContactDialog(BuildContext context) async {
+    showCustomPopup(
+      context,
+      [
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButtonWidget(
+            onTap: () => Get.back(),
+            icon: AppIconsPath.closeIcon,
+            size: 20,
+            color: AppColors.black,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 16),
+        const Center(
+          child: TextWidget(
+            text: 'Please contact with wholesaler',
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontColor: AppColors.primaryBlue,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 2),
+        Center(
+          child: TextWidget(
+            text:
+                "Wholesaler Name: ${wholesaler.value?.storeInformation?.businessname ?? 'N/A'}",
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            fontColor: AppColors.onyxBlack,
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: OutlinedButtonWidget(
+                  onPressed: () {
+                    send();
+                    Get.back();
+                    Get.back();
+                  },
+                  label: 'Okay',
+                  backgroundColor: AppColors.white,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  textColor: AppColors.primaryBlue,
+                  borderColor: AppColors.primaryBlue,
+                  fontSize: 14,
+                ),
+              ),
+              const SpaceWidget(spaceWidth: 16),
+              Expanded(
+                flex: 1,
+                child: ButtonWidget(
+                  onPressed: () async {
+                    try {
+                      final url = "tel:${wholesaler.value!.phone}";
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launchUrl(Uri.parse(url));
+                      }
+                    } catch (e) {
+                      appLogger(e);
+                    }
+                  },
+                  label: "Call Now",
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: 120,
+                  buttonHeight: 36,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SpaceWidget(spaceHeight: 20),
+      ],
+    );
+  }
 
   void send() async {
     //need to implement later

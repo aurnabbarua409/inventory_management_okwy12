@@ -10,8 +10,7 @@ class BuildInvoiceTableWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invoiceItems = confirmedController.confirmedData.value != null
-        ? confirmedController.confirmedData.value!.product
-            ?.map((product) => {
+        ? confirmedController.product.map((product) => {
                   "product": product.productName,
                   "qty": product.quantity.toString(),
                   "unit": product.unit,

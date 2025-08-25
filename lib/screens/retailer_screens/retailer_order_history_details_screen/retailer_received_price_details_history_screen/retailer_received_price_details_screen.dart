@@ -142,9 +142,27 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                   label: "Confirm",
                   backgroundColor: AppColors.primaryBlue,
                   onPressed: () {
+                    List<bool> isavailable = List.generate(
+                      receivedController.products.length,
+                      (index) => true,
+                    );
+                    for (int i = 0;
+                        i < receivedController.products.length;
+                        i++) {
+                      if (!(receivedController.products[i].availability ??
+                          true)) {
+                        isavailable[i] = false;
+                      }
+                    }
+                    if (isavailable.every((available) => available == false)) {
+                      Get.snackbar('Nothing is available right now!',
+                          'You can not confirm now');
+                      return;
+                    }
+
                     if (receivedController.formKey.currentState!.validate()) {
-                      receivedController.send();
-                      Get.back();
+                      receivedController.showContactDialog(context);
+                      // Get.back();
                     } else {
                       Get.snackbar('Error', 'Please enter valid quantities');
                     }
@@ -166,7 +184,8 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Text(
           text,
-          overflow: TextOverflow.ellipsis,
+          softWrap: true,
+          maxLines: null,
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 12 *

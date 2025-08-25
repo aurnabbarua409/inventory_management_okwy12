@@ -48,6 +48,7 @@ class RetailerSavedOrderScreenController extends GetxController {
     'Gal',
     'Bag',
     'Pkt',
+    'Cup',
     'Other',
   ];
   void setSelectedUnit(String? value) {

@@ -103,6 +103,7 @@ class SignInScreenController extends GetxController {
     PrefsHelper.token = token;
     PrefsHelper.isLogIn = true;
     PrefsHelper.userRole = role;
+    PrefsHelper.userId = userId;
     PrefsHelper.setString('token', token);
     PrefsHelper.setString('userRole', role);
     PrefsHelper.setString('userId', userId);

@@ -393,6 +393,8 @@ class FindWholesalerController extends GetxController {
       // for (var offer in newOffer) {
       //   addOffer(offer);
       // }
+      selectedProductIds.clear();
+      selectedWholesalerIds.clear();
       update();
     } catch (e) {
       Get.snackbar("Error", "An error occurred while sending the order: $e");

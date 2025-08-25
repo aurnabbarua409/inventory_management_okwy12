@@ -16,7 +16,7 @@ class WholesalerChangePasswordScreen extends StatelessWidget {
 
   final WholesalerChangePasswordController controller =
       Get.put(WholesalerChangePasswordController());
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,83 +31,85 @@ class WholesalerChangePasswordScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              const TextWidget(
-                text: AppStrings.currentPassword,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.currentPasswordController,
-                hintText: 'Enter password',
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-                suffixIcon: AppIconsPath.visibleOffIcon,
-              ),
-              const SizedBox(height: 16),
-              const TextWidget(
-                text: AppStrings.newPassword,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.newPasswordController,
-                hintText: 'Enter password',
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
-                  }
-                  return null;
-                },
-                suffixIcon: AppIconsPath.visibleOffIcon,
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.confirmNewPassword,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.confirmNewPasswordController,
-                hintText: 'Enter password',
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please  your password';
-                  }
-                  return null;
-                },
-                suffixIcon: AppIconsPath.visibleOffIcon,
-              ),
-              const SpaceWidget(spaceHeight: 36),
-              ButtonWidget(
-                onPressed: () {
-                  controller.resetPassword();
-                },
-                label: AppStrings.update,
-                backgroundColor: AppColors.primaryBlue,
-                buttonWidth: double.infinity,
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const TextWidget(
+                  text: AppStrings.currentPassword,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.currentPasswordController,
+                  hintText: 'Enter password',
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                  suffixIcon: AppIconsPath.visibleOffIcon,
+                ),
+                const SizedBox(height: 16),
+                const TextWidget(
+                  text: AppStrings.newPassword,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.newPasswordController,
+                  hintText: 'Enter password',
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    return null;
+                  },
+                  suffixIcon: AppIconsPath.visibleOffIcon,
+                ),
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.confirmNewPassword,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.confirmNewPasswordController,
+                  hintText: 'Enter password',
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please  your password';
+                    }
+                    return null;
+                  },
+                  suffixIcon: AppIconsPath.visibleOffIcon,
+                ),
+                const SpaceWidget(spaceHeight: 36),
+                ButtonWidget(
+                  onPressed: () {
+                    controller.resetPassword();
+                  },
+                  label: AppStrings.update,
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: double.infinity,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -30,86 +30,94 @@ class RetailerChangePasswordScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              const TextWidget(
-                text: AppStrings.currentPassword,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.currentPasswordController,
-                hintText: 'Enter password',
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-                suffixIcon: AppIconsPath.visibleOffIcon,
-              ),
-              const SizedBox(height: 16),
-              const TextWidget(
-                text: AppStrings.newPassword,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.newPasswordController,
-                hintText: 'Enter password',
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-                suffixIcon: AppIconsPath.visibleOffIcon,
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.confirmNewPassword,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.confirmNewPasswordController,
-                hintText: 'Enter password',
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  if (controller.newPasswordController.text != value) {
-                    return 'Password mismatched';
-                  }
-                  return null;
-                },
-                suffixIcon: AppIconsPath.visibleOffIcon,
-              ),
-              const SpaceWidget(spaceHeight: 36),
-              ButtonWidget(
-                onPressed: () {
-                  controller.resetPassword();
-                },
-                label: AppStrings.update,
-                backgroundColor: AppColors.primaryBlue,
-                buttonWidth: double.infinity,
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const TextWidget(
+                  text: AppStrings.currentPassword,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.currentPasswordController,
+                  hintText: 'Enter password',
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 4) {
+                      return 'Password should be atleast 4 digits';
+                    }
+                    return null;
+                  },
+                  suffixIcon: AppIconsPath.visibleOffIcon,
+                ),
+                const SizedBox(height: 16),
+                const TextWidget(
+                  text: AppStrings.newPassword,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.newPasswordController,
+                  hintText: 'Enter password',
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 4) {
+                      return 'Password should be atleast 4 digits';
+                    }
+                    return null;
+                  },
+                  suffixIcon: AppIconsPath.visibleOffIcon,
+                ),
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.confirmNewPassword,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.confirmNewPasswordController,
+                  hintText: 'Enter password',
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (controller.newPasswordController.text != value) {
+                      return 'Password mismatched';
+                    }
+                    return null;
+                  },
+                  suffixIcon: AppIconsPath.visibleOffIcon,
+                ),
+                const SpaceWidget(spaceHeight: 36),
+                ButtonWidget(
+                  onPressed: () {
+                    controller.resetPassword();
+                  },
+                  label: AppStrings.update,
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: double.infinity,
+                ),
+              ],
+            ),
           ),
         ),
       ),

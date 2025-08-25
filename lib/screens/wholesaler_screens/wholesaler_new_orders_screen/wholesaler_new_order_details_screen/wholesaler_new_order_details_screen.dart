@@ -258,7 +258,7 @@ class _WholesalerNewOrderDetailsScreenState
                         height: 30,
                         width: 10,
                         child: TextFormField(
-                          initialValue: price.toString(),
+                          initialValue: price == 0 ? "" : price.toString(),
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.all(8),
@@ -274,7 +274,7 @@ class _WholesalerNewOrderDetailsScreenState
                               return '';
                             }
                             final parsedValue = int.tryParse(value);
-                            if (parsedValue == null || parsedValue < 0) {
+                            if (parsedValue == null || parsedValue <= 0) {
                               return '';
                             }
                             return null;

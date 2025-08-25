@@ -135,7 +135,8 @@ class _RetailerOrderHistoryScreenState
                             ),
                           ),
                           "id": received.id ?? "0",
-                          "products": received.product ?? []
+                          "products": received.product ?? [],
+                          "wholesaler": received.wholesaler
                         };
                       }).toList(),
                       confirmedInvoices:

@@ -25,6 +25,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
   final productNameController = TextEditingController();
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
+  final priceController = TextEditingController();
 
   final RxList data = [].obs;
   // Observable quantity for increment and decrement
@@ -350,6 +351,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
     productNameController.dispose();
     unitController.dispose();
     additionalInfoController.dispose();
+    priceController.dispose();
     super.onClose();
   }
 }
