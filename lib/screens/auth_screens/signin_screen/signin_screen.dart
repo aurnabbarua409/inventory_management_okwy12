@@ -45,6 +45,8 @@ class SigninScreen extends StatelessWidget {
                     TextFieldWidget(
                       controller: controller.emailController,
                       hintText: 'Enter your email address',
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [AutofillHints.email],
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -78,6 +80,7 @@ class SigninScreen extends StatelessWidget {
                     TextFieldWidget(
                       controller: controller.passwordController,
                       hintText: 'Enter password',
+                      autofillHints: const [AutofillHints.password],
                       maxLines: 1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {

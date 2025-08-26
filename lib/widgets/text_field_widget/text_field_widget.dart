@@ -16,6 +16,7 @@ class TextFieldWidget extends StatefulWidget {
   final bool obscureText;
   final String? preffixIcon;
   final String? suffixIcon2;
+  final Iterable<String>? autofillHints;
   final ValueChanged<String>? onChanged; // Added onChanged parameter
 
   const TextFieldWidget({
@@ -30,6 +31,7 @@ class TextFieldWidget extends StatefulWidget {
     this.keyboardType,
     this.maxLines = 1,
     this.onTapSuffix,
+    this.autofillHints,
     this.onChanged, // Initialize onChanged in constructor
   });
 
@@ -57,6 +59,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextFormField(
+        autofillHints: widget.autofillHints ?? [],
         controller: widget.controller,
         validator: widget.validator,
         obscureText: obscureText,
