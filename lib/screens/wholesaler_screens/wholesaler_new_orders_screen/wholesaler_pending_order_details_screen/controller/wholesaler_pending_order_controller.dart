@@ -51,7 +51,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
         final updatedItem = UpdateProductModel2(
             product: products[index].id ?? "",
             availability: products[index].availability ?? false,
-            price: products[index].price?.toInt() ?? 0);
+            price: products[index].price?.toDouble() ?? 0);
         updatedData.add(updatedItem.toJson());
       }
 
@@ -67,7 +67,8 @@ class WholesalerPendingOrderDetailController extends GetxController {
         // Get.back();
       } else {
         appLogger("failed to update product");
-        Get.snackbar("Error", response['message'] ?? "Failed to update product");
+        Get.snackbar(
+            "Error", response['message'] ?? "Failed to update product");
       }
     } catch (e) {
       appLogger(e);
@@ -259,8 +260,8 @@ class WholesalerPendingOrderDetailController extends GetxController {
             const Center(
               child: TextWidget(
                 text: AppStrings.productDetails,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
                 fontColor: AppColors.black,
               ),
             ),
@@ -269,7 +270,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
                 Get.back();
               },
               icon: AppIconsPath.closeIcon,
-              size: 16,
+              size: 20,
               color: AppColors.black,
             ),
           ],
@@ -280,16 +281,137 @@ class WholesalerPendingOrderDetailController extends GetxController {
           height: 1,
         ),
         const SpaceWidget(spaceHeight: 16),
-        TextWidget(
-          text: item.productName ?? "N/A",
-          fontSize: 14,
-          fontColor: AppColors.black,
+        Row(
+          children: [
+            const TextWidget(
+              text: "Product Name:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.productName ?? "N/A",
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
         ),
         const SpaceWidget(spaceHeight: 6),
-        TextWidget(
-          text: item.additionalInfo ?? "N/A",
-          fontSize: 14,
-          fontColor: AppColors.black,
+        Row(
+          children: [
+            const TextWidget(
+              text: "Additional Info:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.additionalInfo ?? "N/A",
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Quantity:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.quantity.toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Unit:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.unit ?? "N/A",
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Availability:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.availability.toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Price:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.price.toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Total:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: ((item.quantity ?? 0) * (item.price ?? 0)).toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
         ),
       ],
     );

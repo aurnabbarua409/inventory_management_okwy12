@@ -5,6 +5,7 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/controller/wholesaler_order_history_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/wholesaler_order_history.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_profile_screen/controller/wholesaler_profile_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
@@ -37,6 +38,10 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Get.put(WholesalerOrderHistoryController());
+    Get.find<WholesalerOrderHistoryController>().initialize();
+    Get.put(NotificationsController());
+    Get.find<NotificationsController>().getNotificationsRepo();
   }
 
   @override
@@ -45,6 +50,7 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
     final profileController = Get.put(WholesalerProfileScreenController());
 
     final controller = NotificationsController.instance;
+
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       body: Column(
@@ -80,16 +86,17 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
                     IconButton(
                       onPressed: () {
                         Get.toNamed(AppRoutes.wholesalerNotificationScreen);
-                        NotificationsController.instance.unreadMessage.value =
-                            0;
+
+                        appLogger(
+                            "message ${NotificationsController.instance.unreadMessage.value}");
+                        NotificationsController.instance.unreadMessage.clear();
                       },
                       icon: Obx(() {
                         return Badge(
                           isLabelVisible: NotificationsController
-                                  .instance.unreadMessage.value >
-                              0,
+                              .instance.unreadMessage.value.isNotEmpty,
                           label: Text(
-                            "${NotificationsController.instance.unreadMessage.value}",
+                            "${NotificationsController.instance.unreadMessage.value.length}",
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           backgroundColor: AppColors.extremelyRed,
@@ -130,37 +137,58 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
               child: Column(
                 children: [
                   const SpaceWidget(spaceHeight: 36),
-                  CustomContainerWidget(
-                    onTap: () {
-                      final control = Get.find<BottomNavbarController>();
-                      control.changeIndex(1);
-                      // Get.to(WholesalerOrderHistoryScreen(initialTabIndex: 0));
-                    },
-                    containerColor: AppColors.lightestBlue,
-                    icon: AppIconsPath.orderIcon,
-                    text: AppStrings.newOrder,
+                  Obx(
+                    () => CustomContainerWidget(
+                      isWholesaler: true,
+                      onTap: () {
+                        final control = Get.find<BottomNavbarController>();
+                        control.changeIndex(1);
+                        // Get.to(WholesalerOrderHistoryScreen(initialTabIndex: 0));
+                      },
+                      containerColor: AppColors.lightestBlue,
+                      icon: AppIconsPath.orderIcon,
+                      text: AppStrings.newOrder,
+                      numberOfOrder:
+                          Get.find<WholesalerOrderHistoryController>()
+                              .newOrders
+                              .length,
+                    ),
                   ),
                   const SpaceWidget(spaceHeight: 16),
-                  CustomContainerWidget(
-                    onTap: () {
-                      final control = Get.find<BottomNavbarController>();
-                      control.changeIndex(2);
-                    },
-                    containerColor: AppColors.lightYellow,
-                    icon: AppIconsPath.wholeSellerListIcon,
-                    text: AppStrings.pendingOrder,
+                  Obx(
+                    () => CustomContainerWidget(
+                      isWholesaler: true,
+                      onTap: () {
+                        final control = Get.find<BottomNavbarController>();
+                        control.changeIndex(2);
+                      },
+                      containerColor: AppColors.lightYellow,
+                      icon: AppIconsPath.wholeSellerListIcon,
+                      text: AppStrings.pendingOrder,
+                      numberOfOrder:
+                          Get.find<WholesalerOrderHistoryController>()
+                              .pendingOrders
+                              .length,
+                    ),
                   ),
                   const SpaceWidget(spaceHeight: 16),
-                  CustomContainerWidget(
-                    onTap: () {
-                      Get.to(const WholesalerOrderHistoryScreen(
-                          initialTabIndex: 2));
-                      final control = Get.find<BottomNavbarController>();
-                      control.changeIndex(2);
-                    },
-                    containerColor: AppColors.purpleLight,
-                    icon: AppIconsPath.orderHistoryIcon,
-                    text: AppStrings.confirmedOrder,
+                  Obx(
+                    () => CustomContainerWidget(
+                      isWholesaler: true,
+                      onTap: () {
+                        Get.to(const WholesalerOrderHistoryScreen(
+                            initialTabIndex: 2));
+                        final control = Get.find<BottomNavbarController>();
+                        control.changeIndex(2);
+                      },
+                      containerColor: AppColors.purpleLight,
+                      icon: AppIconsPath.orderHistoryIcon,
+                      text: AppStrings.confirmedOrder,
+                      numberOfOrder:
+                          Get.find<WholesalerOrderHistoryController>()
+                              .confirmedOrders
+                              .length,
+                    ),
                   ),
                   const SpaceWidget(spaceHeight: 72),
                   Wrap(

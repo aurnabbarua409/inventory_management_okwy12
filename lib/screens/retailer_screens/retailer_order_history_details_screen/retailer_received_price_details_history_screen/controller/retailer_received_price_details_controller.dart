@@ -31,7 +31,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
   final RxList<Product> products = <Product>[].obs;
-  RxInt grandtotal = 0.obs;
+  RxDouble grandtotal = 0.0.obs;
   final orderid = ''.obs;
   final Rxn<Wholesaler> wholesaler = Rxn<Wholesaler>();
 
@@ -66,8 +66,8 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
             const Center(
               child: TextWidget(
                 text: AppStrings.productDetails,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
                 fontColor: AppColors.black,
               ),
             ),
@@ -76,7 +76,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
                 Get.back();
               },
               icon: AppIconsPath.closeIcon,
-              size: 16,
+              size: 20,
               color: AppColors.black,
             ),
           ],
@@ -87,27 +87,138 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
           height: 1,
         ),
         const SpaceWidget(spaceHeight: 16),
-        TextWidget(
-          text: item.productName ?? "N/A",
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          fontColor: AppColors.black,
+        Row(
+          children: [
+            const TextWidget(
+              text: "Product Name:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.productName ?? "N/A",
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
         ),
         const SpaceWidget(spaceHeight: 6),
-        TextWidget(
-          text: "Price: ${item.price}",
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          fontColor: AppColors.black,
+        Row(
+          children: [
+            const TextWidget(
+              text: "Additional Info:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.additionalInfo ?? "N/A",
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
         ),
         const SpaceWidget(spaceHeight: 6),
-        // TextWidget(
-        //   text: item.,
-        //   fontSize: 13,
-        //   fontWeight: FontWeight.w400,
-        //   fontColor: AppColors.onyxBlack,
-        //   textAlignment: TextAlign.start,
-        // ),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Quantity:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.quantity.toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Unit:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.unit ?? "N/A",
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Available:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.availability.toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Price:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: item.price.toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
+        const SpaceWidget(spaceHeight: 6),
+        Row(
+          children: [
+            const TextWidget(
+              text: "Total:",
+              fontSize: 14,
+              fontColor: AppColors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            const SpaceWidget(
+              spaceWidth: 10,
+            ),
+            TextWidget(
+              text: ((item.quantity ?? 1) * (item.price ?? 0)).toString(),
+              fontSize: 14,
+              fontColor: AppColors.black,
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -372,7 +483,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     for (int i = 0; i < products.length; i++) {
       if (products[i].availability ?? false) {
         grandtotal.value +=
-            ((products[i].price ?? 0) * (products[i].quantity ?? 1));
+            ((products[i].price ?? 0.0) * (products[i].quantity ?? 1));
       }
     }
   }

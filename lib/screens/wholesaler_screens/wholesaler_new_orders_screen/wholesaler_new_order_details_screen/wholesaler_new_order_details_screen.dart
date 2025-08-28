@@ -138,9 +138,9 @@ class _WholesalerNewOrderDetailsScreenState
       final index = entry.key;
       final item = entry.value;
       // bool isPriceNotZero = item. != 0;
-      int price = item.price ?? 0;
+      num price = item.price ?? 0.0;
       int quantity = item.quantity ?? 0;
-      int totalPrice = price * quantity;
+      num totalPrice = price * quantity;
       bool available = item.availability ?? false;
 
       return GestureDetector(
@@ -235,6 +235,12 @@ class _WholesalerNewOrderDetailsScreenState
                       pendingController.products[index].price = 0;
                       pendingController.products[index].availability = newValue;
                       setState(() {});
+                      if (newValue) {
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          pendingController.products[index].focusNode
+                              ?.requestFocus();
+                        });
+                      }
                     },
                     activeColor: Colors.green,
                     inactiveColor: AppColors.red,
@@ -260,6 +266,7 @@ class _WholesalerNewOrderDetailsScreenState
                         child: TextFormField(
                           initialValue: price == 0 ? "" : price.toString(),
                           keyboardType: TextInputType.number,
+                          focusNode: item.focusNode,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.all(8),
                             border: OutlineInputBorder(),
@@ -273,7 +280,7 @@ class _WholesalerNewOrderDetailsScreenState
                             if (value == null || value.isEmpty) {
                               return '';
                             }
-                            final parsedValue = int.tryParse(value);
+                            final parsedValue = double.tryParse(value);
                             if (parsedValue == null || parsedValue <= 0) {
                               return '';
                             }
@@ -286,7 +293,7 @@ class _WholesalerNewOrderDetailsScreenState
                               }
 
                               setState(() {
-                                price = int.parse(value);
+                                price = double.parse(value);
 
                                 pendingController.products[index].price = price;
 

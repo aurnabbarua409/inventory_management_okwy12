@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
-import 'package:inventory_app/models/profile_model.dart';
-import 'package:inventory_app/models/retailer/find_wholesaler/get_wholesaler_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -23,15 +21,14 @@ class WholesalerProfileScreenController extends GetxController {
   var image = Rx<String>('');
 
   // Controllers for form fields
-  final fullNameController = TextEditingController();
-  final businessNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final addressController = TextEditingController();
-  final phoneController = TextEditingController();
-
+  var fullNameController = TextEditingController();
+  var businessNameController = TextEditingController();
+  var emailController = TextEditingController();
+  var addressController = TextEditingController();
+  var phoneController = TextEditingController();
   final RxString phoneNumber = "".obs;
   final RxBool isValidPhonenumber = true.obs;
-
+  var phone = PhoneNumber().obs;
   final RxString userName = ''.obs;
 
   Future<void> updateProfileRepo() async {
@@ -67,9 +64,12 @@ class WholesalerProfileScreenController extends GetxController {
     try {
       // Call the patchApi function with the body data
       // var response = await ApiService.patchApi(Urls.userProfile, body);
-      await ApiService.patchApi(Urls.userProfile, body);
+      final response = await ApiService.patchApi(Urls.userProfile, body);
       await ApiService.MultipartRequest1(
           url: Urls.userProfile, imagePath: imageFile.value?.path);
+      if (response != null) {
+        Get.snackbar("Success: ${response['success']}", response['message']);
+      }
       fetchProfile();
       Get.back();
 
@@ -235,43 +235,18 @@ class WholesalerProfileScreenController extends GetxController {
         emailController.text = response["data"]["email"] ?? "";
         addressController.text =
             response["data"]["storeInformation"]["location"] ?? "";
-        phoneController.text = response["data"]["phone"] ?? "";
+        phone.value = await PhoneNumber.getRegionInfoFromPhoneNumber(
+            response["data"]["phone"] ?? "");
+
+        // phoneController.text = phoneNumber.parseNumber();
+        appLogger(phoneNumber);
+        // countryCode.value = phoneNumber.isoCode ?? "+234";
         image.value = response["data"]["image"] ?? "";
         PrefsHelper.totalOrders = response['data']['order'];
         PrefsHelper.isSubscribed = response['data']['isSubscribed'];
         appLogger(
             "total orders: ${PrefsHelper.totalOrders} and isSubscribed: ${PrefsHelper.isSubscribed}");
         appLogger(userName.value);
-        // image.value = data.data.image;
-        // appLogger("set username");
-        // userName.value = data.data.name;
-        // fullNameController.text = data.data.name;
-        // appLogger("set businessname");
-        // businessNameController.text = data.data.storeInformation.businessName;
-        // appLogger("set email");
-        // emailController.text = data.data.email;
-        // appLogger("set address");
-        // addressController.text = data.data.storeInformation.location;
-        // appLogger("set phone");
-        // phoneController.text = data.data.phone;
-
-        // userName.value = response["data"]["name"] ?? "N/A";
-        // appLogger("set username");
-        // fullNameController.text = response["data"]["name"] ?? "N/A";
-
-        // businessNameController.text =
-        //     response["data"]["storeInformation"]["businessName"] ?? "N/A";
-
-        // emailController.text = response["data"]["email"];
-
-        // addressController.text =
-        //     response["data"]["storeInformation"]["location"] ?? "N/A";
-
-        // phoneController.text = response["data"]["phone"] ?? "N/A";
-
-        // image.value = response["data"]["image"] ?? "N/A";
-        // appLogger("running this now");
-        // appLogger(image.value);
       } else {
         appLogger("response is null");
         Get.snackbar("Error", "Something went wrong");
@@ -285,6 +260,15 @@ class WholesalerProfileScreenController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    fetchProfile();
+  }
+
+  void initial() {
+    fullNameController = TextEditingController();
+    businessNameController = TextEditingController();
+    emailController = TextEditingController();
+    addressController = TextEditingController();
+    phoneController = TextEditingController();
     fetchProfile();
   }
 

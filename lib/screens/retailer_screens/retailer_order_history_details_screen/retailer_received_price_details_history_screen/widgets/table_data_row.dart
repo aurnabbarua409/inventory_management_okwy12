@@ -53,9 +53,9 @@ class _TableDataRowState extends State<TableDataRow> {
             itemBuilder: (context, index) {
               final item = widget.productsReceived[index];
               bool isAvailable = item.availability ?? false;
-              int price = item.price ?? 0;
+              num price = item.price ?? 0.0;
               int quantity = item.quantity ?? 0;
-              int total = price * quantity;
+              num total = price * quantity;
 
               return InkWell(
                 onTap: () {
@@ -74,7 +74,7 @@ class _TableDataRowState extends State<TableDataRow> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.only(left: 8),
                           child: Text(
                             (index + 1).toString(),
                             textAlign: TextAlign.left,
@@ -91,125 +91,117 @@ class _TableDataRowState extends State<TableDataRow> {
                       // Product Name
                       Expanded(
                         flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            item.productName ?? "N/A",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 12 *
-                                  (MediaQuery.of(context).size.width > 600
-                                      ? 1.2
-                                      : 1), // Responsive font size
-                              color: AppColors.onyxBlack,
-                            ),
+                        child: Text(
+                          item.productName ?? "N/A",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 12 *
+                                (MediaQuery.of(context).size.width > 600
+                                    ? 1.2
+                                    : 1), // Responsive font size
+                            color: AppColors.onyxBlack,
                           ),
                         ),
                       ),
                       // Quantity
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          child: isEditing[index]
-                              ? SizedBox(
-                                  width: 40,
-                                  height: 20,
-                                  child: TextFormField(
-                                    initialValue: quantity.toString(),
-                                    keyboardType: TextInputType.number,
-                                    // controller: TextEditingController(
-                                    //     text: item.quantity.toString()),
-                                    decoration: InputDecoration(
-                                      enabledBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.grey,
-                                        ),
+                        child: isEditing[index]
+                            ? Container(
+                                height: 20,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3),
+                                child: TextFormField(
+                                  initialValue: quantity.toString(),
+                                  keyboardType: TextInputType.number,
+                                  // controller: TextEditingController(
+                                  //     text: item.quantity.toString()),
+                                  decoration: InputDecoration(
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
                                       ),
-                                      disabledBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                      ),
-                                      errorBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      focusedErrorBorder:
-                                          const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: isEditing[index]
-                                              ? Colors.grey
-                                              : Colors.grey,
-                                        ),
-                                      ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 0, horizontal: 4),
                                     ),
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: AppColors.onyxBlack,
+                                    disabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.transparent,
+                                      ),
                                     ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return '';
-                                      }
-                                      final parsedValue = int.tryParse(value);
-                                      if (parsedValue == null ||
-                                          parsedValue <= 0) {
-                                        return '';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      try {
-                                        if (value.isEmpty) {
-                                          item.quantity = 0;
-                                          return;
-                                        }
-
-                                        quantity = int.parse(value);
-                                        item.quantity = quantity;
-                                        total = quantity * price;
-                                        widget.controller.updateGrandTotal();
-
-                                        setState(() {});
-                                      } catch (e) {
-                                        appLogger(e);
-                                      }
-                                    },
-                                    enabled: isEditing[index],
+                                    errorBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    focusedErrorBorder:
+                                        const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: isEditing[index]
+                                            ? Colors.grey
+                                            : Colors.grey,
+                                      ),
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 4),
                                   ),
-                                )
-                              : Text(
-                                  item.quantity.toString(),
-                                  textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontSize: 10,
                                     color: AppColors.onyxBlack,
                                   ),
+
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return '';
+                                    }
+                                    final parsedValue = int.tryParse(value);
+                                    if (parsedValue == null ||
+                                        parsedValue <= 0) {
+                                      return '';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    try {
+                                      if (value.isEmpty) {
+                                        item.quantity = 0;
+                                        return;
+                                      }
+
+                                      quantity = int.parse(value);
+                                      item.quantity = quantity;
+                                      total = quantity * price;
+                                      widget.controller.updateGrandTotal();
+
+                                      setState(() {});
+                                    } catch (e) {
+                                      appLogger(e);
+                                    }
+                                  },
+                                  enabled: isEditing[index],
                                 ),
-                        ),
+                              )
+                            : Text(
+                                item.quantity.toString(),
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.onyxBlack,
+                                ),
+                              ),
                       ),
                       // Unit
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            item.unit ?? "pcs",
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: AppColors.onyxBlack,
-                            ),
+                        child: Text(
+                          item.unit ?? "pcs",
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.onyxBlack,
                           ),
                         ),
                       ),
@@ -217,8 +209,8 @@ class _TableDataRowState extends State<TableDataRow> {
                       // Availability
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
                           child: Icon(
                             isAvailable ? Icons.check_circle : Icons.cancel,
                             size: 14,
@@ -229,98 +221,98 @@ class _TableDataRowState extends State<TableDataRow> {
                       // Price
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            price.toString(),
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: AppColors.onyxBlack,
-                            ),
+                        child: Text(
+                          price.toString(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.onyxBlack,
                           ),
                         ),
                       ),
                       // Total
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            total.toString(),
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: AppColors.onyxBlack,
-                            ),
+                        child: Text(
+                          total.toString(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.onyxBlack,
                           ),
                         ),
                       ),
 
                       // More Options
-                      SizedBox(
-                        width: 14,
-                        child: PopupMenuButton(
-                          enabled: isAvailable,
-                          padding: EdgeInsets.zero,
-                          style: const ButtonStyle(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                            visualDensity: VisualDensity.compact,
-                          ),
-                          icon: const Icon(
-                            Icons.more_vert,
-                            color: AppColors.black,
-                            size: 18,
-                          ),
-                          color: AppColors.white,
-                          onSelected: (value) async {
-                            if (value == 1) {
-                              // if (isEditing[index]) {
-                              //   try {
-                              //     final url =
-                              //         "${Urls.updateReceivedOrder}${item.id}";
-                              //     final response = await ApiService.patchApi(url,
-                              //         {"quantity": item.quantity ?? 0});
-                              //     appLogger(response);
-                              //   } catch (e) {
-                              //     appLogger(e);
-                              //   }
-                              // }
-                              if (widget.controller.formKey.currentState!
-                                  .validate()) {
-                                setState(() {
-                                  isEditing[index] = !isEditing[index];
-                                });
-                              } else {
-                                Get.snackbar(
-                                    'Error', 'Please write a valid quantity');
-                              }
-                            }
-                            if (value == 2) {
-                              final url = Urls.deleteProduct + item.id!;
-                              final response =
-                                  await ApiService.deleteApi(url, {});
-                              appLogger(response);
-                              widget.productsReceived
-                                  .removeWhere((id) => item.id == id.id);
+                      Expanded(
+                        flex: 0,
+                        child: isAvailable
+                            ? PopupMenuButton(
+                                padding: EdgeInsets.zero,
+                                style: const ButtonStyle(
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  padding:
+                                      WidgetStatePropertyAll(EdgeInsets.zero),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                  color: AppColors.black,
+                                  size: 18,
+                                ),
+                                color: AppColors.white,
+                                onSelected: (value) async {
+                                  if (value == 1) {
+                                    // if (isEditing[index]) {
+                                    //   try {
+                                    //     final url =
+                                    //         "${Urls.updateReceivedOrder}${item.id}";
+                                    //     final response = await ApiService.patchApi(url,
+                                    //         {"quantity": item.quantity ?? 0});
+                                    //     appLogger(response);
+                                    //   } catch (e) {
+                                    //     appLogger(e);
+                                    //   }
+                                    // }
+                                    if (widget.controller.formKey.currentState!
+                                        .validate()) {
+                                      setState(() {
+                                        isEditing[index] = !isEditing[index];
+                                      });
+                                    } else {
+                                      Get.snackbar('Error',
+                                          'Please write a valid quantity');
+                                    }
+                                  }
+                                  if (value == 2) {
+                                    final url = Urls.deleteProduct + item.id!;
+                                    final response =
+                                        await ApiService.deleteApi(url, {});
+                                    appLogger(response);
+                                    widget.productsReceived
+                                        .removeWhere((id) => item.id == id.id);
 
-                              setState(() {});
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 1,
-                              child: Text(isEditing[index]
-                                  ? AppStrings.save
-                                  : AppStrings.edit),
-                            ),
-                            const PopupMenuItem(
-                              value: 2,
-                              child: Text(AppStrings.delete),
-                            ),
-                          ],
-                        ),
+                                    setState(() {});
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text(isEditing[index]
+                                        ? AppStrings.save
+                                        : AppStrings.edit),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 2,
+                                    child: Text(AppStrings.delete),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(
+                                width: 32,
+                                height: 40,
+                              ),
                       ),
                     ],
                   ),

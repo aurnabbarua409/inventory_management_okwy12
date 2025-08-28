@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/retailer_settings/retailer_profile/retailer_get_profile_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
@@ -22,15 +23,25 @@ class ProfileScreenController extends GetxController {
   var image = Rx<String>(''); // Observable for image URL
   final RxString userName = ''.obs;
 
+  var phone = PhoneNumber().obs;
   ProfileResponse getuserModel = ProfileResponse.fromJson({});
   ProfileData get getProfileData => getuserModel.data;
 
   // Controllers for form fields
-  final businessNameController = TextEditingController();
-  final fullNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final addressController = TextEditingController();
-  final phoneController = TextEditingController();
+  TextEditingController businessNameController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+
+  void initial() {
+    fullNameController = TextEditingController();
+    businessNameController = TextEditingController();
+    emailController = TextEditingController();
+    addressController = TextEditingController();
+    phoneController = TextEditingController();
+    getProfileRepo();
+  }
 
   final RxString phoneNumber = "".obs;
   final RxBool isValidPhonenumber = true.obs;
@@ -88,7 +99,12 @@ class ProfileScreenController extends GetxController {
       emailController.text = response["data"]["email"] ?? "";
       addressController.text =
           response["data"]["storeInformation"]["location"] ?? "";
-      phoneController.text = response["data"]["phone"] ?? "";
+      phone.value = await PhoneNumber.getRegionInfoFromPhoneNumber(
+          response["data"]["phone"] ?? "");
+
+      // phoneController.text = phoneNumber.parseNumber();
+      appLogger(phone);
+      // phoneController.text = phoneNumber.parseNumber();
       image.value = response["data"]["image"] ?? "";
 
       appLogger(image.value);
@@ -133,10 +149,12 @@ class ProfileScreenController extends GetxController {
       // try {
       // Call the patchApi function with the body data
       // var response = await ApiService.patchApi(Urls.userProfile, body);
-      await ApiService.patchApi(Urls.userProfile, body);
+      final response = await ApiService.patchApi(Urls.userProfile, body);
       await ApiService.MultipartRequest1(
           url: Urls.userProfile, imagePath: imageFile.value?.path);
-
+      if (response != null) {
+        Get.snackbar("Success: ${response['success']}", response['message']);
+      }
       getProfileRepo();
       Get.back();
       // final imageRespinse = await ApiService.updateProfileImage(
@@ -278,5 +296,16 @@ class ProfileScreenController extends GetxController {
   void onInit() {
     getProfileRepo();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    // Dispose of all controllers to avoid memory leaks
+    fullNameController.dispose();
+    businessNameController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    phoneController.dispose();
+    super.onClose();
   }
 }

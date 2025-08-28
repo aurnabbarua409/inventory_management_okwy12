@@ -95,9 +95,11 @@ class SocketApi {
         debugPrint('Unauthorized');
       });
       final userId = PrefsHelper.userId;
+
       appLogger("in socket service, the user id: $userId");
       socket.on('get-notification::$userId', (dynamic data) {
-        Get.find<NotificationsController>().unreadMessage.value += 1;
+       
+        Get.find<NotificationsController>().addUnreadMessage(data['_id']);
         appLogger(
             '============ Socket connected and getting values: $data ==============================');
       });

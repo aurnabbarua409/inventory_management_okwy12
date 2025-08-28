@@ -107,17 +107,21 @@ class SigninScreen extends StatelessWidget {
                       ),
                     ),
                     const SpaceWidget(spaceHeight: 24),
-                    ButtonWidget(
-                      onPressed: () {
-                        if (_formKey.currentState == null ||
-                            !(_formKey.currentState!.validate())) {
-                          return;
-                        }
-                        controller.signInUser();
-                      },
-                      label: AppStrings.signIn,
-                      backgroundColor: AppColors.primaryBlue,
-                      buttonWidth: double.infinity,
+                    Obx(
+                      () => controller.isLoading.value
+                          ? const Center(child: CircularProgressIndicator())
+                          : ButtonWidget(
+                              onPressed: () {
+                                if (_formKey.currentState == null ||
+                                    !(_formKey.currentState!.validate())) {
+                                  return;
+                                }
+                                controller.signInUser();
+                              },
+                              label: AppStrings.signIn,
+                              backgroundColor: AppColors.primaryBlue,
+                              buttonWidth: double.infinity,
+                            ),
                     ),
                     const SpaceWidget(spaceHeight: 16),
                     Row(

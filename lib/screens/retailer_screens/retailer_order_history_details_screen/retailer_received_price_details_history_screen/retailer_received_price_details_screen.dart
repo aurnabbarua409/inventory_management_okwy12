@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_wholesaler_model.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/controller/retailer_received_price_details_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/widgets/table_data_row.dart';
-import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
@@ -14,7 +11,6 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_icons_path.dart';
 import '../../../../constants/app_strings.dart';
 import '../../../../widgets/appbar_widget/main_appbar_widget.dart';
-import '../../../../widgets/popup_widget/popup_widget.dart';
 import '../../../../widgets/space_widget/space_widget.dart';
 import '../../../../widgets/text_widget/text_widgets.dart';
 
@@ -116,14 +112,16 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                         // ),
                         child: Row(
                           children: [
-                            _buildHeaderCell("SI", flex: 1),
+                            _buildHeaderCell("SI",
+                                flex: 1,
+                                padding: const EdgeInsets.only(left: 5)),
                             _buildHeaderCell("Product", flex: 2),
                             _buildHeaderCell("Qty", flex: 1),
                             _buildHeaderCell("Unit", flex: 1),
-                            _buildHeaderCell("Avail.", flex: 1),
+                            _buildHeaderCell("Available", flex: 1),
                             _buildHeaderCell("Price", flex: 1),
                             _buildHeaderCell("Total", flex: 1),
-                            _buildHeaderCell("", flex: 0),
+                            _buildHeaderCell("", flex: 1),
                           ],
                         ),
                       ),
@@ -177,11 +175,12 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
     );
   }
 
-  Widget _buildHeaderCell(String text, {int flex = 1}) {
+  Widget _buildHeaderCell(String text,
+      {int flex = 1, EdgeInsetsGeometry? padding}) {
     return Expanded(
       flex: flex,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: padding ?? EdgeInsetsGeometry.zero,
         child: Text(
           text,
           softWrap: true,

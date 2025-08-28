@@ -13,7 +13,7 @@ class UpdateProductModel {
 
 class UpdateProductModel2 {
   String product;
-  int price;
+  num price;
   bool availability;
 
   UpdateProductModel2(

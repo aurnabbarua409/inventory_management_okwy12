@@ -23,15 +23,19 @@ class WholesalerNotificationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       appBar: AppbarWidget(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        text: AppStrings.notification,
-        centerTitle: true,
-      ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          text: AppStrings.notification,
+          centerTitle: true,
+          action: IconButton(
+              onPressed: () {
+                controller.getNotificationsRepo();
+              },
+              icon: const Icon(Icons.refresh))),
       body: Obx(() {
         switch (controller.status.value) {
           case Status.loading:

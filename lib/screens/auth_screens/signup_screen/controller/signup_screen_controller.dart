@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:inventory_app/models/auth/sign_up_model.dart'; // Make sure to update to the new model file path
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
@@ -18,10 +19,10 @@ class SignupScreenController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   // final phoneNumberController = TextEditingController();
-
+  PhoneNumber phone = PhoneNumber(isoCode: "NG");
   final RxString phoneNumber = "".obs;
   final RxBool isValidPhonenumber = true.obs;
-
+  final countryCode = "NG".obs;
   UserCreationResponse? signUpData;
 
   // Function to handle form submission and sign-up API call

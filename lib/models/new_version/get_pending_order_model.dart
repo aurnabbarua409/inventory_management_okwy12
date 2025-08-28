@@ -43,8 +43,9 @@ class Product {
   final String? updatedAt;
   final int? v;
   bool? availability;
-  int? price;
+  num? price;
   TextEditingController? textEditingController;
+  FocusNode? focusNode;
 
   Product(
       {required this.id,
@@ -57,24 +58,28 @@ class Product {
       required this.createAt,
       required this.updatedAt,
       this.availability = false,
-      this.price = 0,
+      this.price = 0.0,
       this.textEditingController,
+      this.focusNode,
       required this.v});
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-      id: json['_id'] ?? "N/A",
-      productName: json['productName'] ?? "N/A",
-      unit: json['unit'] ?? "Pcs",
-      quantity: json['quantity'] ?? 0,
-      additionalInfo: json['additionalInfo'] ?? "N/A",
-      retailer: json['retailer'] ?? "",
-      status: json['status'] ?? false,
-      createAt: json['createdAt'].toString(),
-      updatedAt: json['updatedAt'].toString(),
-      availability: json['availability'] ?? false,
-      price: json['price'] ?? 0,
-      v: json['__v'] ?? 0,
-      textEditingController: TextEditingController());
+        id: json['_id'] ?? "N/A",
+        productName: json['productName'] ?? "N/A",
+        unit: json['unit'] ?? "Pcs",
+        quantity: json['quantity'] ?? 0,
+        additionalInfo: json['additionalInfo'] ?? "N/A",
+        retailer: json['retailer'] ?? "",
+        status: json['status'] ?? false,
+        createAt: json['createdAt'].toString(),
+        updatedAt: json['updatedAt'].toString(),
+        availability: json['availability'] ?? false,
+        price:
+            (json['price'] != null) ? (json['price'] as num).toDouble() : 0.0,
+        v: json['__v'] ?? 0,
+        textEditingController: TextEditingController(),
+        focusNode: FocusNode(),
+      );
 }
 
 class Retailer {

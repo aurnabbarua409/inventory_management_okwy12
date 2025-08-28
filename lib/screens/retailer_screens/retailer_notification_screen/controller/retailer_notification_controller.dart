@@ -14,7 +14,24 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 
 class NotificationsController extends GetxController {
   RxList<NotificationModel> notificationModel = <NotificationModel>[].obs;
-  RxInt unreadMessage = 0.obs;
+
+  RxList unreadMessage = [].obs;
+
+  addUnreadMessage(String id) {
+    print("length : ${unreadMessage.length}");
+    if (!unreadMessage.contains(id)) {
+      unreadMessage.add(id);
+    }
+
+    print("length : ${unreadMessage.length}");
+  }
+
+  removeUnreadMessage(String id) {
+    if (unreadMessage.contains(id)) {
+      unreadMessage.remove(id);
+    }
+  }
+
   String id = "";
   Rx<Status> status =
       Status.loading.obs; // Make status observable using Rx<Status>
@@ -70,13 +87,9 @@ class NotificationsController extends GetxController {
           // notificationModel.insert(0, newNotification);
           // notificationModel.refresh();
           // unreadMessage.value++;
-          unreadMessage.value += 1;
-          appLogger("unread notification value: ${unreadMessage.value}");
-          if (!newNotification.isRead) {
-            unreadMessage.value += 1;
-            unreadMessage.refresh();
-          }
 
+          addUnreadMessage(data['_id']);
+          appLogger("unread notification value: ${unreadMessage.value}");
           update();
         } else {
           appLogger("Received null data for notifications");
@@ -110,6 +123,16 @@ class NotificationsController extends GetxController {
 
         status.value = Status
             .completed; // Set status to completed after successful data fetch
+        List<NotificationModel> filteredNotifications = [];
+        filteredNotifications.addAll(notificationModel
+            .where((notification) => isToday(notification, true))
+            .toList());
+        filteredNotifications.addAll(notificationModel
+            .where((notification) => isToday(notification, false))
+            .toList());
+        appLogger(unreadMessage);
+        unreadMessage.value =
+            filteredNotifications.where((n) => !(n.isRead)).toList();
       } else {
         status.value =
             Status.error; // Set status to error if the response is invalid
@@ -118,7 +141,7 @@ class NotificationsController extends GetxController {
     } catch (e) {
       status.value =
           Status.error; // Set status to error in case of an exception
-      snackBar("Error", "An error occurred while fetching notifications");
+      // snackBar("Error", "An error occurred while fetching notifications");
       debugPrint("Error: $e");
     }
 
@@ -158,7 +181,8 @@ class NotificationsController extends GetxController {
 
           // If the notification was unread, decrement the unreadMessage count
           if (!notification.isRead) {
-            unreadMessage.value -= 1;
+            removeUnreadMessage(notification.id);
+
             notificationModel.refresh(); // Refresh RxList
             unreadMessage.refresh(); // Refresh RxInt
             update(); // Ensure GetBuilder rebuilds
@@ -202,6 +226,23 @@ class NotificationsController extends GetxController {
       return '${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago';
     } else {
       return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+    }
+  }
+
+  // Helper function to determine if a notification is from today or yesterday
+  bool isToday(NotificationModel notification, bool isToday) {
+    final today = DateTime.now();
+    final notificationDate = notification.createdAt;
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    if (isToday) {
+      return notificationDate.year == today.year &&
+          notificationDate.month == today.month &&
+          notificationDate.day == today.day;
+    } else {
+      return notificationDate.year == yesterday.year &&
+          notificationDate.month == yesterday.month &&
+          notificationDate.day == yesterday.day;
     }
   }
 }

@@ -54,7 +54,8 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
     super.dispose();
   }
 
-  void _handleTabSelection() {
+  void _handleTabSelection() async {
+    await Future.delayed(Duration(seconds: 1));
     setState(() {});
   }
 

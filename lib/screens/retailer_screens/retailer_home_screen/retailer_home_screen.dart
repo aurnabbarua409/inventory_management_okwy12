@@ -76,15 +76,15 @@ class RetailerHomeScreen extends StatelessWidget {
                         onPressed: () {
                           Get.toNamed(AppRoutes.retailerNotification);
                           NotificationsController.instance.unreadMessage.value =
-                              0;
+                              [];
                         },
                         icon: Obx(() {
                           return Badge(
                             isLabelVisible: NotificationsController
-                                    .instance.unreadMessage.value >
-                                0,
+                                    .instance.unreadMessage.isNotEmpty
+                                ,
                             label: Text(
-                              "${NotificationsController.instance.unreadMessage.value}",
+                              "${NotificationsController.instance.unreadMessage.length}",
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),

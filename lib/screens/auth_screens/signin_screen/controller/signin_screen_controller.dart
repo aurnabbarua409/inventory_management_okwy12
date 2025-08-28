@@ -5,6 +5,7 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/auth/sign_in_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/services/socket_service.dart';
 import 'package:inventory_app/utils/app_enum.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
@@ -60,6 +61,8 @@ class SignInScreenController extends GetxController {
       // }
 
       if (response['success'] != null && response['success']) {
+        SocketApi.socket.disconnect;
+        SocketApi.init();
         await _saveUserDataAndNavigate(response);
       } else {
         Get.snackbar(
@@ -110,7 +113,6 @@ class SignInScreenController extends GetxController {
     PrefsHelper.setString('email', email);
     PrefsHelper.setBool("isLogIn", true);
 
-    await PrefsHelper.getAllPrefData();
 
     debugPrint("User Role: ======================> $role");
     debugPrint("User ID: ======================> $userId");
@@ -130,6 +132,8 @@ class SignInScreenController extends GetxController {
         arguments: {'userRole': role, 'userId': userId});
 
     // Clear input fields
+        await PrefsHelper.getAllPrefData();
+
     emailController.clear();
     passwordController.clear();
   }

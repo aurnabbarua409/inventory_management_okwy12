@@ -10,14 +10,17 @@ class CustomContainerWidget extends StatelessWidget {
   final String icon;
   final Color containerColor;
   final String text;
+  final int? numberOfOrder;
+  final bool isWholesaler;
 
-  const CustomContainerWidget({
-    super.key,
-    required this.onTap,
-    required this.icon,
-    required this.containerColor,
-    required this.text,
-  });
+  const CustomContainerWidget(
+      {super.key,
+      required this.onTap,
+      required this.icon,
+      required this.containerColor,
+      required this.text,
+      this.isWholesaler = false,
+      this.numberOfOrder});
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +68,18 @@ class CustomContainerWidget extends StatelessWidget {
               fontColor: AppColors.black,
               textAlignment: TextAlign.left,
             ),
+            const Spacer(),
+            if (isWholesaler)
+              CircleAvatar(
+                radius: 15,
+                backgroundColor: AppColors.red,
+                child: TextWidget(
+                  text: numberOfOrder.toString(),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.white,
+                ),
+              )
           ],
         ),
       ),

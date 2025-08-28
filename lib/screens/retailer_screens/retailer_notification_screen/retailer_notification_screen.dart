@@ -13,13 +13,27 @@ import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_notification_screen/controller/retailer_notification_controller.dart';
 
-class RetailerNotificationScreen extends StatelessWidget {
+class RetailerNotificationScreen extends StatefulWidget {
   const RetailerNotificationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = NotificationsController.instance;
+  State<RetailerNotificationScreen> createState() =>
+      _RetailerNotificationScreenState();
+}
 
+class _RetailerNotificationScreenState
+    extends State<RetailerNotificationScreen> {
+  final controller = NotificationsController.instance;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    controller.getNotificationsRepo();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
       appBar: AppbarWidget(
@@ -31,6 +45,11 @@ class RetailerNotificationScreen extends StatelessWidget {
         ),
         text: AppStrings.notification,
         centerTitle: true,
+        action: IconButton(
+            onPressed: () {
+              controller.getNotificationsRepo();
+            },
+            icon: const Icon(Icons.refresh)),
       ),
       body: Obx(() {
         switch (controller.status.value) {

@@ -6,12 +6,14 @@ import '../../utils/app_size.dart';
 
 class InternationalPhoneFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
+  final PhoneNumber? initialValue; 
   final Function(PhoneNumber) onInputChanged;
   final Function(bool)? onInputValidated;
 
   const InternationalPhoneFieldWidget({
     super.key,
     this.controller,
+    required this.initialValue,
     required this.onInputChanged,
     this.onInputValidated,
   });
@@ -28,6 +30,7 @@ class InternationalPhoneFieldWidget extends StatelessWidget {
         onInputChanged: onInputChanged,
         onInputValidated: onInputValidated,
         textFieldController: controller,
+        initialValue: initialValue,
         textStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,

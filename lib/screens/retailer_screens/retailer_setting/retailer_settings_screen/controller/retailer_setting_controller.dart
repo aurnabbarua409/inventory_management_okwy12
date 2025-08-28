@@ -13,6 +13,7 @@ class RetailerSettingController extends GetxController {
     PrefsHelper.emailId = "";
     PrefsHelper.token = "";
     PrefsHelper.userRole = "";
+    PrefsHelper.userId = "";
     PrefsHelper.removeAllPrefData();
     PrefsHelper.isLogIn = false;
     PrefsHelper.setBool('isLogIn', false);

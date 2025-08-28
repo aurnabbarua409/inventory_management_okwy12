@@ -188,7 +188,8 @@ class SignupScreen extends StatelessWidget {
                                   if (value.length < 4) {
                                     return "Password should be atleast 4 character";
                                   }
-                                  if (value != controller.passwordController.text) {
+                                  if (value !=
+                                      controller.passwordController.text) {
                                     return 'Password mismatch error';
                                   }
                                   return null;
@@ -204,6 +205,7 @@ class SignupScreen extends StatelessWidget {
                               ),
                               const SpaceWidget(spaceHeight: 12),
                               InternationalPhoneFieldWidget(
+                                initialValue: controller.phone,
                                 onInputChanged: (p0) {
                                   controller.phoneNumber.value =
                                       p0.phoneNumber!;

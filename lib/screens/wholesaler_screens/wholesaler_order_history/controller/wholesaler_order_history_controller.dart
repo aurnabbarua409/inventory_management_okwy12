@@ -82,7 +82,7 @@ class WholesalerOrderHistoryController extends GetxController {
       appLogger("fetching received order: $pendingOrders");
       // receivedOrders.value = recievedData;
     } catch (e) {
-      appLogger("error fetching pending order: $e");
+      appLogger("error fetching pending order -r: $e");
     } finally {
       isLoading.value = false; // Hide loading indicator
     }

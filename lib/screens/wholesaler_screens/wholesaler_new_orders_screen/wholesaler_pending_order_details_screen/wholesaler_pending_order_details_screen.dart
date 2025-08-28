@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_widget.dart';
@@ -220,9 +218,9 @@ class _WholesalerPendingOrderDetailsScreenState
       final index = entry.key;
       final item = entry.value;
       // appLogger(item.product[0].productId.name);
-      int price = item.price ?? 0;
+      num price = item.price ?? 0.0;
       int quantity = item.quantity ?? 1;
-      int total = price * quantity;
+      num total = price * quantity;
       final isAvailable = item.availability ?? false;
       return GestureDetector(
         onTap: () {

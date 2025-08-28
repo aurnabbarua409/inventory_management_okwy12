@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
-import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/utils/app_invitelink.dart';
 import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
-import 'package:share_plus/share_plus.dart';
 
 class WholesalerSettingController extends GetxController {
   void logout() {
     PrefsHelper.emailId = "";
     PrefsHelper.token = "";
     PrefsHelper.userRole = "";
+    PrefsHelper.userId = "";
     PrefsHelper.removeAllPrefData();
     PrefsHelper.isLogIn = false;
     PrefsHelper.setBool('isLogIn', false);

@@ -174,7 +174,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
 
     final ttfRegular = pw.Font.ttf(fontRegular);
     final ttfBold = pw.Font.ttf(fontBold);
-    var totalPrice = 0;
+    var totalPrice = 0.0;
     final pw.MemoryImage currencyIcon =
         await _loadImageFromAssets("assets/images/currencyIcon.png");
     List<List<dynamic>> tableData = [];
@@ -199,6 +199,11 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
                 style:
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 25)),
             pw.Row(children: [
+              pw.Text(
+                  confirmedData.value?.id!
+                          .substring(confirmedData.value!.id!.length - 12) ??
+                      "N/A",
+                  style: pw.TextStyle(fontStyle: pw.FontStyle.italic)),
               pw.Spacer(),
               pw.Text(
                   confirmedData.value!.updatedAt != null

@@ -225,6 +225,7 @@ class RetailerSavedOrderScreenController extends GetxController {
         arguments: {'selectedProductIds': selectedProductIds});
     Get.find<BottomNavbarController>().changeIndex(1);
     Get.toNamed(AppRoutes.bottomNavBar);
+    clearSelection();
   }
 
   void showDeleteOrderDialog(BuildContext context) {
