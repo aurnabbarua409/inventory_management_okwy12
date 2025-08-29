@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -419,30 +418,96 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Obx(() {
-                  // pendingController.productList.value = pendingController.orders
-                  //     .expand((datum) => datum.product)
-                  //     .toList();
+                  final products = pendingController.products;
 
-                  return ListView(
-                    children: [
-                      // Header Row
-                      Container(
-                        color: AppColors.headerColor,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            _buildHeaderCell("Sl",
-                                flex: 1, padding: EdgeInsets.only(left: 10)),
-                            _buildHeaderCell("Name", flex: 4),
-                            _buildHeaderCell("Qty", flex: 1),
-                            _buildHeaderCell("Unit", flex: 1),
-                            _buildHeaderCell("", flex: 1)
-                          ],
+                  if (products.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          "No orders available",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                       ),
-                      // Data Rows (Flatten orders list and pass products only)
-                      ..._buildDataRows(),
-                    ],
+                    );
+                  }
+
+                  return SingleChildScrollView(
+                    scrollDirection:
+                        Axis.horizontal, // enable horizontal scrolling
+                    child: DataTable(
+                      headingRowColor:
+                          WidgetStateProperty.all(AppColors.headerColor),
+                      columnSpacing: 20,
+                      headingTextStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: AppColors.black,
+                      ),
+                      dataTextStyle: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.onyxBlack,
+                      ),
+                      columns: const [
+                        DataColumn(label: Text("Sl")),
+                        DataColumn(label: Text("Product")),
+                        DataColumn(label: Text("Quantity")),
+                        DataColumn(label: Text("Unit")),
+                        DataColumn(label: Text("Action")),
+                      ],
+                      rows: products.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final item = entry.value;
+
+                        return DataRow(
+                          cells: [
+                            DataCell(Text((index + 1).toString())),
+                            DataCell(Text(item.productName ?? "N/A")),
+                            DataCell(Center(
+                                child: Text(item.quantity?.toString() ?? "0"))),
+                            DataCell(Text(item.unit ?? "N/A")),
+                            DataCell(
+                              PopupMenuButton<int>(
+                                padding: EdgeInsets.zero,
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                  color: AppColors.black,
+                                  size: 18,
+                                ),
+                                color: AppColors.white,
+                                onSelected: (value) {
+                                  if (value == 1) {
+                                    pendingController.productNameController
+                                        .text = item.productName ?? '';
+                                    pendingController.selectedUnit.value = item
+                                            .unit ??
+                                        pendingController.selectedUnit.value;
+                                    pendingController.additionalInfoController
+                                        .text = item.additionalInfo ?? '';
+                                    pendingController.quantity.value =
+                                        item.quantity ?? 0;
+
+                                    showProductEditDialog(context, item.id!);
+                                  } else if (value == 2) {
+                                    showProductDetailsDialog(context, item);
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  const PopupMenuItem(
+                                    value: 1,
+                                    child: Text(AppStrings.edit),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 2,
+                                    child: Text("View Details"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
                   );
                 }),
               ),

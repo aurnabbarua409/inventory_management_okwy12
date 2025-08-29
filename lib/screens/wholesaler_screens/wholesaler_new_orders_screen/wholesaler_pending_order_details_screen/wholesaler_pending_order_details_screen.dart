@@ -142,52 +142,76 @@ class _WholesalerPendingOrderDetailsScreenState
 
             // List/Table View
             Expanded(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Obx(
-                () => Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      // Header Row
-                      Container(
-                        color: AppColors.headerColor,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            _buildHeaderCell("Sl", flex: 0),
-                            _buildHeaderCell("Product", flex: 2),
-                            _buildHeaderCell("Qty", flex: 1),
-                            _buildHeaderCell("Unit", flex: 1),
-                            _buildHeaderCell("Avail", flex: 1),
-                            _buildHeaderCell("Price", flex: 1),
-                            _buildHeaderCell("Total", flex: 1),
-                          ],
-                        ),
-                      ),
-                      // Data Rows
-                      // WholesalerPendingRow(controller: pendingController),
-                      ..._buildDataRows(),
-                      // const SpaceWidget(spaceHeight: 16),
-                      // ButtonWidget(
-                      //   onPressed: () {
-                      //     // Show dialog to send order (implement functionality)
-                      //     if (_formKey.currentState!.validate()) {
-                      //       showSendOrderDialog(context);
-                      //     } else {
-                      //       Get.snackbar('Error', 'Please enter a valid price');
-                      //     }
-                      //   },
-                      //   label: AppStrings.send,
-                      //   backgroundColor: AppColors.primaryBlue,
-                      //   buttonHeight: 45,
-                      //   fontWeight: FontWeight.w500,
-                      // ),
+                () => SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    headingRowColor:
+                        WidgetStateProperty.all(AppColors.headerColor),
+                    columnSpacing: 16,
+                    columns: const [
+                      DataColumn(label: Center(child: Text("Sl"))),
+                      DataColumn(label: Text("Product")),
+                      DataColumn(label: Center(child: Text("Quantity"))),
+                      DataColumn(label: Center(child: Text("Unit"))),
+                      DataColumn(label: Center(child: Text("Availability"))),
+                      DataColumn(label: Center(child: Text("Price"))),
+                      DataColumn(label: Center(child: Text("Total"))),
+                      DataColumn(label: Center(child: Text("Action"))),
                     ],
+                    rows:
+                        pendingController.products.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final item = entry.value;
+                      num price = item.price ?? 0.0;
+                      int quantity = item.quantity ?? 1;
+                      num total = price * quantity;
+                      final isAvailable = item.availability ?? false;
+
+                      return DataRow(
+                        cells: [
+                          DataCell(Center(child: Text("${index + 1}"))),
+                          DataCell(Text(item.productName ?? "N/A")),
+                          DataCell(
+                              Center(child: Text(item.quantity.toString()))),
+                          DataCell(Center(child: Text(item.unit ?? "pcs"))),
+                          DataCell(
+                            Center(
+                              child: Icon(
+                                isAvailable ? Icons.check_circle : Icons.cancel,
+                                size: 16,
+                                color: isAvailable ? Colors.green : Colors.red,
+                              ),
+                            ),
+                          ),
+                          DataCell(Center(child: Text(price.toString()))),
+                          DataCell(Center(child: Text(total.toString()))),
+                          DataCell(
+                            Center(
+                              child: PopupMenuButton<String>(
+                                onSelected: (value) {
+                                  if (value == "details") {
+                                    pendingController.showProductDetailsDialog(
+                                        context, item);
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => [
+                                  const PopupMenuItem(
+                                    value: "details",
+                                    child: Text("View Details"),
+                                  ),
+                                ],
+                                child: const Icon(Icons.more_vert, size: 18),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
-            )),
+            ),
           ],
         ),
       ),

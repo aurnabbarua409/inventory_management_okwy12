@@ -10,12 +10,14 @@ class BuildInvoiceTableWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invoiceItems = confirmedController.confirmedData.value != null
-        ? confirmedController.product.map((product) => {
+        ? confirmedController.product
+            .map((product) => {
                   "product": product.productName,
                   "qty": product.quantity.toString(),
                   "unit": product.unit,
                   "price": product.price.toString(),
-                  "total": ((product.price ?? 0) * (product.quantity ?? 0)).toString(),
+                  "total": ((product.price ?? 0) * (product.quantity ?? 0))
+                      .toString(),
                 })
             .toList()
         : [];
@@ -23,49 +25,53 @@ class BuildInvoiceTableWidget extends StatelessWidget {
     confirmedController.totalPrice.value =
         0; // Reset totalAmount before calculation
 
-    return Column(
-      children: [
-        // Table Header
-        Container(
-          padding: EdgeInsets.symmetric(vertical: ResponsiveUtils.width(12.0)),
-          color: AppColors.tabBG,
-          child: const Row(
-            children: [
-              BuildTableCellWidget("SI", flex: 1, isHeader: true),
-              BuildTableCellWidget("Product", flex: 2, isHeader: true),
-              BuildTableCellWidget("Qty", flex: 1, isHeader: true),
-              BuildTableCellWidget("Unit", flex: 1, isHeader: true),
-              BuildTableCellWidget("Price", flex: 1, isHeader: true),
-              BuildTableCellWidget("Total", flex: 1, isHeader: true),
-            ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        headingRowColor: MaterialStateProperty.all(AppColors.tabBG),
+        columns: const [
+          DataColumn(
+            label: Center(child: Text("SI")),
+            numeric: false,
           ),
-        ),
-        // Table Rows
-        ...invoiceItems!.asMap().entries.map((entry) {
+          DataColumn(
+            label: Center(child: Text("Product")),
+            numeric: false,
+          ),
+          DataColumn(
+            label: Center(child: Text("Quantity")),
+            numeric: false,
+          ),
+          DataColumn(
+            label: Center(child: Text("Unit")),
+            numeric: false,
+          ),
+          DataColumn(
+            label: Center(child: Text("Price")),
+            numeric: false,
+          ),
+          DataColumn(
+            label: Center(child: Text("Total")),
+            numeric: false,
+          ),
+        ],
+        rows: invoiceItems.asMap().entries.map((entry) {
           final index = entry.key + 1;
           final item = entry.value;
           confirmedController.totalPrice.value +=
               double.tryParse(item["total"] ?? "0") ?? 0;
-          return Container(
-            padding:
-                EdgeInsets.symmetric(vertical: ResponsiveUtils.width(12.0)),
-            decoration: const BoxDecoration(
-              color: AppColors.white,
-              border: Border(bottom: BorderSide(color: AppColors.greyLight2)),
-            ),
-            child: Row(
-              children: [
-                BuildTableCellWidget(index.toString(), flex: 1),
-                BuildTableCellWidget(item["product"] ?? "", flex: 2),
-                BuildTableCellWidget(item["qty"] ?? "", flex: 1),
-                BuildTableCellWidget(item["unit"] ?? "", flex: 1),
-                BuildTableCellWidget(item["price"] ?? "", flex: 1),
-                BuildTableCellWidget(item["total"] ?? "", flex: 1),
-              ],
-            ),
+          return DataRow(
+            cells: [
+              DataCell(Center(child: Text(index.toString()))),
+              DataCell(Center(child: Text(item["product"] ?? ""))),
+              DataCell(Center(child: Text(item["qty"] ?? ""))),
+              DataCell(Center(child: Text(item["unit"] ?? ""))),
+              DataCell(Center(child: Text(item["price"] ?? ""))),
+              DataCell(Center(child: Text(item["total"] ?? ""))),
+            ],
           );
-        }),
-      ],
+        }).toList(),
+      ),
     );
   }
 }

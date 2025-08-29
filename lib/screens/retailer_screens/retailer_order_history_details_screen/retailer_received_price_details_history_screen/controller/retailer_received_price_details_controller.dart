@@ -34,7 +34,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   RxDouble grandtotal = 0.0.obs;
   final orderid = ''.obs;
   final Rxn<Wholesaler> wholesaler = Rxn<Wholesaler>();
-
+  final isClickedConfirmed = false.obs;
   final formKey = GlobalKey<FormState>();
   @override
   void onInit() {
@@ -306,7 +306,8 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
         const SpaceWidget(spaceHeight: 16),
         const Center(
           child: TextWidget(
-            text: 'Please contact with wholesaler',
+            text:
+                'Please contact your wholesaler to confirm quantity before you can proceed.',
             fontSize: 16,
             fontWeight: FontWeight.w600,
             fontColor: AppColors.primaryBlue,

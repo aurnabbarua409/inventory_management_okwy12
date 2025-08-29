@@ -217,48 +217,85 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
 
     totalAmount = 0; // Reset totalAmount before calculation
 
-    return Column(
-      children: [
-        // Table Header
-        Container(
-          padding: EdgeInsets.symmetric(vertical: ResponsiveUtils.width(12.0)),
-          color: AppColors.tabBG,
-          child: Row(
-            children: [
-              _buildTableCell("SI", flex: 1, isHeader: true),
-              _buildTableCell("Product", flex: 1, isHeader: true),
-              _buildTableCell("Qty", flex: 1, isHeader: true),
-              _buildTableCell("Unit", flex: 1, isHeader: true),
-              _buildTableCell("Price", flex: 1, isHeader: true),
-              _buildTableCell("Total", flex: 1, isHeader: true),
-            ],
-          ),
-        ),
-        // Table Rows
-        ...invoiceItems!.asMap().entries.map((entry) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        headingRowColor: MaterialStateProperty.all(AppColors.tabBG),
+        dataRowColor: MaterialStateProperty.all(AppColors.white),
+        columns: const [
+          DataColumn(
+              label: Center(
+                  child: Text("SI",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12)))),
+          DataColumn(
+              label: Text("Product",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+          DataColumn(
+              label: Center(
+                  child: Text("Quantity",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12)))),
+          DataColumn(
+              label: Center(
+                  child: Text("Unit",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12)))),
+          DataColumn(
+              label: Center(
+                  child: Text("Price",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12)))),
+          DataColumn(
+              label: Center(
+                  child: Text("Total",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12)))),
+        ],
+        rows: invoiceItems!.asMap().entries.map((entry) {
           final index = entry.key + 1;
           final item = entry.value;
           totalAmount += double.tryParse(item["total"] ?? "0") ?? 0;
-          return Container(
-            padding:
-                EdgeInsets.symmetric(vertical: ResponsiveUtils.width(12.0)),
-            decoration: const BoxDecoration(
-              color: AppColors.white,
-              border: Border(bottom: BorderSide(color: AppColors.greyLight2)),
-            ),
-            child: Row(
-              children: [
-                _buildTableCell(index.toString(), flex: 1),
-                _buildTableCell(item["product"] ?? "", flex: 1),
-                _buildTableCell(item["qty"] ?? "", flex: 1),
-                _buildTableCell(item["unit"] ?? "", flex: 1),
-                _buildTableCell(item["price"] ?? "", flex: 1),
-                _buildTableCell(item["total"] ?? "", flex: 1),
-              ],
-            ),
+          return DataRow(
+            cells: [
+              DataCell(
+                Center(
+                  child: Text(index.toString(),
+                      style: const TextStyle(fontSize: 12)),
+                ),
+              ),
+              DataCell(
+                Text(item["product"] ?? "",
+                    style: const TextStyle(fontSize: 12)),
+              ),
+              DataCell(
+                Center(
+                  child: Text(item["qty"] ?? "",
+                      style: const TextStyle(fontSize: 12)),
+                ),
+              ),
+              DataCell(
+                Center(
+                  child: Text(item["unit"] ?? "",
+                      style: const TextStyle(fontSize: 12)),
+                ),
+              ),
+              DataCell(
+                Center(
+                  child: Text(item["price"] ?? "",
+                      style: const TextStyle(fontSize: 12)),
+                ),
+              ),
+              DataCell(
+                Center(
+                  child: Text(item["total"] ?? "",
+                      style: const TextStyle(fontSize: 12)),
+                ),
+              ),
+            ],
           );
-        }),
-      ],
+        }).toList(),
+      ),
     );
   }
 

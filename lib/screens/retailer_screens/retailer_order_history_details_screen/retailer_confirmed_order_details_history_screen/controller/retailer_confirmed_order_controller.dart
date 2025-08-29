@@ -199,10 +199,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
                 style:
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 25)),
             pw.Row(children: [
-              pw.Text(
-                  confirmedData.value?.id!
-                          .substring(confirmedData.value!.id!.length - 12) ??
-                      "N/A",
+              pw.Text(confirmedData.value?.id! ?? "N/A",
                   style: pw.TextStyle(fontStyle: pw.FontStyle.italic)),
               pw.Spacer(),
               pw.Text(
