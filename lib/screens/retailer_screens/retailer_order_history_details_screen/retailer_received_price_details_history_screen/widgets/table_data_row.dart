@@ -176,7 +176,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                       total = quantity * price;
                                       widget.controller.updateGrandTotal();
 
-                                      setState(() {});
+                                      // setState(() {});
                                     } catch (e) {
                                       appLogger(e);
                                     }

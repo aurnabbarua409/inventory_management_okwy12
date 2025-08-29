@@ -49,6 +49,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
   }
 
   void _handleTabSelection() {
+    if (!mounted) return;
     setState(() {});
   }
 

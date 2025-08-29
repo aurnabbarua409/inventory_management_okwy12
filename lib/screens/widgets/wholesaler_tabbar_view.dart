@@ -4,13 +4,11 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
-import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/utils/app_urls.dart';
-import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
@@ -55,6 +53,7 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
   }
 
   void _handleTabSelection() async {
+    if (!mounted) return;
     await Future.delayed(Duration(seconds: 1));
     setState(() {});
   }
@@ -744,12 +743,14 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 3, vertical: 1),
                               decoration: BoxDecoration(
-                                color: AppColors.green,
+                                color: status == 'delivered'
+                                    ? Colors.brown
+                                    : AppColors.green,
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               child: Center(
                                 child: TextWidget(
-                                  text: status,
+                                  text: status.toString().capitalize,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500,
                                   fontColor: AppColors.white,
