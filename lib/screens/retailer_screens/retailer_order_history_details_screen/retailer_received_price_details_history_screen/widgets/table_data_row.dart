@@ -62,7 +62,7 @@ class _TableDataRowState extends State<TableDataRow> {
       );
     }
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.of(context).size.height * 0.6,
       child: Form(
         key: widget.controller.formKey,
         child: ListView.builder(

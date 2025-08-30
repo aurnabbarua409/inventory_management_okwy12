@@ -44,202 +44,205 @@ class _RetailerProfileScreenState extends State<RetailerProfileScreen> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(ResponsiveUtils.height(16)),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SpaceWidget(spaceHeight: 16),
-              Obx(
-                () => Center(
-                  child: GestureDetector(
-                    onTap: () => controller.showImageSourceDialog(context),
-                    child: CircleAvatar(
-                        radius: ResponsiveUtils.width(50),
-                        backgroundColor: Colors.grey[300],
-                        child:
-                            // Use the observable 'image' to update the profile image
-                            controller.image.value.isNotEmpty
-                                ? controller.imageFile.value != null
-                                    ? Stack(
-                                        alignment: Alignment.bottomCenter,
-                                        children: [
-                                            ClipOval(
-                                              child: Image.file(
-                                                controller.imageFile
-                                                    .value!, // Use controller.image.value here
-                                                fit: BoxFit.cover,
-                                                height:
-                                                    ResponsiveUtils.width(100),
-                                                width:
-                                                    ResponsiveUtils.width(100),
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return ClipOval(
-                                                    child: Image.asset(
-                                                        AppImagesPath
-                                                            .profileImage,
-                                                        fit: BoxFit
-                                                            .cover), // Fallback image
-                                                  );
-                                                },
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(ResponsiveUtils.height(16)),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SpaceWidget(spaceHeight: 16),
+                Obx(
+                  () => Center(
+                    child: GestureDetector(
+                      onTap: () => controller.showImageSourceDialog(context),
+                      child: CircleAvatar(
+                          radius: ResponsiveUtils.width(50),
+                          backgroundColor: Colors.grey[300],
+                          child:
+                              // Use the observable 'image' to update the profile image
+                              controller.image.value.isNotEmpty
+                                  ? controller.imageFile.value != null
+                                      ? Stack(
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                              ClipOval(
+                                                child: Image.file(
+                                                  controller.imageFile
+                                                      .value!, // Use controller.image.value here
+                                                  fit: BoxFit.cover,
+                                                  height: ResponsiveUtils.width(
+                                                      100),
+                                                  width: ResponsiveUtils.width(
+                                                      100),
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return ClipOval(
+                                                      child: Image.asset(
+                                                          AppImagesPath
+                                                              .profileImage,
+                                                          fit: BoxFit
+                                                              .cover), // Fallback image
+                                                    );
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                            Icon(
-                                              Icons.camera_alt,
-                                              size: ResponsiveUtils.width(25),
-                                              color: AppColors.blueDarker,
-                                            )
-                                          ])
-                                    : Stack(
-                                        alignment: Alignment.bottomCenter,
-                                        children: [
-                                            ClipOval(
-                                              child: Image.network(
-                                                "${Urls.socketUrl}${controller.image.value}", // Use controller.image.value here
-                                                fit: BoxFit.cover,
-                                                height:
-                                                    ResponsiveUtils.width(100),
-                                                width:
-                                                    ResponsiveUtils.width(100),
+                                              Icon(
+                                                Icons.camera_alt,
+                                                size: ResponsiveUtils.width(25),
+                                                color: AppColors.blueDarker,
+                                              )
+                                            ])
+                                      : Stack(
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                              ClipOval(
+                                                child: Image.network(
+                                                  "${Urls.socketUrl}${controller.image.value}", // Use controller.image.value here
+                                                  fit: BoxFit.cover,
+                                                  height: ResponsiveUtils.width(
+                                                      100),
+                                                  width: ResponsiveUtils.width(
+                                                      100),
 
-                                                loadingBuilder: (context, child,
-                                                    loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  } else {
-                                                    return const CircularProgressIndicator();
-                                                  }
-                                                },
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return const SizedBox
-                                                      .shrink();
-                                                },
+                                                  loadingBuilder: (context,
+                                                      child, loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    } else {
+                                                      return const CircularProgressIndicator();
+                                                    }
+                                                  },
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return const SizedBox
+                                                        .shrink();
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                            Icon(
-                                              Icons.camera_alt,
-                                              size: ResponsiveUtils.width(25),
-                                              color: AppColors.blueDarker,
-                                            )
-                                          ])
-                                : Icon(
-                                    Icons.camera_alt,
-                                    size: ResponsiveUtils.width(30),
-                                    color: AppColors.oceanBlue,
-                                  )),
+                                              Icon(
+                                                Icons.camera_alt,
+                                                size: ResponsiveUtils.width(25),
+                                                color: AppColors.blueDarker,
+                                              )
+                                            ])
+                                  : Icon(
+                                      Icons.camera_alt,
+                                      size: ResponsiveUtils.width(30),
+                                      color: AppColors.oceanBlue,
+                                    )),
+                    ),
                   ),
                 ),
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.fullName,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.fullNameController,
-                hintText: AppStrings.nameHint,
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your full name';
-                  }
-                  return null;
-                },
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.businessName,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.businessNameController,
-                hintText: AppStrings.businesshint,
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your business name';
-                  }
-                  return null;
-                },
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.email,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.emailController,
-                hintText: AppStrings.emailhint,
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.phoneNumber,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              Obx(
-                () => InternationalPhoneFieldWidget(
-                  initialValue: controller.phone.value,
-                  onInputChanged: (p0) {
-                    controller.phoneNumber.value = p0.phoneNumber!;
-                  },
-                  onInputValidated: (p0) {
-                    controller.isValidPhonenumber.value = p0;
-                  },
-                  // controller: controller.phoneController,
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.fullName,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
                 ),
-              ),
-              const SpaceWidget(spaceHeight: 16),
-              const TextWidget(
-                text: AppStrings.address,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontColor: AppColors.black,
-              ),
-              const SpaceWidget(spaceHeight: 12),
-              TextFieldWidget(
-                controller: controller.addressController,
-                hintText: AppStrings.hintAddress,
-                maxLines: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your address';
-                  }
-                  return null;
-                },
-              ),
-              const SpaceWidget(spaceHeight: 36),
-              ButtonWidget(
-                onPressed: () {
-                  controller.updateProfileRepo();
-                },
-                label: AppStrings.updatePassword,
-                backgroundColor: AppColors.primaryBlue,
-                buttonWidth: double.infinity,
-              ),
-            ],
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.fullNameController,
+                  hintText: AppStrings.nameHint,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your full name';
+                    }
+                    return null;
+                  },
+                ),
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.businessName,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.businessNameController,
+                  hintText: AppStrings.businesshint,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your business name';
+                    }
+                    return null;
+                  },
+                ),
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.email,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.emailController,
+                  hintText: AppStrings.emailhint,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                ),
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.phoneNumber,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                Obx(
+                  () => InternationalPhoneFieldWidget(
+                    initialValue: controller.phone.value,
+                    onInputChanged: (p0) {
+                      controller.phoneNumber.value = p0.phoneNumber!;
+                    },
+                    onInputValidated: (p0) {
+                      controller.isValidPhonenumber.value = p0;
+                    },
+                    // controller: controller.phoneController,
+                  ),
+                ),
+                const SpaceWidget(spaceHeight: 16),
+                const TextWidget(
+                  text: AppStrings.address,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColors.black,
+                ),
+                const SpaceWidget(spaceHeight: 12),
+                TextFieldWidget(
+                  controller: controller.addressController,
+                  hintText: AppStrings.hintAddress,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your address';
+                    }
+                    return null;
+                  },
+                ),
+                const SpaceWidget(spaceHeight: 36),
+                ButtonWidget(
+                  onPressed: () {
+                    controller.updateProfileRepo();
+                  },
+                  label: AppStrings.updatePassword,
+                  backgroundColor: AppColors.primaryBlue,
+                  buttonWidth: double.infinity,
+                ),
+              ],
+            ),
           ),
         ),
       ),

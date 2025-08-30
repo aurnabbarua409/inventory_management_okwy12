@@ -92,38 +92,40 @@ class _WholesalerNewOrderDetailsScreenState
                         ..._buildDataRows(),
                         const SpaceWidget(spaceHeight: 16),
 
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ButtonWidget(
-                                onPressed: pendingController.onSave,
-                                label: AppStrings.save,
-                                backgroundColor: AppColors.primaryBlue,
-                                buttonHeight: 45,
-                                fontWeight: FontWeight.w500,
+                        SafeArea(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ButtonWidget(
+                                  onPressed: pendingController.onSave,
+                                  label: AppStrings.save,
+                                  backgroundColor: AppColors.primaryBlue,
+                                  buttonHeight: 45,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            const SpaceWidget(
-                              spaceWidth: 10,
-                            ),
-                            Expanded(
-                              child: ButtonWidget(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    pendingController
-                                        .showSendOrderDialog(context);
-                                  } else {
-                                    Get.snackbar(
-                                        'Error', 'Please enter a valid price');
-                                  }
-                                },
-                                label: AppStrings.send,
-                                backgroundColor: AppColors.primaryBlue,
-                                buttonHeight: 45,
-                                fontWeight: FontWeight.w500,
+                              const SpaceWidget(
+                                spaceWidth: 10,
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: ButtonWidget(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      pendingController
+                                          .showSendOrderDialog(context);
+                                    } else {
+                                      Get.snackbar('Error',
+                                          'Please enter a valid price');
+                                    }
+                                  },
+                                  label: AppStrings.send,
+                                  backgroundColor: AppColors.primaryBlue,
+                                  buttonHeight: 45,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

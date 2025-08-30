@@ -74,6 +74,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
         ),
         const SpaceWidget(spaceHeight: 16),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TextWidget(
               text: "Product Name:",
@@ -84,15 +85,21 @@ class _RetailerPendingOrderDetailsHistoryScreenState
             const SpaceWidget(
               spaceWidth: 10,
             ),
-            TextWidget(
-              text: item.productName ?? "N/A",
-              fontSize: 14,
-              fontColor: AppColors.black,
+            Expanded(
+              child: TextWidget(
+                text: item.productName ?? "N/A",
+                fontSize: 14,
+                fontColor: AppColors.black,
+                softWrap: true,
+                maxLines: null,
+                textAlignment: TextAlign.left,
+              ),
             ),
           ],
         ),
         const SpaceWidget(spaceHeight: 6),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TextWidget(
               text: "Additional Info:",
@@ -103,10 +110,15 @@ class _RetailerPendingOrderDetailsHistoryScreenState
             const SpaceWidget(
               spaceWidth: 10,
             ),
-            TextWidget(
-              text: item.additionalInfo ?? "N/A",
-              fontSize: 14,
-              fontColor: AppColors.black,
+            Expanded(
+              child: TextWidget(
+                text: item.additionalInfo ?? "N/A",
+                fontSize: 14,
+                fontColor: AppColors.black,
+                softWrap: true,
+                maxLines: null,
+                textAlignment: TextAlign.left,
+              ),
             ),
           ],
         ),

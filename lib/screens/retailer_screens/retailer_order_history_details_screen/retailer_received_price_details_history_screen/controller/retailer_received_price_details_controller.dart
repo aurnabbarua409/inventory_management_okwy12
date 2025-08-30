@@ -96,6 +96,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
         ),
         const SpaceWidget(spaceHeight: 16),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TextWidget(
               text: "Product Name:",
@@ -106,15 +107,21 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
             const SpaceWidget(
               spaceWidth: 10,
             ),
-            TextWidget(
-              text: item.productName ?? "N/A",
-              fontSize: 14,
-              fontColor: AppColors.black,
+            Expanded(
+              child: TextWidget(
+                text: item.productName ?? "N/A",
+                fontSize: 14,
+                fontColor: AppColors.black,
+                softWrap: true,
+                maxLines: null,
+                textAlignment: TextAlign.left,
+              ),
             ),
           ],
         ),
         const SpaceWidget(spaceHeight: 6),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TextWidget(
               text: "Additional Info:",
@@ -125,10 +132,15 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
             const SpaceWidget(
               spaceWidth: 10,
             ),
-            TextWidget(
-              text: item.additionalInfo ?? "N/A",
-              fontSize: 14,
-              fontColor: AppColors.black,
+            Expanded(
+              child: TextWidget(
+                text: item.additionalInfo ?? "N/A",
+                fontSize: 14,
+                fontColor: AppColors.black,
+                softWrap: true,
+                maxLines: null,
+                textAlignment: TextAlign.left,
+              ),
             ),
           ],
         ),
@@ -504,6 +516,4 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     final formatter = NumberFormat('#,###');
     return formatter.format(grandtotal.value);
   }
-
-  
 }

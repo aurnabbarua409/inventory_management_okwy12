@@ -26,9 +26,7 @@ class BuildSummarySectionWidget extends StatelessWidget {
             price: confirmedController.formatPrice(grandTotal)),
         SizedBox(height: ResponsiveUtils.height(24)),
         // Download Button
-        SizedBox(
-          width: double.infinity,
-          height: ResponsiveUtils.height(48),
+        SafeArea(
           child: ButtonWidget(
             onPressed: () {
               confirmedController.generatePdf();

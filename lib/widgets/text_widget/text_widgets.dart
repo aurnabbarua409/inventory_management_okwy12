@@ -18,23 +18,24 @@ class TextWidget extends StatelessWidget {
   final Color? underlineColor;
   final double underlineWidth;
   final List<Shadow>? shadows;
+  final bool? softWrap;
 
-  const TextWidget({
-    super.key,
-    this.text,
-    this.fontWeight = FontWeight.w400,
-    this.fontSize = 14,
-    this.fontStyle = FontStyle.normal,
-    this.fontColor = Colors.transparent,
-    this.overflow,
-    this.maxLines,
-    this.textAlignment = TextAlign.center,
-    this.fontFamily,
-    this.underline = false,
-    this.underlineColor,
-    this.underlineWidth = 1.0,
-    this.shadows,
-  });
+  const TextWidget(
+      {super.key,
+      this.text,
+      this.fontWeight = FontWeight.w400,
+      this.fontSize = 14,
+      this.fontStyle = FontStyle.normal,
+      this.fontColor = Colors.transparent,
+      this.overflow,
+      this.maxLines,
+      this.textAlignment = TextAlign.center,
+      this.fontFamily,
+      this.underline = false,
+      this.underlineColor,
+      this.underlineWidth = 1.0,
+      this.shadows,
+      this.softWrap});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,8 @@ class TextWidget extends StatelessWidget {
       overflow: overflow,
       maxLines: maxLines,
       textAlign: textAlignment,
-       // Set the text alignment
+      softWrap: softWrap,
+      // Set the text alignment
       style: TextStyle(
         fontWeight: fontWeight,
         fontSize: ResponsiveUtils.width(fontSize),
