@@ -33,13 +33,18 @@ class _TableDataRowState extends State<TableDataRow> {
 
   @override
   Widget build(BuildContext context) {
+    appLogger(isEditing);
     if (widget.productsReceived.isEmpty) {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text(
-            "No orders available",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+            "No orders available. Please go back and refresh",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
           ),
         ),
       );
@@ -112,11 +117,15 @@ class _TableDataRowState extends State<TableDataRow> {
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 3),
                                 child: TextFormField(
-                                  initialValue: quantity.toString(),
+                                  controller: item.textEditingController,
+                                  // initialValue: quantity.toString(),
                                   keyboardType: TextInputType.number,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   // controller: TextEditingController(
                                   //     text: item.quantity.toString()),
                                   decoration: InputDecoration(
+                                    errorStyle: TextStyle(fontSize: 0),
                                     enabledBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.grey,
@@ -125,11 +134,6 @@ class _TableDataRowState extends State<TableDataRow> {
                                     disabledBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.transparent,
-                                      ),
-                                    ),
-                                    errorBorder: const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey,
                                       ),
                                     ),
                                     focusedErrorBorder:
@@ -155,32 +159,36 @@ class _TableDataRowState extends State<TableDataRow> {
 
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return '';
+                                      return ' ';
                                     }
                                     final parsedValue = int.tryParse(value);
                                     if (parsedValue == null ||
                                         parsedValue <= 0) {
-                                      return '';
+                                      return ' ';
+                                    }
+                                    if (parsedValue >
+                                        widget.controller.prevQuantity[index]) {
+                                      return ' ';
                                     }
                                     return null;
                                   },
-                                  onChanged: (value) {
-                                    try {
-                                      if (value.isEmpty) {
-                                        item.quantity = 0;
-                                        return;
-                                      }
+                                  // onChanged: (value) {
+                                  //   try {
+                                  //     if (value.isEmpty) {
+                                  //       item.quantity = 0;
+                                  //       return;
+                                  //     }
 
-                                      quantity = int.parse(value);
-                                      item.quantity = quantity;
-                                      total = quantity * price;
-                                      widget.controller.updateGrandTotal();
+                                  //     quantity = int.parse(value);
+                                  //     item.quantity = quantity;
+                                  //     total = quantity * price;
+                                  //     widget.controller.updateGrandTotal();
 
-                                      // setState(() {});
-                                    } catch (e) {
-                                      appLogger(e);
-                                    }
-                                  },
+                                  //     // setState(() {});
+                                  //   } catch (e) {
+                                  //     appLogger(e);
+                                  //   }
+                                  // },
                                   enabled: isEditing[index],
                                 ),
                               )
@@ -264,6 +272,9 @@ class _TableDataRowState extends State<TableDataRow> {
                                 color: AppColors.white,
                                 onSelected: (value) async {
                                   if (value == 1) {
+                                    setState(() {
+                                      isEditing[index] = !isEditing[index];
+                                    });
                                     // if (isEditing[index]) {
                                     //   try {
                                     //     final url =
@@ -277,12 +288,20 @@ class _TableDataRowState extends State<TableDataRow> {
                                     // }
                                     if (widget.controller.formKey.currentState!
                                         .validate()) {
-                                      setState(() {
-                                        isEditing[index] = !isEditing[index];
-                                      });
+                                      try {
+                                        quantity = int.parse(
+                                            item.textEditingController!.text);
+                                        item.quantity = quantity;
+                                        total = quantity * price;
+                                        widget.controller.updateGrandTotal();
+
+                                        setState(() {});
+                                      } catch (e) {
+                                        appLogger(e);
+                                      }
                                     } else {
-                                      Get.snackbar('Error',
-                                          'Please write a valid quantity');
+                                      Get.snackbar("Error",
+                                          'You can not increase the quantity more than wholesaler approved, if you want additional quantity send new order');
                                     }
                                   }
                                   if (value == 2) {
@@ -301,7 +320,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                     value: 1,
                                     child: Text(isEditing[index]
                                         ? AppStrings.save
-                                        : AppStrings.edit),
+                                        : AppStrings.decrease),
                                   ),
                                   const PopupMenuItem(
                                     value: 2,

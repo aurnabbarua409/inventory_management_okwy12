@@ -18,6 +18,8 @@ class PrefsHelper extends GetxController {
   static String localizationCountryCode = 'US';
   static int totalOrders = 0;
   static bool isSubscribed = false;
+  static String firstLoggedIn = "";
+  
 
   // Save the selected product ID
   static Future<void> getAllPrefData() async {
@@ -38,6 +40,7 @@ class PrefsHelper extends GetxController {
         preferences.getString("localizationLanguageCode") ?? "en";
     totalOrders = preferences.getInt('totalOrders') ?? 0;
     isSubscribed = preferences.getBool('isSubscribed') ?? false;
+    firstLoggedIn = preferences.getString('firstLoggedIn') ?? "";
 
     if (kDebugMode) {
       print("===============UserRole: $userRole====================");

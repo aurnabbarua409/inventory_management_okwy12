@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
 import 'package:inventory_app/models/new_version/update_product_model.dart';
 
@@ -17,6 +20,7 @@ import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_wid
 import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../../constants/app_colors.dart';
 
@@ -34,12 +38,75 @@ class WholesalerNewOrderDetailsController extends GetxController {
   //final RxList<Map<bool, int>> availableList = <Map<bool, int>>[].obs;
   final orderId = "".obs;
   final companyName = "".obs;
-  void fetchData() {
+  void fetchData() async {
     try {
       final args = Get.arguments;
-      products.value = args['products'];
       orderId.value = args['id'];
       companyName.value = args['company'];
+
+      final fileName = '${orderId.value}.txt';
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/$fileName');
+
+      if (await file.exists()) {
+        final fileContent = await file.readAsString();
+        if (fileContent.trim().isNotEmpty) {
+          // Parse the file content to products list
+          // Assuming each product is separated by "---" and fields by new lines
+          final productBlocks = fileContent.split('---');
+          final List<Product> loadedProducts = [];
+          for (var block in productBlocks) {
+            if (block.trim().isEmpty) continue;
+            final lines = block.trim().split('\n');
+            String? id, productName, unit, additionalInfo;
+            int? quantity;
+            double? price;
+            bool? availability;
+            for (var line in lines) {
+              if (line.startsWith('Product ID:')) {
+                id = line.replaceFirst('Product ID:', '').trim();
+              } else if (line.startsWith('Product Name:')) {
+                productName = line.replaceFirst('Product Name:', '').trim();
+              } else if (line.startsWith('Unit:')) {
+                unit = line.replaceFirst('Unit:', '').trim();
+              } else if (line.startsWith('Quantity:')) {
+                quantity =
+                    int.tryParse(line.replaceFirst('Quantity:', '').trim());
+              } else if (line.startsWith('Additional Info:')) {
+                additionalInfo =
+                    line.replaceFirst('Additional Info:', '').trim();
+              } else if (line.startsWith('Price:')) {
+                price = double.tryParse(line.replaceFirst('Price:', '').trim());
+              } else if (line.startsWith('Availability:')) {
+                final availStr = line.replaceFirst('Availability:', '').trim();
+                availability = availStr.toLowerCase() == 'true';
+              }
+            }
+            loadedProducts.add(Product(
+              id: id ?? '',
+              productName: productName,
+              unit: unit,
+              quantity: quantity,
+              additionalInfo: additionalInfo,
+              price: price,
+              availability: availability,
+              retailer: '',
+              status: null,
+              createAt: '',
+              updatedAt: '',
+              v: null,
+            ));
+          }
+          products.value = loadedProducts;
+          appLogger("Loaded products from $fileName");
+        } else {
+          products.value = args['products'];
+          appLogger("Loaded products from arguments");
+        }
+      } else {
+        products.value = args['products'];
+        appLogger("Loaded products from arguments");
+      }
       appLogger(
           "order id while fetching data from new order: ${orderId.value}");
     } catch (e) {
@@ -71,6 +138,14 @@ class WholesalerNewOrderDetailsController extends GetxController {
       final isSuccess = response["success"] ?? false;
       appLogger("response after product updated: $response");
       if (isSuccess) {
+        final fileName = '${orderId.value}.txt';
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File('${dir.path}/$fileName');
+
+        if (await file.exists()) {
+          await file.delete();
+          appLogger("Draft file $fileName deleted after sending order.");
+        }
         Get.back();
         Get.snackbar("Success", "Products updated successfully");
         showSendOrderSuccessfulDialog(context);
@@ -297,6 +372,31 @@ class WholesalerNewOrderDetailsController extends GetxController {
     //   products.length,
     //   (index) => {false: 0},
     // );
+  }
+
+  void onSave() async {
+    try {
+      final fileName = '${orderId.value}.txt';
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/$fileName');
+
+      final buffer = StringBuffer();
+      for (var product in products) {
+        buffer.writeln('Product ID: ${product.id ?? "N/A"}');
+        buffer.writeln('Product Name: ${product.productName ?? "N/A"}');
+        buffer.writeln('Unit: ${product.unit ?? "N/A"}');
+        buffer.writeln('Quantity: ${product.quantity ?? "N/A"}');
+        buffer.writeln('Additional Info: ${product.additionalInfo ?? "N/A"}');
+        buffer.writeln('Price: ${product.price ?? "N/A"}');
+        buffer.writeln('Availability: ${product.availability ?? "N/A"}');
+        buffer.writeln('---');
+      }
+      await file.writeAsString(buffer.toString());
+      Get.snackbar('Success', 'Order saved as draft');
+    } catch (e) {
+      appLogger('Failed to save order: $e');
+      Get.snackbar('Error', 'Failed to save order');
+    }
   }
 
   void showProductDetailsDialog(BuildContext context, Product item) {

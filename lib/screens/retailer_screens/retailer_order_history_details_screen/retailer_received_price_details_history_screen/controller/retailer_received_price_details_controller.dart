@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
@@ -34,8 +36,9 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   RxDouble grandtotal = 0.0.obs;
   final orderid = ''.obs;
   final Rxn<Wholesaler> wholesaler = Rxn<Wholesaler>();
-
+  final isConfirmedPressed = false.obs;
   final formKey = GlobalKey<FormState>();
+  List<int> prevQuantity = [];
   @override
   void onInit() {
     super.onInit();
@@ -49,6 +52,11 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
       products.value = arg['products'];
       orderid.value = arg['id'];
       wholesaler.value = arg['wholesaler'];
+      prevQuantity = List.generate(
+        products.length,
+        (index) => products[index].quantity ?? 0,
+      );
+
       appLogger(products);
     } catch (e) {
       appLogger(e);
@@ -290,6 +298,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   //     isLoading(false);
   //   }
   // }
+
   Future<void> showContactDialog(BuildContext context) async {
     showCustomPopup(
       context,
@@ -297,7 +306,9 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
         Align(
           alignment: Alignment.centerRight,
           child: IconButtonWidget(
-            onTap: () => Get.back(),
+            onTap: () {
+              Get.back();
+            },
             icon: AppIconsPath.closeIcon,
             size: 20,
             color: AppColors.black,
@@ -306,7 +317,8 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
         const SpaceWidget(spaceHeight: 16),
         const Center(
           child: TextWidget(
-            text: 'Please contact with wholesaler',
+            text:
+                'Please contact your wholesaler to confirm quantity before you can proceed',
             fontSize: 16,
             fontWeight: FontWeight.w600,
             fontColor: AppColors.primaryBlue,
@@ -390,7 +402,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
       final response = await ApiService.patchApi(url, updatedData);
       appLogger(response);
       if (response != null) {
-        Get.snackbar("Success", "Updated Successfully");
+        Get.snackbar("Success", "Order confirmed");
       } else {
         Get.snackbar("Failed", "Failed to update");
       }
@@ -486,5 +498,10 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
             ((products[i].price ?? 0.0) * (products[i].quantity ?? 1));
       }
     }
+  }
+
+  String formatPrice() {
+    final formatter = NumberFormat('#,###');
+    return formatter.format(grandtotal.value);
   }
 }

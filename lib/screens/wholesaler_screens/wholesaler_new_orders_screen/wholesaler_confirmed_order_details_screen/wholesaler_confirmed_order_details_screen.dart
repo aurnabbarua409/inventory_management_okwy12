@@ -75,6 +75,19 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                     child: SafeArea(
                       child: Column(
                         children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Invoice: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(confirmedController.confirmedData.value?.id
+                                      ?.substring(confirmedController
+                                              .confirmedData.value!.id!.length -
+                                          7) ??
+                                  "N/A")
+                            ],
+                          ),
                           if (confirmedController.confirmedData.value != null)
                             // Order Details Section
 
@@ -170,7 +183,8 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
       children: [
         // Header Row
         Container(
-          padding: EdgeInsets.symmetric(vertical: ResponsiveUtils.height(12.0)),
+          padding: EdgeInsets.symmetric(
+              vertical: ResponsiveUtils.height(12.0), horizontal: 10),
           color: AppColors.tabBG,
           child: Row(
             children: [
@@ -183,8 +197,8 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
           final key = entry.keys.first;
           final value = entry.values.first;
           return Container(
-            padding:
-                EdgeInsets.symmetric(vertical: ResponsiveUtils.height(12.0)),
+            padding: EdgeInsets.symmetric(
+                vertical: ResponsiveUtils.height(12.0), horizontal: 10),
             decoration: const BoxDecoration(
               color: AppColors.white,
               border: Border(bottom: BorderSide(color: AppColors.greyLight2)),
@@ -225,8 +239,9 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
           color: AppColors.tabBG,
           child: Row(
             children: [
-              _buildTableCell("SI", flex: 1, isHeader: true),
-              _buildTableCell("Product", flex: 1, isHeader: true),
+              _buildTableCell("SI",
+                  flex: 1, isHeader: true, padding: EdgeInsets.only(left: 8)),
+              _buildTableCell("Product", flex: 2, isHeader: true),
               _buildTableCell("Qty", flex: 1, isHeader: true),
               _buildTableCell("Unit", flex: 1, isHeader: true),
               _buildTableCell("Price", flex: 1, isHeader: true),
@@ -248,8 +263,9 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
             ),
             child: Row(
               children: [
-                _buildTableCell(index.toString(), flex: 1),
-                _buildTableCell(item["product"] ?? "", flex: 1),
+                _buildTableCell(index.toString(),
+                    flex: 1, padding: EdgeInsets.only(left: 12)),
+                _buildTableCell(item["product"] ?? "", flex: 2),
                 _buildTableCell(item["qty"] ?? "", flex: 1),
                 _buildTableCell(item["unit"] ?? "", flex: 1),
                 _buildTableCell(item["price"] ?? "", flex: 1),
@@ -272,7 +288,9 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
           spaceHeight: 10,
         ),
 
-        SummaryItemWidget(title: AppStrings.grandTotal, price: grandTotal),
+        SummaryItemWidget(
+            title: AppStrings.grandTotal,
+            price: confirmedController.formatPrice()),
         SizedBox(height: ResponsiveUtils.height(24)),
         // Download Button
         SizedBox(
@@ -291,11 +309,12 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
     );
   }
 
-  Widget _buildTableCell(String text, {int flex = 1, bool isHeader = false}) {
+  Widget _buildTableCell(String text,
+      {int flex = 1, bool isHeader = false, EdgeInsetsGeometry? padding}) {
     return Expanded(
       flex: flex,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveUtils.width(8.0)),
+        padding: padding ?? EdgeInsets.zero,
         child: Text(
           text,
           softWrap: true,

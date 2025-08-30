@@ -190,4 +190,5 @@ class AppStrings {
   static const String grandTotal = "Grand Total";
   static const String deliver = "Delivered";
   static const String savedHistory = 'Saved History';
+  static const String decrease = "Decrease Quantity";
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/controller/retailer_received_price_details_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/widgets/table_data_row.dart';
@@ -46,6 +47,8 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                     IconButtonWidget(
                       onTap: () {
                         Get.back();
+                        // Get.delete<
+                        //     RetailerReceivedOrderDetailsHistoryController>();
                       },
                       icon: AppIconsPath.backIcon,
                       color: AppColors.white,
@@ -85,7 +88,7 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                               imagePath: AppImagesPath.currencyIcon),
                           Obx(
                             () => TextWidget(
-                              text: "${receivedController.grandtotal.value}",
+                              text: receivedController.formatPrice(),
                               fontColor: AppColors.black,
                             ),
                           )
@@ -134,7 +137,7 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                   )),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: ButtonWidget(
                   buttonWidth: double.infinity,
                   label: "Confirm",
@@ -159,7 +162,9 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                     }
 
                     if (receivedController.formKey.currentState!.validate()) {
-                      receivedController.showContactDialog(context);
+                      receivedController.send();
+                      Get.back();
+
                       // Get.back();
                     } else {
                       Get.snackbar('Error', 'Please enter valid quantities');

@@ -80,6 +80,23 @@ class Product {
         textEditingController: TextEditingController(),
         focusNode: FocusNode(),
       );
+
+  Product copy() {
+    return Product(
+      id: id,
+      productName: productName,
+      quantity: quantity,
+      unit: unit,
+      availability: availability,
+      price: price,
+      additionalInfo: additionalInfo,
+      retailer: retailer,
+      status: status,
+      createAt: createAt,
+      updatedAt: updatedAt,
+      v: v,
+    );
+  }
 }
 
 class Retailer {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/international_phone_field_widget/international_phone_field_widget.dart';
@@ -50,80 +52,85 @@ class _RetailerProfileScreenState extends State<RetailerProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SpaceWidget(spaceHeight: 16),
-              Center(
-                child: GestureDetector(
-                  onTap: () => controller.showImageSourceDialog(context),
-                  child: CircleAvatar(
-                    radius: ResponsiveUtils.width(50),
-                    backgroundColor: Colors.grey[300],
-                    child: Obx(() {
-                      // Use the observable 'image' to update the profile image
+              Obx(
+                () => Center(
+                  child: GestureDetector(
+                    onTap: () => controller.showImageSourceDialog(context),
+                    child: CircleAvatar(
+                        radius: ResponsiveUtils.width(50),
+                        backgroundColor: Colors.grey[300],
+                        child:
+                            // Use the observable 'image' to update the profile image
+                            controller.image.value.isNotEmpty
+                                ? controller.imageFile.value != null
+                                    ? Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                            ClipOval(
+                                              child: Image.file(
+                                                controller.imageFile
+                                                    .value!, // Use controller.image.value here
+                                                fit: BoxFit.cover,
+                                                height:
+                                                    ResponsiveUtils.width(100),
+                                                width:
+                                                    ResponsiveUtils.width(100),
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return ClipOval(
+                                                    child: Image.asset(
+                                                        AppImagesPath
+                                                            .profileImage,
+                                                        fit: BoxFit
+                                                            .cover), // Fallback image
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.camera_alt,
+                                              size: ResponsiveUtils.width(25),
+                                              color: AppColors.blueDarker,
+                                            )
+                                          ])
+                                    : Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                            ClipOval(
+                                              child: Image.network(
+                                                "${Urls.socketUrl}${controller.image.value}", // Use controller.image.value here
+                                                fit: BoxFit.cover,
+                                                height:
+                                                    ResponsiveUtils.width(100),
+                                                width:
+                                                    ResponsiveUtils.width(100),
 
-                      if (controller.imageFile.value != null) {
-                        return Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              ClipOval(
-                                child: Image.file(
-                                  controller.imageFile
-                                      .value!, // Use controller.image.value here
-                                  fit: BoxFit.cover,
-                                  height: ResponsiveUtils.width(100),
-                                  width: ResponsiveUtils.width(100),
-                                  // errorBuilder: (context, error, stackTrace) {
-                                  //   return ClipOval(
-                                  //     child: Image.asset(
-                                  //         AppImagesPath.profileImage,
-                                  //         fit:
-                                  //             BoxFit.cover), // Fallback image
-                                  //   );
-                                  // },
-                                ),
-                              ),
-                              Icon(
-                                Icons.camera_alt,
-                                size: ResponsiveUtils.width(25),
-                                color: AppColors.blueDarker,
-                              )
-                            ]);
-                      }
-                      return Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            ClipOval(
-                              child: Image.network(
-                                controller.image
-                                    .value, // Use controller.image.value here
-                                fit: BoxFit.cover,
-                                height: ResponsiveUtils.width(100),
-                                width: ResponsiveUtils.width(100),
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return const CircularProgressIndicator();
-                                  }
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const SizedBox.shrink();
-                                },
-                              ),
-                            ),
-                            Icon(
-                              Icons.camera_alt,
-                              size: ResponsiveUtils.width(25),
-                              color: AppColors.blueDarker,
-                            )
-                          ]);
-                      // } else {
-                      //   return Icon(
-                      //     Icons.camera_alt,
-                      //     size: ResponsiveUtils.width(30),
-                      //     color: AppColors.oceanBlue,
-                      //   );
-                      // }
-                    }),
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return const CircularProgressIndicator();
+                                                  }
+                                                },
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const SizedBox
+                                                      .shrink();
+                                                },
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.camera_alt,
+                                              size: ResponsiveUtils.width(25),
+                                              color: AppColors.blueDarker,
+                                            )
+                                          ])
+                                : Icon(
+                                    Icons.camera_alt,
+                                    size: ResponsiveUtils.width(30),
+                                    color: AppColors.oceanBlue,
+                                  )),
                   ),
                 ),
               ),

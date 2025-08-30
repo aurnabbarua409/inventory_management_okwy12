@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 class SummaryItemWidget extends StatelessWidget {
   const SummaryItemWidget(
       {super.key, required this.title, required this.price});
   final String title;
 
-  final double price;
+  final String price;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -27,7 +26,7 @@ class SummaryItemWidget extends StatelessWidget {
           height: 11,
         ),
         Text(
-          price.toStringAsFixed(2),
+          price,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ],

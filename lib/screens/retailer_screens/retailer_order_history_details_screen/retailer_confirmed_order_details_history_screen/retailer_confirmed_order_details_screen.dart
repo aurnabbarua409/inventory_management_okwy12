@@ -67,6 +67,22 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                     child: SafeArea(
                       child: Column(
                         children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Invoice: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(confirmedController.confirmedData.value?.id
+                                      ?.substring(confirmedController
+                                              .confirmedData.value!.id!.length -
+                                          7) ??
+                                  "N/A")
+                            ],
+                          ),
+                          const SpaceWidget(
+                            spaceHeight: 10,
+                          ),
                           if (confirmedController.confirmedData.value != null)
                             // Order Details Section
                             BuildDetailsListWidget(

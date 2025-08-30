@@ -52,6 +52,7 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                       children: [
                         IconButtonWidget(
                           onTap: () {
+                            controller.clearSelection();
                             Get.back();
                           },
                           icon: AppIconsPath.backIcon,

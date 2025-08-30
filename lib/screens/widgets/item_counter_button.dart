@@ -67,7 +67,7 @@ class _ItemCountState extends State<ItemCount> {
           ),
           // Counter Display (Now Displays Whole Numbers)
           Container(
-            width: ResponsiveUtils.width(30),
+            width: ResponsiveUtils.width(70),
             alignment: Alignment.center,
             child: Text(
               _currentValue.toString(), // Ensures integer display

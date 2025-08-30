@@ -85,6 +85,11 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
     }
   }
 
+  String formatPrice() {
+    final formatter = NumberFormat('#,###');
+    return formatter.format(totalPrice.value);
+  }
+
   // Future<void> fetchConfirmed() async {
   //   try {
   //     String? token = await PrefsHelper.getToken();
@@ -201,7 +206,7 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
             pw.Row(children: [
               pw.Text(
                   confirmedData.value?.id!
-                          .substring(confirmedData.value!.id!.length - 12) ??
+                          .substring(confirmedData.value!.id!.length - 7) ??
                       "N/A",
                   style: pw.TextStyle(fontStyle: pw.FontStyle.italic)),
               pw.Spacer(),

@@ -31,7 +31,32 @@ class SplashController extends GetxController {
       //   Get.offAllNamed(AppRoutes.bottomNavBar,
       //       arguments: {'userRole': role, 'userId': userId});
       // } else {
-      Get.offAllNamed(AppRoutes.onboardingScreen);
+      final now = DateTime.now();
+
+// Read last login timestamp
+      final firstLoggedInStr = PrefsHelper.firstLoggedIn;
+      DateTime? firstLoggedIn;
+
+      if (firstLoggedInStr.isNotEmpty) {
+        try {
+          firstLoggedIn = DateTime.parse(firstLoggedInStr);
+        } catch (_) {}
+      }
+
+      if (firstLoggedIn == null || now.difference(firstLoggedIn).inDays >= 7) {
+        // If never logged in OR last login was at least 1 day ago → show onboarding/login
+        PrefsHelper.setString('firstLoggedIn', now.toIso8601String());
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+      } else {
+        // Otherwise → go to home screen
+        final role = PrefsHelper.userRole;
+        final userId = PrefsHelper.userId;
+        Get.offAllNamed(
+          AppRoutes.bottomNavBar,
+          arguments: {'userRole': role, 'userId': userId},
+        );
+      }
+
       // }
       //Get.to(() => BottomNavBar());
     });

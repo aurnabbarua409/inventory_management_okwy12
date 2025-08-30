@@ -47,13 +47,14 @@ class _WholesalerNewOrderDetailsScreenState
                       color: AppColors.white,
                       size: 22,
                     ),
+                    const Spacer(),
                     const TextWidget(
                       text: AppStrings.details,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       fontColor: AppColors.white,
                     ),
-                    const SpaceWidget(spaceWidth: 28),
+                    const Spacer(),
                   ],
                 ),
               ),
@@ -66,44 +67,66 @@ class _WholesalerNewOrderDetailsScreenState
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Form(
                   key: _formKey,
-                  child: ListView(
-                    children: [
-                      // Header Row
-                      Container(
-                        color: AppColors.headerColor,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
+                  child: Obx(
+                    () => ListView(
+                      children: [
+                        // Header Row
+                        Container(
+                          color: AppColors.headerColor,
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            children: [
+                              _buildHeaderCell("Sl", flex: 0),
+                              _buildHeaderCell("Product", flex: 2),
+                              _buildHeaderCell("Qty", flex: 1),
+                              _buildHeaderCell("Unit", flex: 1),
+                              _buildHeaderCell("Avail", flex: 1),
+                              _buildHeaderCell("Price", flex: 1),
+                              _buildHeaderCell("Total", flex: 1),
+                              const SpaceWidget(spaceWidth: 8),
+                            ],
+                          ),
+                        ),
+                        // Data Rows
+                        // WholesalerNewOrderRows(controller: pendingController),
+                        ..._buildDataRows(),
+                        const SpaceWidget(spaceHeight: 16),
+
+                        Row(
                           children: [
-                            _buildHeaderCell("Sl", flex: 0),
-                            _buildHeaderCell("Product", flex: 2),
-                            _buildHeaderCell("Qty", flex: 1),
-                            _buildHeaderCell("Unit", flex: 1),
-                            _buildHeaderCell("Avail", flex: 1),
-                            _buildHeaderCell("Price", flex: 1),
-                            _buildHeaderCell("Total", flex: 1),
-                            const SpaceWidget(spaceWidth: 8),
+                            Expanded(
+                              child: ButtonWidget(
+                                onPressed: pendingController.onSave,
+                                label: AppStrings.save,
+                                backgroundColor: AppColors.primaryBlue,
+                                buttonHeight: 45,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SpaceWidget(
+                              spaceWidth: 10,
+                            ),
+                            Expanded(
+                              child: ButtonWidget(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    pendingController
+                                        .showSendOrderDialog(context);
+                                  } else {
+                                    Get.snackbar(
+                                        'Error', 'Please enter a valid price');
+                                  }
+                                },
+                                label: AppStrings.send,
+                                backgroundColor: AppColors.primaryBlue,
+                                buttonHeight: 45,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                      // Data Rows
-                      // WholesalerNewOrderRows(controller: pendingController),
-                      ..._buildDataRows(),
-                      const SpaceWidget(spaceHeight: 16),
-
-                      ButtonWidget(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            pendingController.showSendOrderDialog(context);
-                          } else {
-                            Get.snackbar('Error', 'Please enter a valid price');
-                          }
-                        },
-                        label: AppStrings.send,
-                        backgroundColor: AppColors.primaryBlue,
-                        buttonHeight: 45,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -268,6 +291,7 @@ class _WholesalerNewOrderDetailsScreenState
                           keyboardType: TextInputType.number,
                           focusNode: item.focusNode,
                           decoration: const InputDecoration(
+                            errorStyle: TextStyle(fontSize: 0),
                             contentPadding: EdgeInsets.all(8),
                             border: OutlineInputBorder(),
                           ),
