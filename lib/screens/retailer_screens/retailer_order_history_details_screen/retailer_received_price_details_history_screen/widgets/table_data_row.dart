@@ -29,6 +29,18 @@ class _TableDataRowState extends State<TableDataRow> {
       widget.productsReceived.length,
       (index) => false,
     );
+    for (var product in widget.productsReceived) {
+      product.textEditingController = TextEditingController();
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose of controllers to avoid memory leaks
+    for (var product in widget.productsReceived) {
+      product.textEditingController?.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -136,12 +148,13 @@ class _TableDataRowState extends State<TableDataRow> {
                                         color: Colors.transparent,
                                       ),
                                     ),
+                                    errorBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: AppColors.red)),
                                     focusedErrorBorder:
                                         const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                            borderSide: BorderSide(
+                                                color: AppColors.red)),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                         color: isEditing[index]
@@ -300,6 +313,8 @@ class _TableDataRowState extends State<TableDataRow> {
                                         appLogger(e);
                                       }
                                     } else {
+                                      item.quantity =
+                                          widget.controller.prevQuantity[index];
                                       Get.snackbar("Error",
                                           'You can not increase the quantity more than wholesaler approved, if you want additional quantity send new order');
                                     }

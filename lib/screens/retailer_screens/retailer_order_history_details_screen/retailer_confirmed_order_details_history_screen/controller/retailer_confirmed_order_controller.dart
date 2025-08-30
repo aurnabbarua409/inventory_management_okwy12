@@ -85,9 +85,9 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
     }
   }
 
-  String formatPrice() {
+  String formatPrice(double value) {
     final formatter = NumberFormat('#,###');
-    return formatter.format(totalPrice.value);
+    return formatter.format(value);
   }
 
   // Future<void> fetchConfirmed() async {

@@ -504,4 +504,6 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     final formatter = NumberFormat('#,###');
     return formatter.format(grandtotal.value);
   }
+
+  
 }

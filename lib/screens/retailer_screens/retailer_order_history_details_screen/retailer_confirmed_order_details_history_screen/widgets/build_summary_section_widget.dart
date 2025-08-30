@@ -23,7 +23,7 @@ class BuildSummarySectionWidget extends StatelessWidget {
         // SummaryItemWidget(title: AppStrings.subTotal, price: grandTotal),
         SummaryItemWidget(
             title: AppStrings.grandTotal,
-            price: confirmedController.formatPrice()),
+            price: confirmedController.formatPrice(grandTotal)),
         SizedBox(height: ResponsiveUtils.height(24)),
         // Download Button
         SizedBox(
