@@ -837,7 +837,7 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                             value: 1,
                             child: Text(AppStrings.delete),
                           ),
-                          if (status == 'confirm')
+                          if (status == 'confirmed')
                             const PopupMenuItem(
                               value: 2,
                               child: Text(AppStrings.deliver),

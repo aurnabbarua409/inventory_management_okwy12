@@ -29,6 +29,9 @@ class WholesalerPendingOrderDetailController extends GetxController {
     try {
       final arg = Get.arguments;
       products.value = arg['products'];
+      if (products.isNotEmpty) {
+        products.sort((a, b) => a.createAt!.compareTo(b.createAt!));
+      }
       id.value = arg['id'];
       companyName.value = arg['company'];
       appLogger(products);

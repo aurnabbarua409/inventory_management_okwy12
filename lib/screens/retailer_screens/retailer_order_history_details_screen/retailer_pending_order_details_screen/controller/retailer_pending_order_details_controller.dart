@@ -41,6 +41,11 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   void fetchData() {
     final arg = Get.arguments;
     products.value = arg['products'];
+    if (products.isNotEmpty) {
+      products.sort(
+        (a, b) => a.createAt!.compareTo(b.createAt!),
+      );
+    }
   }
 
   // void updateData(

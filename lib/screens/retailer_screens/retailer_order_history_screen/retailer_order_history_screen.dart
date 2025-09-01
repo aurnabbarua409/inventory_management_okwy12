@@ -6,12 +6,16 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
+import 'package:inventory_app/screens/widgets/photo_viewer_widget.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
+import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
+import 'package:photo_view/photo_view.dart';
 
 class RetailerOrderHistoryScreen extends StatefulWidget {
   const RetailerOrderHistoryScreen({super.key});
@@ -104,14 +108,16 @@ class _RetailerOrderHistoryScreenState
                               : "",
                           "date": pending.createAt ?? "",
                           "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(2)),
-                            child: Icon(
-                              Icons.business,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(30),
-                            ),
-                          ),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(2)),
+                              child: pending.wholesaler?.image == null
+                                  ? Icon(
+                                      Icons.business,
+                                      color: AppColors.primaryBlue,
+                                      size: ResponsiveUtils.width(30),
+                                    )
+                                  : PhotoViewerWidget(
+                                      url: pending.wholesaler?.image)),
                           "id": pending.id ?? "0",
                           "products": pending.product ?? []
                         };
@@ -124,14 +130,16 @@ class _RetailerOrderHistoryScreenState
                               "N/A",
                           "date": received.createAt ?? "",
                           "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(4)),
-                            child: Icon(
-                              Icons.business_center,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(38),
-                            ),
-                          ),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(4)),
+                              child: received.wholesaler?.image == null
+                                  ? Icon(
+                                      Icons.business_center,
+                                      color: AppColors.primaryBlue,
+                                      size: ResponsiveUtils.width(38),
+                                    )
+                                  : PhotoViewerWidget(
+                                      url: received.wholesaler?.image)),
                           "id": received.id ?? "0",
                           "products": received.product ?? [],
                           "wholesaler": received.wholesaler
@@ -145,14 +153,16 @@ class _RetailerOrderHistoryScreenState
                               "N/A",
                           "date": confirmed.createAt ?? "",
                           "logo": ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveUtils.width(4)),
-                            child: Icon(
-                              Icons.verified,
-                              color: AppColors.primaryBlue,
-                              size: ResponsiveUtils.width(38),
-                            ),
-                          ),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveUtils.width(4)),
+                              child: confirmed.wholesaler?.image == null
+                                  ? Icon(
+                                      Icons.verified,
+                                      color: AppColors.primaryBlue,
+                                      size: ResponsiveUtils.width(38),
+                                    )
+                                  : PhotoViewerWidget(
+                                      url: confirmed.wholesaler?.image)),
                           "id": confirmed.id ?? "0",
                           "products": confirmed
                         };

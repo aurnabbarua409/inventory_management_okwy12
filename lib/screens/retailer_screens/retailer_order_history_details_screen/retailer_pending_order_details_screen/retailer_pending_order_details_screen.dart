@@ -454,6 +454,9 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                       ),
                       // Data Rows (Flatten orders list and pass products only)
                       ..._buildDataRows(),
+                      const SpaceWidget(
+                        spaceHeight: 30,
+                      )
                     ],
                   );
                 }),

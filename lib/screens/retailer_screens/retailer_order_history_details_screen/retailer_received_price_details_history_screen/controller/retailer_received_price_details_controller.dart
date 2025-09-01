@@ -17,7 +17,7 @@ import 'package:inventory_app/widgets/outlined_button_widget/outlined_button_wid
 import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   var token = ''.obs;
@@ -39,6 +39,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   final isConfirmedPressed = false.obs;
   final formKey = GlobalKey<FormState>();
   List<int> prevQuantity = [];
+  RxList<bool> isEditing = <bool>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -50,6 +51,11 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     try {
       final arg = Get.arguments;
       products.value = arg['products'];
+      if (products.isNotEmpty) {
+        products.sort(
+          (a, b) => a.createAt!.compareTo(b.createAt!),
+        );
+      }
       orderid.value = arg['id'];
       wholesaler.value = arg['wholesaler'];
       prevQuantity = List.generate(
@@ -311,92 +317,92 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   //   }
   // }
 
-  Future<void> showContactDialog(BuildContext context) async {
-    showCustomPopup(
-      context,
-      [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButtonWidget(
-            onTap: () {
-              Get.back();
-            },
-            icon: AppIconsPath.closeIcon,
-            size: 20,
-            color: AppColors.black,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 16),
-        const Center(
-          child: TextWidget(
-            text:
-                'Please contact your wholesaler to confirm quantity before you can proceed',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            fontColor: AppColors.primaryBlue,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 2),
-        Center(
-          child: TextWidget(
-            text:
-                "Wholesaler Name: ${wholesaler.value?.storeInformation?.businessname ?? 'N/A'}",
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            fontColor: AppColors.onyxBlack,
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: OutlinedButtonWidget(
-                  onPressed: () {
-                    send();
-                    Get.back();
-                    Get.back();
-                  },
-                  label: 'Okay',
-                  backgroundColor: AppColors.white,
-                  buttonWidth: 120,
-                  buttonHeight: 36,
-                  textColor: AppColors.primaryBlue,
-                  borderColor: AppColors.primaryBlue,
-                  fontSize: 14,
-                ),
-              ),
-              const SpaceWidget(spaceWidth: 16),
-              Expanded(
-                flex: 1,
-                child: ButtonWidget(
-                  onPressed: () async {
-                    try {
-                      final url = "tel:${wholesaler.value!.phone}";
-                      if (await canLaunchUrl(Uri.parse(url))) {
-                        await launchUrl(Uri.parse(url));
-                      }
-                    } catch (e) {
-                      appLogger(e);
-                    }
-                  },
-                  label: "Call Now",
-                  backgroundColor: AppColors.primaryBlue,
-                  buttonWidth: 120,
-                  buttonHeight: 36,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SpaceWidget(spaceHeight: 20),
-      ],
-    );
-  }
+  // Future<void> showContactDialog(BuildContext context) async {
+  //   showCustomPopup(
+  //     context,
+  //     [
+  //       Align(
+  //         alignment: Alignment.centerRight,
+  //         child: IconButtonWidget(
+  //           onTap: () {
+  //             Get.back();
+  //           },
+  //           icon: AppIconsPath.closeIcon,
+  //           size: 20,
+  //           color: AppColors.black,
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 16),
+  //       const Center(
+  //         child: TextWidget(
+  //           text:
+  //               'Please contact your wholesaler to confirm quantity before you can proceed',
+  //           fontSize: 16,
+  //           fontWeight: FontWeight.w600,
+  //           fontColor: AppColors.primaryBlue,
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 2),
+  //       Center(
+  //         child: TextWidget(
+  //           text:
+  //               "Wholesaler Name: ${wholesaler.value?.storeInformation?.businessname ?? 'N/A'}",
+  //           fontSize: 15,
+  //           fontWeight: FontWeight.w500,
+  //           fontColor: AppColors.onyxBlack,
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 20),
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 32),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Expanded(
+  //               flex: 1,
+  //               child: OutlinedButtonWidget(
+  //                 onPressed: () {
+  //                   send();
+  //                   Get.back();
+  //                   Get.back();
+  //                 },
+  //                 label: 'Okay',
+  //                 backgroundColor: AppColors.white,
+  //                 buttonWidth: 120,
+  //                 buttonHeight: 36,
+  //                 textColor: AppColors.primaryBlue,
+  //                 borderColor: AppColors.primaryBlue,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //             const SpaceWidget(spaceWidth: 16),
+  //             Expanded(
+  //               flex: 1,
+  //               child: ButtonWidget(
+  //                 onPressed: () async {
+  //                   try {
+  //                     final url = "tel:${wholesaler.value!.phone}";
+  //                     if (await canLaunchUrl(Uri.parse(url))) {
+  //                       await launchUrl(Uri.parse(url));
+  //                     }
+  //                   } catch (e) {
+  //                     appLogger(e);
+  //                   }
+  //                 },
+  //                 label: "Call Now",
+  //                 backgroundColor: AppColors.primaryBlue,
+  //                 buttonWidth: 120,
+  //                 buttonHeight: 36,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       const SpaceWidget(spaceHeight: 20),
+  //     ],
+  //   );
+  // }
 
   void send() async {
     //need to implement later

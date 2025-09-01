@@ -64,9 +64,12 @@ class WholesalerProfileCard extends StatelessWidget {
                   child: ImageWidget(
                     height: 82,
                     width: 82,
+                    fromNetwork: wholesaler.image.isNotEmpty && !isSelected,
                     imagePath: isSelected
                         ? AppImagesPath.checkImage
-                        : AppImagesPath.wholesalerProfileImage,
+                        : (wholesaler.image.isEmpty
+                            ? AppImagesPath.wholesalerProfileImage
+                            : wholesaler.image),
                   ),
                 ),
                 const SpaceWidget(spaceWidth: 12),

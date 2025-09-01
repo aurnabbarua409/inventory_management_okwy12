@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/subscription/controller/subscription_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -75,6 +76,7 @@ class PaymentController extends GetxController {
   void _handlePageFinished(String url) {
     if (url.contains('payment-success')) {
       debugPrint('Payment successful!');
+      Get.find<SubscriptionController>().initial();
       Get.back();
       String? transactionId = _extractTransactionId(url);
       if (transactionId != null) {

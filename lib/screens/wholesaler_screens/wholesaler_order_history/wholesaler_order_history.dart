@@ -5,9 +5,11 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/controller/wholesaler_order_history_controller.dart';
+import 'package:inventory_app/screens/widgets/photo_viewer_widget.dart';
 import 'package:inventory_app/screens/widgets/wholesaler_tabbar_view.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
+import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
 
@@ -115,16 +117,18 @@ class _WholesalerOrderHistoryScreenState
                                 "N/A",
                             "date": order.createAt ?? DateTime.now().toString(),
                             "logo": ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  ResponsiveUtils.width(
-                                      2)), // Responsive radius
-                              child: Icon(
-                                Icons.business,
-                                color: AppColors.primaryBlue,
-                                size: ResponsiveUtils.width(
-                                    30), // Use responsive width for icon size
-                              ),
-                            ),
+                                borderRadius: BorderRadius.circular(
+                                    ResponsiveUtils.width(
+                                        2)), // Responsive radius
+                                child: order.retailer?.image == null
+                                    ? Icon(
+                                        Icons.business,
+                                        color: AppColors.primaryBlue,
+                                        size: ResponsiveUtils.width(
+                                            30), // Use responsive width for icon size
+                                      )
+                                    : PhotoViewerWidget(
+                                        url: order.retailer?.image)),
                             "id": order.id ?? "N/A",
                             "product": order.product ?? []
                           };
@@ -136,16 +140,18 @@ class _WholesalerOrderHistoryScreenState
                                 "N/A",
                             "date": order.createAt ?? "N/A",
                             "logo": ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  ResponsiveUtils.width(
-                                      4)), // Responsive radius
-                              child: Icon(
-                                Icons.business_center,
-                                color: AppColors.primaryBlue,
-                                size: ResponsiveUtils.width(
-                                    38), // Responsive size
-                              ),
-                            ),
+                                borderRadius: BorderRadius.circular(
+                                    ResponsiveUtils.width(
+                                        4)), // Responsive radius
+                                child: order.retailer?.image == null
+                                    ? Icon(
+                                        Icons.business_center,
+                                        color: AppColors.primaryBlue,
+                                        size: ResponsiveUtils.width(
+                                            38), // Responsive size
+                                      )
+                                    : PhotoViewerWidget(
+                                        url: order.retailer?.image)),
                             "id": order.id ?? "N/A",
                             "product": order.product ?? []
                           };
@@ -158,16 +164,18 @@ class _WholesalerOrderHistoryScreenState
                                 "N/A",
                             "date": order.createAt ?? "N/A",
                             "logo": ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  ResponsiveUtils.width(
-                                      4)), // Responsive radius
-                              child: Icon(
-                                Icons.business_center,
-                                color: AppColors.primaryBlue,
-                                size: ResponsiveUtils.width(
-                                    38), // Responsive size
-                              ),
-                            ),
+                                borderRadius: BorderRadius.circular(
+                                    ResponsiveUtils.width(
+                                        4)), // Responsive radius
+                                child: order.retailer?.image == null
+                                    ? Icon(
+                                        Icons.business_center,
+                                        color: AppColors.primaryBlue,
+                                        size: ResponsiveUtils.width(
+                                            38), // Responsive size
+                                      )
+                                    : PhotoViewerWidget(
+                                        url: order.retailer?.image)),
                             "id": order.id ?? "N/A",
                             "status": order.status,
                             "product": order

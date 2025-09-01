@@ -7,6 +7,7 @@ import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_co
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/widget/wholesaler_profile_card.dart';
 import 'package:inventory_app/screens/widgets/search_bar_widget.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -35,6 +36,7 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                     onTap: () {
                       final control = Get.find<BottomNavbarController>();
                       control.changeIndex(0);
+                      controller.filteredWholesalers.clear();
                     },
                     icon: AppIconsPath.backIcon,
                     color: AppColors.white,
@@ -98,51 +100,52 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
 
             // Filtered List of Wholesalers based on the search query
 
-            Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (controller.filteredWholesalers.isEmpty) {
-                  return const Center(
-                      child: Text("There is no wholesaler found"));
-                }
-                return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
+            Expanded(child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (controller.filteredWholesalers.isEmpty) {
+                return const Center(
+                    child: Text("There is no wholesaler found"));
+              }
+              return RefreshIndicator(
+                onRefresh: () => controller.fetchWholesalers(),
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  // shrinkWrap: true,
                   itemCount: controller.filteredWholesalers.length,
                   itemBuilder: (context, index) {
-                    return Obx(() {
-                      final wholesaler = controller.filteredWholesalers[index];
-                      final isCardSelected = controller.selectedItems[index];
+                    final wholesaler = controller.filteredWholesalers[index];
+                    final isCardSelected = controller.selectedItems.isEmpty
+                        ? false
+                        : controller.selectedItems[index];
+                    appLogger(wholesaler);
+                    appLogger(isCardSelected);
 
-                      return GestureDetector(
-                        onTap: () {
-                          controller.toggleSelection(index, !isCardSelected);
+                    return GestureDetector(
+                      onTap: () {
+                        controller.toggleSelection(index, !isCardSelected);
+                      },
+                      child: WholesalerProfileCard(
+                        wholesaler: wholesaler,
+                        isSelected: isCardSelected,
+                        onLongPress: (isSelected) {
+                          controller.toggleSelection(index, isSelected);
                         },
-                        child: WholesalerProfileCard(
-                          wholesaler: wholesaler,
-                          isSelected: isCardSelected,
-                          onLongPress: (isSelected) {
-                            controller.toggleSelection(index, isSelected);
-                          },
-                          onDoubleTap: (_) {
-                            controller.deselect(index);
-                          },
-                          onTap: () {
-                            controller.showSendOrderDialog(context);
-                          },
-                        ),
-                      );
-                    });
+                        onDoubleTap: (_) {
+                          controller.deselect(index);
+                        },
+                        onTap: () {
+                          controller.showSendOrderDialog(context);
+                        },
+                      ),
+                    );
                   },
-                );
-              }),
-            )),
+                ),
+              );
+            })),
 
             // Show send order button if items are selected
             Obx(() {

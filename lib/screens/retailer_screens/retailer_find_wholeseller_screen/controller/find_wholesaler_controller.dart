@@ -113,6 +113,8 @@ class FindWholesalerController extends GetxController {
             '${Urls.getWholesaler}?storeInformation.businessName=$query');
         _handleResponse(response);
       }
+      selectedItems
+          .assignAll(List.generate(filteredWholesalers.length, (_) => false));
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while filtering wholesalers');
     }
@@ -124,6 +126,8 @@ class FindWholesalerController extends GetxController {
       MGetWholesalers mGetWholesalers = MGetWholesalers.fromJson(response);
       if (mGetWholesalers.success) {
         filteredWholesalers.assignAll(mGetWholesalers.data);
+        selectedItems
+            .assignAll(List.generate(filteredWholesalers.length, (_) => false));
       } else {
         Get.snackbar('Error', mGetWholesalers.message);
       }
@@ -242,20 +246,24 @@ class FindWholesalerController extends GetxController {
 
   // Toggle selection for wholesalers
   void toggleSelection(int index, bool isSelected) {
-    if (index < selectedItems.length) {
-      selectedItems[index] = isSelected;
-      selectedItems.refresh();
-      update();
-    }
-    debugPrint("selected wholesalers:  $selectedItems");
-
-    List<String> selectedWholesalerIds = [];
-    for (int i = 0; i < filteredWholesalers.length; i++) {
-      if (selectedItems[i]) {
-        selectedWholesalerIds.add(filteredWholesalers[i].id);
+    try {
+      if (index < selectedItems.length) {
+        selectedItems[index] = isSelected;
+        selectedItems.refresh();
+        update();
       }
+      debugPrint("selected wholesalers:  $selectedItems");
+
+      List<String> selectedWholesalerIds = [];
+      for (int i = 0; i < filteredWholesalers.length; i++) {
+        if (selectedItems[i]) {
+          selectedWholesalerIds.add(filteredWholesalers[i].id);
+        }
+      }
+      debugPrint("Updated selected wholesaler IDs: $selectedWholesalerIds");
+    } catch (e) {
+      appLogger(e);
     }
-    debugPrint("Updated selected wholesaler IDs: $selectedWholesalerIds");
   }
 
   void deselect(int index) {
@@ -326,9 +334,9 @@ class FindWholesalerController extends GetxController {
   Future<void> sendOrder(BuildContext context) async {
     List<String> selectedWholesalerIds = [];
 
-    for (int i = 0; i < wholesalers.length; i++) {
+    for (int i = 0; i < filteredWholesalers.length; i++) {
       if (selectedItems[i]) {
-        selectedWholesalerIds.add(wholesalers[i].id);
+        selectedWholesalerIds.add(filteredWholesalers[i].id);
       }
     }
 

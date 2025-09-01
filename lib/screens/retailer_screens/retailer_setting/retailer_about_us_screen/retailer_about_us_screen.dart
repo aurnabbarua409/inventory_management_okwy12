@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_strings.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_about_us_screen/controller/about_us_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/appbar_widget.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../widgets/text_widget/text_widgets.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
-class RetailerAboutUsScreen extends StatelessWidget {
+class RetailerAboutUsScreen extends StatefulWidget {
   const RetailerAboutUsScreen({super.key});
+
+  @override
+  State<RetailerAboutUsScreen> createState() => _RetailerAboutUsScreenState();
+}
+
+class _RetailerAboutUsScreenState extends State<RetailerAboutUsScreen> {
+  final _controller = Get.put(AboutUsController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,35 +32,34 @@ class RetailerAboutUsScreen extends StatelessWidget {
         text: AppStrings.aboutUs,
         centerTitle: true,
       ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                TextWidget(
-                  text: AppStrings.aboutUsIntro,
-                  fontColor: AppColors.onyxBlack,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                TextWidget(
-                  text: AppStrings.appName,
-                  fontColor: AppColors.onyxBlack,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ],
-            ),
-            TextWidget(
-              text: AppStrings.aboutUsDesc,
-              fontColor: AppColors.onyxBlack,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              textAlignment: TextAlign.start,
-            ),
-          ],
-        ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Obx(
+              () {
+                if (_controller.isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (_controller.aboutUsData.value.isEmpty) {
+                  return const Center(
+                    child: TextWidget(
+                      text: "Nothing is added yet",
+                      fontColor: AppColors.onyxBlack,
+                    ),
+                  );
+                }
+                return HtmlWidget(
+                  _controller.aboutUsData.value,
+                  textStyle: const TextStyle(
+                    color: AppColors.onyxBlack,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                );
+              },
+            )),
       ),
     );
   }

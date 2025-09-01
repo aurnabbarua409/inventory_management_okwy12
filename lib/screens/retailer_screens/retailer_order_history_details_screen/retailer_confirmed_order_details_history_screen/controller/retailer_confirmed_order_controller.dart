@@ -69,7 +69,13 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
       final args = Get.arguments;
       appLogger("in confirmed data: $args");
       confirmedData.value = args['products'];
+      if (confirmedData.value?.product?.isNotEmpty ?? false) {
+        confirmedData.value!.product!
+            .sort((a, b) => a.createAt!.compareTo(b.createAt!));
+      }
+
       var temp = confirmedData.value?.product ?? [];
+
       for (int i = 0; i < temp.length; i++) {
         if (temp[i].availability ?? false) {
           product.add(temp[i]);

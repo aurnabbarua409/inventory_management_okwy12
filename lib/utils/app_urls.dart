@@ -36,7 +36,7 @@ class Urls {
   static const updateWholesalerProduct = "$baseUrl/send-offer/update-product/";
   static const updateReceivedOrder = "$baseUrl/new-order/";
   static const updateAllReceivedOrders = "$baseUrl/confirmation";
-  static const confirmedOrderRetailer = "$baseUrl/products/all/confirm";
+  static const confirmedOrderRetailer = "$baseUrl/products/all/confirmed";
   static const confirmedOrderWholesaler =
       "$baseUrl/products/all-product/confirm";
 
@@ -52,4 +52,11 @@ class Urls {
   static const updateSingleProduct = "$baseUrl/new-order/";
   static const inviteLink = "$baseUrl/invite-link/";
   static const getAllHistory = "$baseUrl/new-order/all-history";
+  static const termCondition =
+      "$baseUrl/about-us-contact-us-terms-and-conditions/termsAndConditions/";
+  static const aboutUs =
+      "$baseUrl/about-us-contact-us-terms-and-conditions/aboutUs";
+  static const contactUs =
+      "$baseUrl/about-us-contact-us-terms-and-conditions/contactUs";
+  static const faq = "$baseUrl/faq/all";
 }

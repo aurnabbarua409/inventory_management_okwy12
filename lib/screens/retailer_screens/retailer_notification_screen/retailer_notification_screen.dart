@@ -40,6 +40,7 @@ class _RetailerNotificationScreenState
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
+            controller.getNotificationsRepo();
             Get.back();
           },
         ),

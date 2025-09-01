@@ -10,10 +10,14 @@ Future<void> main() async {
   await PrefsHelper.getAllPrefData();
   //NotificationService.initLocalNotification();
   SocketApi.init();
-  
+
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight
+  ]);
 
   runApp(const MainApp());
 }

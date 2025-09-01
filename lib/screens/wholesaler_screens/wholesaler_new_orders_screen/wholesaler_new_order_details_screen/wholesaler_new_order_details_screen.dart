@@ -289,6 +289,7 @@ class _WholesalerNewOrderDetailsScreenState
                         height: 30,
                         width: 10,
                         child: TextFormField(
+                          
                           initialValue: price == 0 ? "" : price.toString(),
                           keyboardType: TextInputType.number,
                           focusNode: item.focusNode,

@@ -160,7 +160,16 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                           'You can not confirm now');
                       return;
                     }
+                    if (receivedController.isEditing
+                        .any((isEditing) => isEditing == true)) {
+                      Get.snackbar(
+                        'Hold on!',
+                        'You have unsaved changes. Please save them before confirming.',
+                        snackPosition: SnackPosition.TOP,
+                      );
 
+                      return;
+                    }
                     if (receivedController.formKey.currentState!.validate()) {
                       receivedController.send();
                       Get.back();

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
 import '../../../routes/app_routes.dart';
@@ -46,6 +47,8 @@ class SplashController extends GetxController {
       if (firstLoggedIn == null || now.difference(firstLoggedIn).inDays >= 7) {
         // If never logged in OR last login was at least 1 day ago → show onboarding/login
         PrefsHelper.setString('firstLoggedIn', now.toIso8601String());
+        PrefsHelper.firstLoggedIn = now.toIso8601String();
+        appLogger("First logged in: ${PrefsHelper.firstLoggedIn}");
         Get.offAllNamed(AppRoutes.onboardingScreen);
       } else {
         // Otherwise → go to home screen

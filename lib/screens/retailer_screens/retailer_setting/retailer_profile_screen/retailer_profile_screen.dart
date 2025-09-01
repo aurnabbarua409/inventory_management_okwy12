@@ -236,6 +236,7 @@ class _RetailerProfileScreenState extends State<RetailerProfileScreen> {
                 ButtonWidget(
                   onPressed: () {
                     controller.updateProfileRepo();
+                    Get.back();
                   },
                   label: AppStrings.updatePassword,
                   backgroundColor: AppColors.primaryBlue,

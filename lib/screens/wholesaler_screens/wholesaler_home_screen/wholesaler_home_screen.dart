@@ -16,7 +16,7 @@ import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_icons_path.dart';

@@ -101,10 +101,16 @@ class WholesalerNewOrderDetailsController extends GetxController {
           appLogger("Loaded products from $fileName");
         } else {
           products.value = args['products'];
+          if (products.isNotEmpty) {
+            products.sort((a, b) => a.createAt!.compareTo(b.createAt!));
+          }
           appLogger("Loaded products from arguments");
         }
       } else {
         products.value = args['products'];
+        if (products.isNotEmpty) {
+          products.sort((a, b) => a.createAt!.compareTo(b.createAt!));
+        }
         appLogger("Loaded products from arguments");
       }
       appLogger(

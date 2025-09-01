@@ -19,13 +19,11 @@ class TableDataRow extends StatefulWidget {
 }
 
 class _TableDataRowState extends State<TableDataRow> {
-  List<bool> isEditing = [];
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    isEditing = List.generate(
+    widget.controller.isEditing.value = List.generate(
       widget.productsReceived.length,
       (index) => false,
     );
@@ -45,7 +43,7 @@ class _TableDataRowState extends State<TableDataRow> {
 
   @override
   Widget build(BuildContext context) {
-    appLogger(isEditing);
+    appLogger(widget.controller.isEditing);
     if (widget.productsReceived.isEmpty) {
       return const Center(
         child: Padding(
@@ -123,7 +121,7 @@ class _TableDataRowState extends State<TableDataRow> {
                       // Quantity
                       Expanded(
                         flex: 1,
-                        child: isEditing[index]
+                        child: widget.controller.isEditing[index]
                             ? Container(
                                 height: 20,
                                 margin:
@@ -157,9 +155,10 @@ class _TableDataRowState extends State<TableDataRow> {
                                                 color: AppColors.red)),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: isEditing[index]
-                                            ? Colors.grey
-                                            : Colors.grey,
+                                        color:
+                                            widget.controller.isEditing[index]
+                                                ? Colors.grey
+                                                : Colors.grey,
                                       ),
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
@@ -202,7 +201,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                   //     appLogger(e);
                                   //   }
                                   // },
-                                  enabled: isEditing[index],
+                                  enabled: widget.controller.isEditing[index],
                                 ),
                               )
                             : Text(
@@ -284,10 +283,13 @@ class _TableDataRowState extends State<TableDataRow> {
                                 ),
                                 color: AppColors.white,
                                 onSelected: (value) async {
+                                  int? editingIndex;
                                   if (value == 1) {
                                     setState(() {
-                                      isEditing[index] = !isEditing[index];
+                                      widget.controller.isEditing[index] =
+                                          !widget.controller.isEditing[index];
                                     });
+
                                     // if (isEditing[index]) {
                                     //   try {
                                     //     final url =
@@ -333,9 +335,10 @@ class _TableDataRowState extends State<TableDataRow> {
                                 itemBuilder: (context) => [
                                   PopupMenuItem(
                                     value: 1,
-                                    child: Text(isEditing[index]
-                                        ? AppStrings.save
-                                        : AppStrings.decrease),
+                                    child: Text(
+                                        widget.controller.isEditing[index]
+                                            ? AppStrings.save
+                                            : AppStrings.decrease),
                                   ),
                                   const PopupMenuItem(
                                     value: 2,

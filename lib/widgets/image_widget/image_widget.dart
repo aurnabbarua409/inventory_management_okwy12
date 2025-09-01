@@ -20,16 +20,14 @@ class ImageWidget extends StatelessWidget {
       return Image.network("${Urls.socketUrl}$imagePath",
           height: height,
           width: width,
-          fit: BoxFit.cover, 
-      //     errorBuilder: (context, error, stackTrace) {
-      //   return Image.asset(
-      //     AppImagesPath.profileImage,
-      //     height: height,
-      //     width: width,
-      //     fit: BoxFit.cover,
-      //   );
-      // }
-      );
+          fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          AppImagesPath.profileImage,
+          height: height,
+          width: width,
+          fit: BoxFit.cover,
+        );
+      });
     } else {
       return Image.asset(
         imagePath,

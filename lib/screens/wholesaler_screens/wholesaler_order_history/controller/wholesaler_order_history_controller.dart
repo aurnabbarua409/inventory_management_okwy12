@@ -29,8 +29,9 @@ class WholesalerOrderHistoryController extends GetxController {
   RxList<GetPendingOrderModel> confirmedOrders = <GetPendingOrderModel>[].obs;
   Timer? refreshTimer;
   Future<void> fetchNewOrders() async {
-    update();
     newOrders.clear();
+    update();
+
     isLoading.value = true; // Show loading indicator
     int page = 1;
     bool hasmore = true;
@@ -51,6 +52,7 @@ class WholesalerOrderHistoryController extends GetxController {
         }
         page++;
       }
+
       appLogger("Succesfully fetched new orders: $newOrders");
     } catch (e) {
       appLogger("error from fetching new order: $e");
@@ -61,8 +63,9 @@ class WholesalerOrderHistoryController extends GetxController {
 
   // Fetch Received Orders
   Future<void> fetchPendingOrders() async {
-    update();
     pendingOrders.clear();
+    update();
+
     isLoading.value = true; // Show loading indicator
     try {
       final response = await ApiService.getApi(
@@ -78,6 +81,7 @@ class WholesalerOrderHistoryController extends GetxController {
           }
         }
       }
+
       // var recievedData = await retailerRepo.getRecieved();
       appLogger("fetching received order: $pendingOrders");
       // receivedOrders.value = recievedData;
@@ -90,8 +94,9 @@ class WholesalerOrderHistoryController extends GetxController {
 
   // Fetch Confirmed Orders
   Future<void> fetchConfirmedOrders() async {
-    update();
     confirmedOrders.clear();
+    update();
+
     isLoading.value = true; // Show loading indicator
     try {
       var response = await ApiService.getApi(Urls.confirmedOrderWholesaler);
