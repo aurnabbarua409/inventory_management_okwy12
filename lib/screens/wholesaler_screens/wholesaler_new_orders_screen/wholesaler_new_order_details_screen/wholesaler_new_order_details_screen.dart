@@ -76,14 +76,19 @@ class _WholesalerNewOrderDetailsScreenState
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Row(
                             children: [
-                              _buildHeaderCell("Sl", flex: 0),
+                              _buildHeaderCell("Sl",
+                                  flex: 0, spaceHorizontal: 8),
                               _buildHeaderCell("Product", flex: 2),
                               _buildHeaderCell("Qty", flex: 1),
-                              _buildHeaderCell("Unit", flex: 1),
+                              _buildHeaderCell(
+                                "Unit",
+                                flex: 1,
+                              ),
                               _buildHeaderCell("Avail", flex: 1),
                               _buildHeaderCell("Price", flex: 1),
                               _buildHeaderCell("Total", flex: 1),
-                              const SpaceWidget(spaceWidth: 8),
+                              _buildHeaderCell("", flex: 1),
+                              // const SpaceWidget(spaceWidth: 10),
                             ],
                           ),
                         ),
@@ -97,7 +102,9 @@ class _WholesalerNewOrderDetailsScreenState
                             children: [
                               Expanded(
                                 child: ButtonWidget(
-                                  onPressed: pendingController.onSave,
+                                  onPressed: () {
+                                    pendingController.onSave;
+                                  },
                                   label: AppStrings.save,
                                   backgroundColor: AppColors.primaryBlue,
                                   buttonHeight: 45,
@@ -110,6 +117,17 @@ class _WholesalerNewOrderDetailsScreenState
                               Expanded(
                                 child: ButtonWidget(
                                   onPressed: () {
+                                    appLogger(pendingController.isEditing);
+                                    if (pendingController.isEditing.any(
+                                        (isEditing) => isEditing == true)) {
+                                      Get.snackbar(
+                                        'Hold on!',
+                                        'You have unsaved changes. Please save them before confirming.',
+                                        snackPosition: SnackPosition.TOP,
+                                      );
+
+                                      return;
+                                    }
                                     if (_formKey.currentState!.validate()) {
                                       pendingController
                                           .showSendOrderDialog(context);
@@ -139,11 +157,13 @@ class _WholesalerNewOrderDetailsScreenState
     );
   }
 
-  Widget _buildHeaderCell(String text, {int flex = 1}) {
+  Widget _buildHeaderCell(String text,
+      {int flex = 1, double spaceHorizontal = 0, double spaceVertical = 10}) {
     return Expanded(
       flex: flex,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        padding: EdgeInsets.symmetric(
+            horizontal: spaceHorizontal, vertical: spaceVertical),
         child: Center(
           child: Text(
             text,
@@ -246,6 +266,7 @@ class _WholesalerNewOrderDetailsScreenState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: FlutterSwitch(
+                    disabled: !pendingController.isEditing[index],
                     width: 80,
                     height: 18,
                     toggleSize: 15,
@@ -284,12 +305,12 @@ class _WholesalerNewOrderDetailsScreenState
               const SizedBox(width: 15),
               Expanded(
                 flex: 1,
-                child: item.availability ?? false
+                child: (item.availability ?? false) &&
+                        (pendingController.isEditing[index])
                     ? SizedBox(
                         height: 30,
                         width: 10,
                         child: TextFormField(
-                          
                           initialValue: price == 0 ? "" : price.toString(),
                           keyboardType: TextInputType.number,
                           focusNode: item.focusNode,
@@ -355,6 +376,67 @@ class _WholesalerNewOrderDetailsScreenState
                       color: AppColors.onyxBlack,
                     ),
                   ),
+                ),
+              ),
+              Expanded(
+                flex: 0,
+                child: PopupMenuButton(
+                  padding: EdgeInsets.zero,
+                  style: const ButtonStyle(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: AppColors.black,
+                    size: 18,
+                  ),
+                  color: AppColors.white,
+                  onSelected: (value) async {
+                    if (value == 1) {
+                      appLogger("after changing the price: ${price}");
+                      // totalPrice = price * quantity;
+                      appLogger("total price is: $totalPrice");
+                      setState(() {
+                        pendingController.isEditing[index] =
+                            !pendingController.isEditing[index];
+                      });
+
+                      // if (isEditing[index]) {
+                      //   try {
+                      //     final url =
+                      //         "${Urls.updateReceivedOrder}${item.id}";
+                      //     final response = await ApiService.patchApi(url,
+                      //         {"quantity": item.quantity ?? 0});
+                      //     appLogger(response);
+                      //   } catch (e) {
+                      //     appLogger(e);
+                      //   }
+                      // }
+                      if (_formKey.currentState!.validate()) {
+                        try {
+                          price = int.parse(item.textEditingController!.text);
+                          item.price = price;
+
+                          setState(() {});
+                        } catch (e) {
+                          appLogger(e);
+                        }
+                      } else {
+                        item.price = 0;
+                        Get.snackbar("Error", 'Invalid price');
+                      }
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      child: Text(pendingController.isEditing[index]
+                          ? AppStrings.save
+                          : AppStrings.edit),
+                    ),
+                  ],
                 ),
               ),
               // SizedBox(

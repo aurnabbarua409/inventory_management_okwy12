@@ -120,35 +120,31 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
                     ),
                     const SpaceWidget(spaceHeight: 12),
                     Obx(() {
-                      if (controller.canResend.value) {}
-                      return controller.canResend.value
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const TextWidget(
-                                    text: AppStrings.didntReceiveOtp,
-                                    fontColor: AppColors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    maxLines: 1,
-                                  ),
-                                  const SpaceWidget(spaceWidth: 8),
-                                  TextButtonWidget(
-                                    onPressed: () {
-                                      controller.resendCode();
-                                    },
-                                    text: AppStrings.resendOtp,
-                                    textColor: AppColors.primaryBlue,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : const SizedBox.shrink();
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const TextWidget(
+                              text: AppStrings.didntReceiveOtp,
+                              fontColor: AppColors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              maxLines: 1,
+                            ),
+                            const SpaceWidget(spaceWidth: 8),
+                            TextButtonWidget(
+                              onPressed: () {
+                                controller.resendCode();
+                              },
+                              text: AppStrings.resendOtp,
+                              textColor: AppColors.primaryBlue,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
+                      );
                     }),
                   ],
                 ),

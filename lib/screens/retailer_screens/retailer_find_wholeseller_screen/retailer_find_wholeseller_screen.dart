@@ -16,107 +16,145 @@ import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 
-class RetailerFindWholeSellerScreen extends StatelessWidget {
+class RetailerFindWholeSellerScreen extends StatefulWidget {
   const RetailerFindWholeSellerScreen({super.key});
+
+  @override
+  State<RetailerFindWholeSellerScreen> createState() =>
+      _RetailerFindWholeSellerScreenState();
+}
+
+class _RetailerFindWholeSellerScreenState
+    extends State<RetailerFindWholeSellerScreen> {
+  final controller = Get.put(FindWholesalerController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.fetchWholesalers();
+    controller.searchController = TextEditingController();
+
+    // Bind search function
+    controller.searchController.addListener(() {
+      controller.filterWholesalers(controller.searchController.text);
+    });
+    controller.scrollController = ScrollController();
+    controller.scrollController.addListener(controller.onScroll);
+    appLogger("find wholesaler controller initialized");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    controller.searchController.dispose();
+    controller.scrollController.dispose();
+    appLogger("find wholesaler controller disposed");
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
-      body: GetBuilder(
-        init: FindWholesalerController(),
-        builder: (controller) => Column(
-          children: [
-            // AppBar Section
-            MainAppbarWidget(
-              child: Stack(children: [
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: IconButtonWidget(
-                    onTap: () {
-                      final control = Get.find<BottomNavbarController>();
-                      control.changeIndex(0);
-                      controller.filteredWholesalers.clear();
-                    },
-                    icon: AppIconsPath.backIcon,
-                    color: AppColors.white,
-                    size: ResponsiveUtils.width(22),
-                  ),
+      body: Column(
+        children: [
+          // AppBar Section
+          MainAppbarWidget(
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: IconButtonWidget(
+                  onTap: () {
+                    final control = Get.find<BottomNavbarController>();
+                    control.changeIndex(0);
+                    controller.filteredWholesalers.clear();
+                  },
+                  icon: AppIconsPath.backIcon,
+                  color: AppColors.white,
+                  size: ResponsiveUtils.width(22),
                 ),
-                const Center(
-                  child: TextWidget(
-                    text: AppStrings.findWholeSaler,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    fontColor: AppColors.white,
-                  ),
-                ),
-              ]),
-            ),
-            const SpaceWidget(spaceHeight: 16),
-
-            // Search Bar Section
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SearchBarWidget(
-                      controller: controller.searchController,
-                      hintText: 'Search by name, email or phone',
-                      maxLines: 1,
-                      onChanged: (query) {
-                        controller.filterWholesalers(query);
-                      },
-                    ),
-                  ),
-                  const SpaceWidget(spaceWidth: 12),
-                  InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(4),
-                    child: Container(
-                        width: ResponsiveUtils.width(56),
-                        height: ResponsiveUtils.width(56),
-                        padding: const EdgeInsets.all(13),
-                        decoration: ShapeDecoration(
-                          color: AppColors.primaryBlue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                        ),
-                        child: const Center(
-                          child: IconWidget(
-                            height: 25,
-                            width: 25,
-                            icon: AppIconsPath.searchIcon,
-                          ),
-                        )),
-                  )
-                ],
               ),
+              const Center(
+                child: TextWidget(
+                  text: AppStrings.findWholeSaler,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontColor: AppColors.white,
+                ),
+              ),
+            ]),
+          ),
+          const SpaceWidget(spaceHeight: 16),
+
+          // Search Bar Section
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SearchBarWidget(
+                    controller: controller.searchController,
+                    hintText: 'Search by name, email or phone',
+                    maxLines: 1,
+                    onChanged: (query) {
+                      // controller.filterWholesalers(query);
+                      controller
+                          .filterWholesalers(controller.searchController.text);
+                    },
+                  ),
+                ),
+                const SpaceWidget(spaceWidth: 12),
+                InkWell(
+                  onTap: () {
+                    // controller
+                    //     .filterWholesalers(controller.searchController.text);
+                  },
+                  borderRadius: BorderRadius.circular(4),
+                  child: Container(
+                      width: ResponsiveUtils.width(56),
+                      height: ResponsiveUtils.width(56),
+                      padding: const EdgeInsets.all(13),
+                      decoration: ShapeDecoration(
+                        color: AppColors.primaryBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4)),
+                      ),
+                      child: const Center(
+                        child: IconWidget(
+                          height: 25,
+                          width: 25,
+                          icon: AppIconsPath.searchIcon,
+                        ),
+                      )),
+                )
+              ],
             ),
+          ),
 
-            const SpaceWidget(spaceHeight: 8),
+          const SpaceWidget(spaceHeight: 8),
 
-            // Filtered List of Wholesalers based on the search query
+          // Filtered List of Wholesalers based on the search query
 
-            Expanded(child: Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (controller.filteredWholesalers.isEmpty) {
-                return const Center(
-                    child: Text("There is no wholesaler found"));
-              }
-              return RefreshIndicator(
-                onRefresh: () => controller.fetchWholesalers(),
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  // shrinkWrap: true,
-                  itemCount: controller.filteredWholesalers.length,
-                  itemBuilder: (context, index) {
+          Expanded(child: Obx(() {
+            if (controller.isLoading.value && controller.wholesalers.isEmpty) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (controller.filteredWholesalers.isEmpty) {
+              return const Center(child: Text("There is no wholesaler found"));
+            }
+            return RefreshIndicator(
+              onRefresh: () => controller.fetchWholesalers(),
+              child: ListView.builder(
+                controller: controller.scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                // shrinkWrap: true,
+                itemCount: controller.filteredWholesalers.length +
+                    (controller.hasMore.value ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < controller.filteredWholesalers.length) {
                     final wholesaler = controller.filteredWholesalers[index];
                     final isCardSelected = controller.selectedItems.isEmpty
                         ? false
@@ -142,57 +180,63 @@ class RetailerFindWholeSellerScreen extends StatelessWidget {
                         },
                       ),
                     );
-                  },
-                ),
-              );
-            })),
+                  } else {
+                    // Loader at bottom while fetching next page
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                },
+              ),
+            );
+          })),
 
-            // Show send order button if items are selected
-            Obx(() {
-              int selectedCount =
-                  controller.selectedItems.where((item) => item).length;
-              return selectedCount > 0
-                  ? Container(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 10, bottom: 10),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryBlue,
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(12)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextWidget(
-                              text: "$selectedCount Selected",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              fontColor: AppColors.white),
-                          Obx(() => controller.isSendingOrder.value
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white)
-                              : ButtonWidget(
-                                  onPressed: () {
-                                    if (controller.selectedProductIds.isEmpty) {
-                                      Get.snackbar('No product selected',
-                                          'Please select the product');
-                                      return;
-                                    }
-                                    controller.showSendOrderDialog(context);
-                                  },
-                                  label: "Send",
-                                  backgroundColor: AppColors.white,
-                                  textColor: AppColors.primaryBlue,
-                                  buttonHeight: 40,
-                                  buttonWidth: 140,
-                                )),
-                        ],
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            }),
-          ],
-        ),
+          // Show send order button if items are selected
+          Obx(() {
+            int selectedCount =
+                controller.selectedItems.where((item) => item).length;
+            return selectedCount > 0
+                ? Container(
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primaryBlue,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextWidget(
+                            text: "$selectedCount Selected",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            fontColor: AppColors.white),
+                        Obx(() => controller.isSendingOrder.value
+                            ? const CircularProgressIndicator(
+                                color: Colors.white)
+                            : ButtonWidget(
+                                onPressed: () {
+                                  if (controller.selectedProductIds.isEmpty) {
+                                    Get.snackbar('No product selected',
+                                        'Please select the product');
+                                    return;
+                                  }
+                                  controller.showSendOrderDialog(context);
+                                },
+                                label: "Send",
+                                backgroundColor: AppColors.white,
+                                textColor: AppColors.primaryBlue,
+                                buttonHeight: 40,
+                                buttonWidth: 140,
+                              )),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink();
+          }),
+        ],
       ),
     );
   }

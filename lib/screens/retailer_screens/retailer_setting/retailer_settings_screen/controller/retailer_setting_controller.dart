@@ -21,7 +21,7 @@ class RetailerSettingController extends GetxController {
   }
 
   void share() {
-    AppInvitelink.invite();
+    AppCommonFunction.invite();
   }
 
   void termAndCondition() {

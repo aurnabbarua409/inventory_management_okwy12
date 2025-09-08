@@ -34,6 +34,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
   final RxList data = [].obs;
   // Observable quantity for increment and decrement
   var quantity = 1.obs;
+  final isEditing = <bool>[].obs;
   final RxList<Product> products = <Product>[].obs;
   //final RxList<Map<bool, int>> availableList = <Map<bool, int>>[].obs;
   final orderId = "".obs;
@@ -118,6 +119,7 @@ class WholesalerNewOrderDetailsController extends GetxController {
     } catch (e) {
       appLogger("failed to get new order details data: $e");
     }
+    isEditing.value = List.generate(products.length, (index) => false,);
   }
 
   void sendData(BuildContext context) async {

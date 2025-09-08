@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/utils/app_size.dart';
+import 'package:inventory_app/widgets/text_field_widget/text_field_widget.dart';
 
 class ItemCount extends StatefulWidget {
   final int initialValue;
@@ -20,17 +21,20 @@ class ItemCount extends StatefulWidget {
 
 class _ItemCountState extends State<ItemCount> {
   late int _currentValue;
+  final quantityController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _currentValue = widget.initialValue;
+    quantityController.text = _currentValue.toString();
   }
 
   void _increment() {
     setState(() {
       _currentValue += 1; // No max limit
     });
+
     widget.onChanged(_currentValue);
   }
 
@@ -45,6 +49,7 @@ class _ItemCountState extends State<ItemCount> {
 
   @override
   Widget build(BuildContext context) {
+    quantityController.text = _currentValue.toString();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -67,16 +72,28 @@ class _ItemCountState extends State<ItemCount> {
           ),
           // Counter Display (Now Displays Whole Numbers)
           Container(
-            width: ResponsiveUtils.width(70),
-            alignment: Alignment.center,
-            child: Text(
-              _currentValue.toString(), // Ensures integer display
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+              width: ResponsiveUtils.width(70),
+              alignment: Alignment.center,
+              child: TextFormField(
+                  decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(5),
+                      border: OutlineInputBorder()),
+                  controller: quantityController,
+                  keyboardType: const TextInputType.numberWithOptions(),
+                  onChanged: (value) {
+                    value.isNotEmpty
+                        ? _currentValue = int.parse(value)
+                        : _currentValue = widget.minValue;
+                    widget.onChanged(_currentValue);
+                  })
+              //  Text(
+              //   _currentValue.toString(), // Ensures integer display
+              //   style: const TextStyle(
+              //     fontSize: 16,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              // ),
               ),
-            ),
-          ),
           // Increment Button
           IconButton(
             icon: const Icon(Icons.add),

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
@@ -29,22 +28,24 @@ class FindWholesalerController extends GetxController {
   var selectedProductIds = <String>[];
   var pendingOrders = <Map<String, String>>[].obs;
 
-  final searchController = TextEditingController();
-  final RxBool isLoading = true.obs;
+  late TextEditingController searchController;
+  final RxBool isLoading = false.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchWholesalers();
+  late ScrollController scrollController;
+  final page = 1.obs;
+  final hasMore = true.obs;
 
-    // Bind search function
-    searchController.addListener(() {
-      filterWholesalers(searchController.text);
-    });
+  void onScroll() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
+      fetchWholesalers();
+    }
   }
 
   // Fetch wholesalers from the API
   Future<void> fetchWholesalers() async {
+    if (isLoading.value || !hasMore.value) return;
+
     try {
       String? token = await PrefsHelper.getToken();
       if (token.isEmpty) {
@@ -52,24 +53,26 @@ class FindWholesalerController extends GetxController {
         return;
       }
       isLoading.value = true;
-      var response = await ApiService.getApi(Urls.getWholesaler);
+      var response =
+          await ApiService.getApi("${Urls.getWholesaler}?page=${page.value}");
       isLoading.value = false;
       appLogger(response);
       if (response != null) {
         final mGetWholesalers = MGetWholesalers.fromJson(response);
-        if (kDebugMode) {
-          print(response);
-          appLogger(mGetWholesalers.success);
-          appLogger(mGetWholesalers.data);
-        }
 
         if (mGetWholesalers.success) {
           appLogger("data is coming from wholesaler");
-          wholesalers.assignAll(mGetWholesalers.data);
-          filteredWholesalers.assignAll(
-              mGetWholesalers.data); // Assign all to filtered list initially
-          selectedItems.clear();
-          selectedItems.addAll(List.generate(wholesalers.length, (_) => false));
+          if (mGetWholesalers.data.isEmpty) {
+            hasMore.value = false; // no more data
+          } else {
+            wholesalers.addAll(mGetWholesalers.data);
+            filteredWholesalers.addAll(
+                mGetWholesalers.data); // Assign all to filtered list initially
+            page.value++;
+            selectedItems.clear();
+            selectedItems
+                .addAll(List.generate(wholesalers.length, (_) => false));
+          }
         } else {
           Get.snackbar('Error', mGetWholesalers.message);
         }
@@ -333,6 +336,8 @@ class FindWholesalerController extends GetxController {
 
   Future<void> sendOrder(BuildContext context) async {
     List<String> selectedWholesalerIds = [];
+    // final args = Get.arguments;
+    // selectedProductIds = args['selectedProductIds'];
 
     for (int i = 0; i < filteredWholesalers.length; i++) {
       if (selectedItems[i]) {

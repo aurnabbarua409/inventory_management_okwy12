@@ -207,7 +207,7 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
                       const SpaceWidget(spaceWidth: 4),
                       TextButtonWidget(
                         onPressed: () {
-                          AppInvitelink.invite();
+                          AppCommonFunction.invite();
                         },
                         text: AppStrings.clickHere,
                         textColor: AppColors.primaryBlue,

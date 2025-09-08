@@ -1,7 +1,6 @@
 import 'dart:io';
+import 'dart:math';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -166,11 +165,6 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
   //   }
   // }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<pw.MemoryImage> _loadImageFromAssets(String path) async {
     final data = await rootBundle.load(path);
     return pw.MemoryImage(data.buffer.asUint8List());
@@ -179,245 +173,165 @@ class ConfirmedOrderDetailsHistoryController extends GetxController {
   Future<void> generatePdf() async {
     final pdf = pw.Document();
 
-    final fontRegular =
-        await rootBundle.load("assets/fonts/Poppins-Regular.ttf");
-    final fontBold = await rootBundle.load("assets/fonts/Poppins-Bold.ttf");
+    // final fontRegular =
+    //     await rootBundle.load("assets/fonts/Poppins-Regular.ttf");
+    // final fontBold = await rootBundle.load("assets/fonts/Poppins-Bold.ttf");
 
-    final ttfRegular = pw.Font.ttf(fontRegular);
-    final ttfBold = pw.Font.ttf(fontBold);
+    // final ttfRegular = pw.Font.ttf(fontRegular);
+    // final ttfBold = pw.Font.ttf(fontBold);
     var totalPrice = 0.0;
     final pw.MemoryImage currencyIcon =
         await _loadImageFromAssets("assets/images/currencyIcon.png");
-    List<List<dynamic>> tableData = [];
+    List<List<String>> tableData = [];
 
     for (int i = 0; i < product.length; i++) {
       tableData.add([
-        i + 1,
-        product[i].productName,
-        product[i].quantity,
-        product[i].unit,
-        product[i].price,
-        (product[i].price! * product[i].quantity!)
+        (i + 1).toString(),
+        product[i].productName ?? "N/A",
+        product[i].quantity.toString(),
+        product[i].unit ?? "pics",
+        product[i].price.toString(),
+        ((product[i].price ?? 0) * (product[i].quantity ?? 1)).toString()
       ]);
-      totalPrice += (product[i].price! * product[i].quantity!);
+      totalPrice += ((product[i].price ?? 0) * (product[i].quantity ?? 1));
     }
     try {
-      pdf.addPage(pw.Page(
-        build: (context) {
-          return pw.Column(children: [
-            pw.Text("Invoice",
-                textAlign: pw.TextAlign.center,
-                style:
-                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 25)),
-            pw.Row(children: [
-              pw.Text(
-                  confirmedData.value?.id!
-                          .substring(confirmedData.value!.id!.length - 7) ??
-                      "N/A",
-                  style: pw.TextStyle(fontStyle: pw.FontStyle.italic)),
-              pw.Spacer(),
-              pw.Text(
-                  confirmedData.value!.updatedAt != null
-                      ? DateFormat('yyyy-MM-dd EEE hh:mm a').format(
-                          DateTime.parse(
-                              confirmedData.value!.updatedAt.toString()))
-                      : "N/A",
-                  style: pw.TextStyle(fontStyle: pw.FontStyle.italic))
-            ]),
-            pw.SizedBox(height: 20),
-            pw.Container(
-                width: double.infinity,
-                color: PdfColors.grey300,
-                child: pw.Text("Retailer Details",
-                    style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold, fontSize: 15))),
-            pw.Row(children: [
-              pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Text(
-                  confirmedData
-                          .value?.retailer?.storeInformation?.businessname ??
-                      "N/A",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.Row(children: [
-              pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Text(
-                  confirmedData.value?.retailer?.storeInformation?.location ??
-                      "N/A",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.Row(children: [
-              pw.Text("Phone:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.retailer?.phone ?? "N/A",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.SizedBox(height: 15),
-            pw.Container(
-                width: double.infinity,
-                color: PdfColors.grey300,
-                child: pw.Text("Wholesaler Details",
-                    style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold, fontSize: 15))),
-            pw.Row(children: [
-              pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Text(
-                  confirmedData
-                          .value?.wholesaler?.storeInformation?.businessname ??
-                      "N/A",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.Row(children: [
-              pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Text(
-                  confirmedData.value?.wholesaler?.storeInformation?.location ??
-                      "N/A",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.Row(children: [
-              pw.Text("Phone:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Text(confirmedData.value?.wholesaler?.phone ?? "N/A",
-                  style: const pw.TextStyle(fontSize: 15))
-            ]),
-            pw.SizedBox(height: 15),
-            pw.TableHelper.fromTextArray(
-                headers: ['SI', 'Product', 'Qty', 'Unit', 'Price', 'Total'],
-                data: tableData,
-                headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                headerDecoration:
-                    const pw.BoxDecoration(color: PdfColors.grey300),
-                cellAlignment: pw.Alignment.center),
-            // pw.Container(
-            //     width: double.infinity,
-            //     color: PdfColors.grey300,
-            //     child: pw.Row(children: [
-            //       pw.Text("SI", style: const pw.TextStyle(fontSize: 15)),
-            //       pw.Spacer(),
-            //       pw.Text("Product", style: const pw.TextStyle(fontSize: 15)),
-            //       pw.Spacer(),
-            //       pw.Text("Qty", style: const pw.TextStyle(fontSize: 15)),
-            //       pw.Spacer(),
-            //       pw.Text("Unit", style: const pw.TextStyle(fontSize: 15)),
-            //       pw.Spacer(),
-            //       pw.Text("Price", style: const pw.TextStyle(fontSize: 15)),
-            //       pw.Spacer(),
-            //       pw.Text("Total", style: const pw.TextStyle(fontSize: 15)),
-            //     ])),
-            // for (int i = 0; i < confirmedData.value!.product!.length; i++)
-            //   pw.Row(children: [
-            //     pw.Text("${i + 1}", style: const pw.TextStyle(fontSize: 15)),
-            //     pw.Spacer(),
-            //     pw.Text(confirmedData.value?.product?[i].productName ?? "N/A",
-            //         style: const pw.TextStyle(fontSize: 15)),
-            //     pw.Spacer(),
-            //     pw.Text(
-            //         confirmedData.value?.product?[i].quantity.toString() ?? "0",
-            //         style: const pw.TextStyle(fontSize: 15)),
-            //     pw.Spacer(),
-            //     pw.Text(confirmedData.value?.product?[i].unit ?? "Kg",
-            //         style: const pw.TextStyle(fontSize: 15)),
-            //     pw.Spacer(),
-            //     pw.Text("${confirmedData.value?.product?[i].price ?? 0}",
-            //         style: const pw.TextStyle(fontSize: 15)),
-            //     pw.Spacer(),
-            //     pw.Text(
-            //         "${(confirmedData.value?.product![i].quantity ?? 0) * (confirmedData.value!.product![i].price ?? 0)}",
-            //         style: const pw.TextStyle(fontSize: 15)),
-            //   ]),
-            pw.SizedBox(height: 15),
-
-            pw.Row(children: [
-              pw.Text("Grand Total:", style: const pw.TextStyle(fontSize: 15)),
-              pw.SizedBox(width: 10),
-              pw.Image(currencyIcon, height: 12, width: 12),
-              pw.Text("$totalPrice", style: const pw.TextStyle(fontSize: 15))
-            ]),
-          ]);
-        },
-      ));
-
-      // pdf.addPage(
-      //   pw.Page(
-      //     build: (pw.Context context) {
-      //       return pw.Column(
-      //         children: [
-      //           pw.Text(
-      //             'Confirmed Orders',
-      //             style: pw.TextStyle(
-      //                 fontSize: 24,
-      //                 fontWeight: pw.FontWeight.bold,
-      //                 font: ttfBold),
-      //           ),
-      //           pw.SizedBox(height: 10),
-      //           // Loop through the orders and create a table
-      //           pw.ListView.builder(
-      //             itemCount: ordersConfirmed.length,
-      //             itemBuilder: (context, index) {
-      //               var order = ordersConfirmed[index];
-      //               return pw.Column(
-      //                 crossAxisAlignment: pw.CrossAxisAlignment.start,
-      //                 children: [
-      //                   pw.Text('Order ID: ${order.id}',
-      //                       style: pw.TextStyle(
-      //                           fontSize: 24,
-      //                           fontWeight: pw.FontWeight.normal,
-      //                           font: ttfRegular)),
-      //                   pw.Text('Retailer: ${order.retailer?.name}',
-      //                       style: pw.TextStyle(
-      //                           fontSize: 24,
-      //                           fontWeight: pw.FontWeight.bold,
-      //                           font: ttfBold)),
-      //                   pw.Text('Status: ${order.status}',
-      //                       style: pw.TextStyle(
-      //                           fontSize: 24,
-      //                           fontWeight: pw.FontWeight.bold,
-      //                           font: ttfBold)),
-      //                   pw.Text(
-      //                       'Created At: ${DateFormat('yyyy-MM-dd hh:mm a').format(
-      //                         order.createdAt ?? DateTime.now(),
-      //                       )}',
-      //                       style: pw.TextStyle(
-      //                           fontSize: 24,
-      //                           fontWeight: pw.FontWeight.bold,
-      //                           font: ttfBold)),
-      //                   pw.SizedBox(height: 5),
-      //                   pw.Text('Products:'),
-      //                   pw.ListView.builder(
-      //                     itemCount: order.product.length,
-      //                     itemBuilder: (context, productIndex) {
-      //                       var product = order.product[productIndex];
-      //                       return pw.Text(
-      //                           'Product: ${product.productId.name}, Price: ${product.price}');
-      //                     },
-      //                   ),
-      //                   pw.SizedBox(height: 15),
-      //                 ],
-      //               );
-      //             },
-      //           ),
-      //         ],
-      //       );
-      //     },
-      //   ),
-      // );
+      for (int i = 0; i < tableData.length; i = i == 0 ? i + 18 : i + 26) {
+        final endIndex = min(i == 0 ? i + 18 : i + 26, tableData.length);
+        pdf.addPage(pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (context) {
+            return pw.Column(children: [
+              pw.Text("Invoice",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold, fontSize: 25)),
+              pw.Row(children: [
+                pw.Text(
+                    confirmedData.value?.id!
+                            .substring(confirmedData.value!.id!.length - 7) ??
+                        "N/A",
+                    style: pw.TextStyle(fontStyle: pw.FontStyle.italic)),
+                pw.Spacer(),
+                pw.Text(
+                    confirmedData.value!.updatedAt != null
+                        ? DateFormat('yyyy-MM-dd EEE hh:mm a').format(
+                            DateTime.parse(
+                                confirmedData.value!.updatedAt.toString()))
+                        : "N/A",
+                    style: pw.TextStyle(fontStyle: pw.FontStyle.italic))
+              ]),
+              pw.SizedBox(height: 20),
+              if (i < 18) ...[
+                pw.Container(
+                    width: double.infinity,
+                    color: PdfColors.grey300,
+                    child: pw.Text("Retailer Details",
+                        style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold, fontSize: 15))),
+                pw.Row(children: [
+                  pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
+                  pw.SizedBox(width: 10),
+                  pw.Text(
+                      confirmedData.value?.retailer?.storeInformation
+                              ?.businessname ??
+                          "N/A",
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.Row(children: [
+                  pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
+                  pw.SizedBox(width: 10),
+                  pw.Text(
+                      confirmedData
+                              .value?.retailer?.storeInformation?.location ??
+                          "N/A",
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.Row(children: [
+                  pw.Text("Phone:", style: const pw.TextStyle(fontSize: 15)),
+                  pw.SizedBox(width: 10),
+                  pw.Text(confirmedData.value?.retailer?.phone ?? "N/A",
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.SizedBox(height: 15),
+                pw.Container(
+                    width: double.infinity,
+                    color: PdfColors.grey300,
+                    child: pw.Text("Wholesaler Details",
+                        style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold, fontSize: 15))),
+                pw.Row(children: [
+                  pw.Text("Name:", style: const pw.TextStyle(fontSize: 15)),
+                  pw.SizedBox(width: 10),
+                  pw.Text(
+                      confirmedData.value?.wholesaler?.storeInformation
+                              ?.businessname ??
+                          "N/A",
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.Row(children: [
+                  pw.Text("Address:", style: const pw.TextStyle(fontSize: 15)),
+                  pw.SizedBox(width: 10),
+                  pw.Text(
+                      confirmedData
+                              .value?.wholesaler?.storeInformation?.location ??
+                          "N/A",
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.Row(children: [
+                  pw.Text("Phone:", style: const pw.TextStyle(fontSize: 15)),
+                  pw.SizedBox(width: 10),
+                  pw.Text(confirmedData.value?.wholesaler?.phone ?? "N/A",
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.SizedBox(height: 15),
+                pw.Row(children: [
+                  pw.Spacer(),
+                  pw.Text("Grand Total:",
+                      style: pw.TextStyle(
+                          fontSize: 15, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(width: 10),
+                  pw.Image(currencyIcon, height: 12, width: 12),
+                  pw.Text(formatPrice(totalPrice),
+                      style: const pw.TextStyle(fontSize: 15))
+                ]),
+                pw.SizedBox(height: 15),
+              ],
+              pw.TableHelper.fromTextArray(
+                  headers: ['SI', 'Product', 'Qty', 'Unit', 'Price', 'Total'],
+                  data: tableData.sublist(i, endIndex),
+                  headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                  headerDecoration:
+                      const pw.BoxDecoration(color: PdfColors.grey300),
+                  cellAlignment: pw.Alignment.center),
+            ]);
+          },
+        ));
+      }
 
       // Get the directory to save the PDF
       final output = await getTemporaryDirectory();
       final file = File('${output.path}/confirmed_orders.pdf');
-
+      appLogger("File generated suucessfully: ${file.path}");
       // Save the PDF to the file
-      await file.writeAsBytes(await pdf.save());
+      final pdfBytes = await pdf.save();
+      appLogger("PDF byte length: ${pdfBytes.length}");
 
+      if (pdfBytes.isEmpty) {
+        appLogger("PDF is empty — likely an error during generation");
+      } else {
+        await file.writeAsBytes(pdfBytes);
+        final result = await OpenFile.open(file.path);
+        appLogger("OpenFile result: ${result.message}");
+      }
+
+      appLogger("File saved");
       // Optionally, open the PDF file
       await OpenFile.open(file.path);
     } catch (e) {
       Get.snackbar('Error', 'Failed to generate PDF: $e');
-      debugPrint("Error generating PDF: $e");
+      appLogger("Error in confirm order generate page: $e");
+      // debugPrint("Error generating PDF: $e");
     }
   }
 }

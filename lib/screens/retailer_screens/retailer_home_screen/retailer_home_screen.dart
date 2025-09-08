@@ -130,7 +130,7 @@ class RetailerHomeScreen extends StatelessWidget {
                     onTap: () {
                       // Register the controller before navigating to the screen
 
-                      Get.put(RetailerSavedOrderScreenController());
+                      // Get.put(RetailerSavedOrderScreenController());
                       // Register the controller
                       Get.toNamed(AppRoutes.retailerSavedOrderScreen);
 
@@ -168,7 +168,7 @@ class RetailerHomeScreen extends StatelessWidget {
                       const SpaceWidget(spaceWidth: 4),
                       TextButtonWidget(
                         onPressed: () async {
-                          AppInvitelink.invite();
+                          AppCommonFunction.invite();
                         },
                         text: AppStrings.clickHere,
                         textColor: AppColors.primaryBlue,

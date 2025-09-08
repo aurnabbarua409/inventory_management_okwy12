@@ -113,7 +113,6 @@ class SignInScreenController extends GetxController {
     PrefsHelper.setString('email', email);
     PrefsHelper.setBool("isLogIn", true);
 
-
     debugPrint("User Role: ======================> $role");
     debugPrint("User ID: ======================> $userId");
     debugPrint("User Email: ======================> $email");
@@ -132,7 +131,7 @@ class SignInScreenController extends GetxController {
         arguments: {'userRole': role, 'userId': userId});
 
     // Clear input fields
-        await PrefsHelper.getAllPrefData();
+    await PrefsHelper.getAllPrefData();
 
     emailController.clear();
     passwordController.clear();

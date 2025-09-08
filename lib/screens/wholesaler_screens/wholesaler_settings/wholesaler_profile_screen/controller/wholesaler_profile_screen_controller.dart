@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_invitelink.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
@@ -140,7 +143,24 @@ class WholesalerProfileScreenController extends GetxController {
           pickImage(ImageSource.camera);
         },
       ),
+      ListTile(
+        leading: const Icon(
+          Icons.remove_circle,
+          color: AppColors.red,
+        ),
+        title: const Text('Remove Profile Picture'),
+        onTap: () {
+          removeProfilePic();
+          Get.back();
+        },
+      ),
     ]);
+  }
+
+  Future<void> removeProfilePic() async {
+    imageFile.value =
+        await AppCommonFunction.getAssetAsFile(AppImagesPath.profileImage);
+    image.value = AppImagesPath.profileImage;
   }
 
   /// Pick an Image from the gallery or camera
@@ -228,7 +248,8 @@ class WholesalerProfileScreenController extends GetxController {
         // final data = ProfileModel.fromJson(response);
         // appLogger(data.data.email);
         // final data = WholeSalerDetails.fromJson(response["data"]);
-        userName.value = response["data"]["name"] ?? "";
+        userName.value =
+            response["data"]["storeInformation"]["businessName"] ?? "";
         fullNameController.text = response["data"]["name"] ?? "";
         businessNameController.text =
             response["data"]["storeInformation"]["businessName"] ?? "";

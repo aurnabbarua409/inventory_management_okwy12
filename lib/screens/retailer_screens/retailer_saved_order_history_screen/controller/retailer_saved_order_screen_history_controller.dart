@@ -651,7 +651,11 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
   Future<bool> updateProduct(String id) async {
     try {
       final url = Urls.updateSingleProduct + id;
-      final body = {"status": false};
+      final body = {
+        "status": false,
+        "price": 0,
+        "availability": false,       
+      };
       final response = await ApiService.patchApi(url, body);
       fetchOrders();
       final success = response['success'] ?? false;
@@ -668,6 +672,7 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
       return false;
     }
   }
+
 
   @override
   void onClose() {

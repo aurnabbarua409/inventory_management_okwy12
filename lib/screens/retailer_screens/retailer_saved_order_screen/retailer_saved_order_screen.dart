@@ -146,7 +146,7 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                                     spaceWidth: 3,
                                   ),
                                   Text(
-                                    'History',
+                                    'Restore List',
                                     style: TextStyle(
                                         color: AppColors.primaryBlue,
                                         fontWeight: FontWeight.w500),
@@ -171,6 +171,13 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                       child: ListView(
                         children: [
                           // Header Row
+                          const Text(
+                            "Select items to send",
+                            textAlign: TextAlign.center,
+                          ),
+                          const SpaceWidget(
+                            spaceHeight: 20,
+                          ),
                           Container(
                             color: AppColors.headerColor,
                             padding: const EdgeInsets.symmetric(vertical: 4),

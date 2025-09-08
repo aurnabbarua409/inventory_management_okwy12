@@ -2,15 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:inventory_app/constants/app_colors.dart';
+import 'package:inventory_app/constants/app_images_path.dart';
+import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/retailer_settings/retailer_profile/retailer_get_profile_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_invitelink.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../../../../utils/app_enum.dart';
 import '../../../../../widgets/popup_widget/popup_widget.dart';
 
@@ -92,7 +98,8 @@ class ProfileScreenController extends GetxController {
       //       "====================================================================>");
       // }
       // Populate Controllers with Data
-      userName.value = response["data"]["name"] ?? "";
+      userName.value =
+          response["data"]["storeInformation"]["businessName"] ?? "";
       fullNameController.text = response["data"]["name"] ?? "";
       businessNameController.text =
           response["data"]["storeInformation"]["businessName"] ?? "";
@@ -145,7 +152,7 @@ class ProfileScreenController extends GetxController {
         // You can update this to dynamically pass image URL
         if (phoneNumber.value.isNotEmpty) "phone": phoneNumber.value,
       };
-
+      appLogger("Selected image: ${imageFile.value?.path}");
       // try {
       // Call the patchApi function with the body data
       // var response = await ApiService.patchApi(Urls.userProfile, body);
@@ -244,7 +251,24 @@ class ProfileScreenController extends GetxController {
           pickImage(ImageSource.camera);
         },
       ),
+      ListTile(
+        leading: const Icon(
+          Icons.remove_circle,
+          color: AppColors.red,
+        ),
+        title: const Text('Remove Profile Picture'),
+        onTap: () {
+          removeProfilePic();
+          Get.back();
+        },
+      ),
     ]);
+  }
+
+  Future<void> removeProfilePic() async {
+    imageFile.value =
+        await AppCommonFunction.getAssetAsFile(AppImagesPath.profileImage);
+    image.value = AppImagesPath.profileImage;
   }
 
   /// Pick Image from Gallery or Camera

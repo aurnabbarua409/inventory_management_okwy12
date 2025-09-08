@@ -35,6 +35,48 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
 
     return Scaffold(
       backgroundColor: AppColors.whiteLight,
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: ButtonWidget(
+            buttonWidth: double.infinity,
+            label: "Confirm",
+            backgroundColor: AppColors.primaryBlue,
+            onPressed: () {
+              List<bool> isavailable = List.generate(
+                receivedController.products.length,
+                (index) => true,
+              );
+              for (int i = 0; i < receivedController.products.length; i++) {
+                if (!(receivedController.products[i].availability ?? true)) {
+                  isavailable[i] = false;
+                }
+              }
+              if (isavailable.every((available) => available == false)) {
+                Get.snackbar('Nothing is available right now!',
+                    'You can not confirm now');
+                return;
+              }
+              if (receivedController.isEditing
+                  .any((isEditing) => isEditing == true)) {
+                Get.snackbar(
+                  'Hold on!',
+                  'You have unsaved changes. Please save them before confirming.',
+                  snackPosition: SnackPosition.TOP,
+                );
+
+                return;
+              }
+              if (receivedController.formKey.currentState!.validate()) {
+                receivedController.send();
+                Get.back();
+
+                // Get.back();
+              } else {
+                Get.snackbar('Error', 'Please enter valid quantities');
+              }
+            }),
+      ),
       body: Center(
         child: Column(
           children: [
@@ -136,53 +178,6 @@ class _RetailerReceivedPriceDetailsHistoryScreenState
                     ],
                   )),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: ButtonWidget(
-                  buttonWidth: double.infinity,
-                  label: "Confirm",
-                  backgroundColor: AppColors.primaryBlue,
-                  onPressed: () {
-                    List<bool> isavailable = List.generate(
-                      receivedController.products.length,
-                      (index) => true,
-                    );
-                    for (int i = 0;
-                        i < receivedController.products.length;
-                        i++) {
-                      if (!(receivedController.products[i].availability ??
-                          true)) {
-                        isavailable[i] = false;
-                      }
-                    }
-                    if (isavailable.every((available) => available == false)) {
-                      Get.snackbar('Nothing is available right now!',
-                          'You can not confirm now');
-                      return;
-                    }
-                    if (receivedController.isEditing
-                        .any((isEditing) => isEditing == true)) {
-                      Get.snackbar(
-                        'Hold on!',
-                        'You have unsaved changes. Please save them before confirming.',
-                        snackPosition: SnackPosition.TOP,
-                      );
-
-                      return;
-                    }
-                    if (receivedController.formKey.currentState!.validate()) {
-                      receivedController.send();
-                      Get.back();
-
-                      // Get.back();
-                    } else {
-                      Get.snackbar('Error', 'Please enter valid quantities');
-                    }
-                  }),
-            ),
-            const SpaceWidget(
-              spaceHeight: 30,
-            )
           ],
         ),
       ),
