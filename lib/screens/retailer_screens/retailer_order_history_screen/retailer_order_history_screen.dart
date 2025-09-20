@@ -10,12 +10,9 @@ import 'package:inventory_app/screens/widgets/photo_viewer_widget.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_size.dart';
-import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
-import 'package:inventory_app/widgets/image_widget/image_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import '../../../widgets/icon_button_widget/icon_button_widget.dart';
-import 'package:photo_view/photo_view.dart';
 
 class RetailerOrderHistoryScreen extends StatefulWidget {
   const RetailerOrderHistoryScreen({super.key});
@@ -28,13 +25,6 @@ class RetailerOrderHistoryScreen extends StatefulWidget {
 class _RetailerOrderHistoryScreenState
     extends State<RetailerOrderHistoryScreen> {
   final controller = Get.put(RetailerOrderHistoryController());
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    controller.initalize();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +83,9 @@ class _RetailerOrderHistoryScreenState
               child: Obx(() {
                 appLogger(
                     "pending: ${controller.pendingOrders.length}, received: ${controller.receivedOrders.length}, confirm: ${controller.confirmedOrders}");
-                if (controller.isLoading.value) {
+                if (controller.isLoadingPending.value ||
+                    controller.isLoadingPending.value ||
+                    controller.isLoadingConfirmed.value) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   return OrdersTabView(

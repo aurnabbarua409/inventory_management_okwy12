@@ -10,7 +10,7 @@ import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
-import 'package:inventory_app/utils/app_invitelink.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 

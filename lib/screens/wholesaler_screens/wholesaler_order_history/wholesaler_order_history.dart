@@ -34,13 +34,6 @@ class _WholesalerOrderHistoryScreenState
   final controller = Get.put(WholesalerOrderHistoryController());
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    controller.initialize();
-  }
-
-  @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context); // Initialize the screen dimensions
 
@@ -105,7 +98,9 @@ class _WholesalerOrderHistoryScreenState
             SizedBox(height: ResponsiveUtils.height(16)), // Responsive spacing
             Expanded(
               child: Obx(
-                () => controller.isLoading.value
+                () => controller.isLoadingNewOrder.value ||
+                        controller.isLoadingPendingOrder.value ||
+                        controller.isLoadingConfirmedOrder.value
                     ? const Center(child: CircularProgressIndicator())
                     : WholesalerTabView(
                         onRefresh: () => controller.initialize(),

@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:inventory_app/constants/app_colors.dart';
-import 'package:inventory_app/helpers/prefs_helper.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_model.dart'
-    as getPending;
-import 'package:inventory_app/models/new_version/update_product_model.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 
 class RetailerPendingOrderDetailsHistoryController extends GetxController {
   var token = ''.obs;
@@ -22,15 +17,15 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
   var isListening = false.obs;
   var lastWords = ''.obs;
   // Update orders list type to match the new model
-  RxList<MPendingOrders> orders = <MPendingOrders>[].obs;
+  // RxList<MPendingOrders> orders = <MPendingOrders>[].obs;
 
   // TextEditingControllers for the fields
   final productNameController = TextEditingController();
   final unitController = TextEditingController();
   final additionalInfoController = TextEditingController();
   final RxInt quantity = 0.obs;
-  final RxList<Product> productList = <Product>[].obs;
-  final RxList<getPending.Product> products = <getPending.Product>[].obs;
+  // final RxList<Product> productList = <Product>[].obs;
+  final RxList<Product> products = <Product>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -154,20 +149,6 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
 
   var selectedUnit = 'Kg'.obs;
 
-  final List<String> units = [
-    'Kg',
-    'Pcs',
-    'Roll',
-    'Crate',
-    'Bottle',
-    'Carton',
-    'Gal',
-    'Bag',
-    'Pkt',
-    'Cup',
-    'Other',
-  ];
-
   // Decrement the quantity (minimum is 1)
   void decrementQuantity() {
     if (quantity.value > 1) {
@@ -224,12 +205,12 @@ class RetailerPendingOrderDetailsHistoryController extends GetxController {
         "quantity": quantity.value,
         "additionalInfo": additionalInfoController.text
       });
-      final index = products.indexWhere((p) => p.id == id);
+      final index = products.indexWhere((p) => p.id!.id == id);
       if (index != -1) {
-        products[index].productName = productNameController.text;
-        products[index].unit = selectedUnit.value;
-        products[index].quantity = quantity.value;
-        products[index].additionalInfo = additionalInfoController.text;
+        products[index].id?.productName = productNameController.text;
+        products[index].id?.unit = selectedUnit.value;
+        products[index].id?.quantity = quantity.value;
+        products[index].id?.additionalInfo = additionalInfoController.text;
         // update();
         products.refresh();
       }

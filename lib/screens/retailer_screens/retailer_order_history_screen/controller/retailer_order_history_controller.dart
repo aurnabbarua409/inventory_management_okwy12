@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/new_version/get_confirm_model.dart';
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_wholesaler_model.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/services/repository/retailer/retailer_repo.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -25,17 +23,21 @@ class RetailerOrderHistoryController extends GetxController {
   RetailerRepo retailerRepo = RetailerRepo();
 
   RxBool isLoading = false.obs;
-  RxList<GetPendingOrderModel> pendingOrders = <GetPendingOrderModel>[].obs;
-  RxList<GetPendingOrderModel> receivedOrders = <GetPendingOrderModel>[].obs;
+  RxList<GetNewOrderModel> pendingOrders = <GetNewOrderModel>[].obs;
+  RxList<GetNewOrderModel> receivedOrders = <GetNewOrderModel>[].obs;
   // RxList<Confirmed> confirmedOrders = <Confirmed>[].obs;
-  RxList<GetPendingOrderModel> confirmedOrders = <GetPendingOrderModel>[].obs;
+  RxList<GetNewOrderModel> confirmedOrders = <GetNewOrderModel>[].obs;
   Timer? refreshTimer;
+
+  final isLoadingPending = false.obs;
+  final isLoadingReceived = false.obs;
+  final isLoadingConfirmed = false.obs;
 
   Future<void> fetchPendingOrders() async {
     update();
     // pendingOrders.clear();
     appLogger("trying to fetch orders");
-    isLoading.value = true; // Show loading indicator
+    isLoadingPending.value = true; // Show loading indicator
 
     try {
       var data = await retailerRepo.getRetailers();
@@ -44,7 +46,7 @@ class RetailerOrderHistoryController extends GetxController {
     } catch (e) {
       appLogger(e);
     } finally {
-      isLoading.value = false; // Hide loading indicator
+      isLoadingPending.value = false; // Hide loading indicator
     }
   }
 
@@ -52,7 +54,7 @@ class RetailerOrderHistoryController extends GetxController {
   Future<void> fetchReceivedOrders() async {
     update();
     //  receivedOrders.clear();
-    isLoading.value = true; // Show loading indicator
+    isLoadingReceived.value = true; // Show loading indicator
     try {
       var recievedData = await retailerRepo.getRecieved();
       appLogger("fetching received data: $recievedData");
@@ -63,7 +65,7 @@ class RetailerOrderHistoryController extends GetxController {
     } catch (e) {
       appLogger(e);
     } finally {
-      isLoading.value = false; // Hide loading indicator
+      isLoadingReceived.value = false; // Hide loading indicator
     }
   }
 
@@ -71,7 +73,7 @@ class RetailerOrderHistoryController extends GetxController {
   Future<void> fetchConfirmedOrders() async {
     update();
 
-    isLoading.value = true; // Show loading indicator
+    isLoadingConfirmed.value = true; // Show loading indicator
     try {
       var data = await retailerRepo.getConfirmed();
       appLogger("Fetching confirm order from retailer: $data");
@@ -79,7 +81,7 @@ class RetailerOrderHistoryController extends GetxController {
     } catch (e) {
       appLogger("Error in fetching confirm order data: $e");
     } finally {
-      isLoading.value = false; // Hide loading indicator
+      isLoadingConfirmed.value = false; // Hide loading indicator
     }
   }
 
@@ -179,6 +181,13 @@ class RetailerOrderHistoryController extends GetxController {
     fetchPendingOrders();
     fetchReceivedOrders();
     fetchConfirmedOrders();
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    initalize();
   }
 
   @override

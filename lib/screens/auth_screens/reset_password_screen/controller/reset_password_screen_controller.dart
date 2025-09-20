@@ -15,6 +15,7 @@ class ResetPasswordScreenController extends GetxController {
   void resetPassword() async {
     if (newPasswordController.text.isEmpty ||
         confirmPasswordController.text.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar(
         'Error',
         'Please fill in both password fields',
@@ -23,6 +24,7 @@ class ResetPasswordScreenController extends GetxController {
         colorText: AppColors.white,
       );
     } else if (newPasswordController.text != confirmPasswordController.text) {
+      Get.closeAllSnackbars();
       Get.snackbar(
         'Error',
         'Passwords do not match',
@@ -48,9 +50,11 @@ class ResetPasswordScreenController extends GetxController {
             },
             header: mainHeader);
         if (response["success"]) {
+          Get.closeAllSnackbars();
           Get.snackbar("Success", response["message"]);
           Get.toNamed(AppRoutes.signinScreen);
         } else {
+          Get.closeAllSnackbars();
           Get.snackbar("Error", response["message"]);
         }
         appLogger(response);

@@ -1,3 +1,4 @@
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -5,8 +6,8 @@ import 'package:inventory_app/utils/app_urls.dart';
 
 class RetailerRepo {
   ApiService apiService = ApiService();
-  Future<List<GetPendingOrderModel>> getRetailers() async {
-    List<GetPendingOrderModel> retailers = [];
+  Future<List<GetNewOrderModel>> getRetailers() async {
+    List<GetNewOrderModel> retailers = [];
     int page = 1;
     bool hasmore = true;
     try {
@@ -25,7 +26,7 @@ class RetailerRepo {
               appLogger("retailer pending data: $element");
               // appLogger("sarah");
               // appLogger(element.runtimeType);
-              retailers.add(GetPendingOrderModel.fromJson(element));
+              retailers.add(GetNewOrderModel.fromJson(element));
             }
           }
 
@@ -43,8 +44,8 @@ class RetailerRepo {
     return retailers;
   }
 
-  Future<List<GetPendingOrderModel>> getRecieved() async {
-    List<GetPendingOrderModel> recieved = [];
+  Future<List<GetNewOrderModel>> getRecieved() async {
+    List<GetNewOrderModel> recieved = [];
     int page = 1;
     bool hasmore = true;
     try {
@@ -59,7 +60,7 @@ class RetailerRepo {
           }
           if (response['data'] != null && response['data'] is List) {
             for (var elementReceived in response['data']) {
-              recieved.add(GetPendingOrderModel.fromJson(elementReceived));
+              recieved.add(GetNewOrderModel.fromJson(elementReceived));
             }
           }
         }
@@ -103,8 +104,8 @@ class RetailerRepo {
 
   //   return ;
   // }
-  Future<List<GetPendingOrderModel>> getConfirmed() async {
-    List<GetPendingOrderModel> confirmed = [];
+  Future<List<GetNewOrderModel>> getConfirmed() async {
+    List<GetNewOrderModel> confirmed = [];
     int page = 1;
     bool hasmore = true;
     try {
@@ -119,7 +120,7 @@ class RetailerRepo {
           }
           if (response['data'] != null && response['data'] is List) {
             for (var elementReceived in response['data']) {
-              confirmed.add(GetPendingOrderModel.fromJson(elementReceived));
+              confirmed.add(GetNewOrderModel.fromJson(elementReceived));
             }
           }
         }

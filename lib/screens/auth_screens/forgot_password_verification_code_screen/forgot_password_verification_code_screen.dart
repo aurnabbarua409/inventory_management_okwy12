@@ -8,7 +8,6 @@ import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_button_widget/text_button_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
-import '../../../utils/app_logger.dart';
 import 'controller/forgot_password_verification_code_screen_controller.dart';
 
 class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
@@ -102,8 +101,7 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
                     }),
                     const SpaceWidget(spaceHeight: 32),
                     ButtonWidget(
-                      onPressed: () {
-                        appLogger("object");
+                      onPressed: () {                      
                         if (_formKey.currentState?.validate() ?? false) {
                           controller.verifyOTP();
                         } else {
@@ -119,33 +117,31 @@ class ForgotPasswordVerificationCodeScreen extends StatelessWidget {
                       backgroundColor: AppColors.primaryBlue,
                     ),
                     const SpaceWidget(spaceHeight: 12),
-                    Obx(() {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const TextWidget(
-                              text: AppStrings.didntReceiveOtp,
-                              fontColor: AppColors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              maxLines: 1,
-                            ),
-                            const SpaceWidget(spaceWidth: 8),
-                            TextButtonWidget(
-                              onPressed: () {
-                                controller.resendCode();
-                              },
-                              text: AppStrings.resendOtp,
-                              textColor: AppColors.primaryBlue,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const TextWidget(
+                            text: AppStrings.didntReceiveOtp,
+                            fontColor: AppColors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            maxLines: 1,
+                          ),
+                          const SpaceWidget(spaceWidth: 8),
+                          TextButtonWidget(
+                            onPressed: () {
+                              controller.resendCode();
+                            },
+                            text: AppStrings.resendOtp,
+                            textColor: AppColors.primaryBlue,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               )

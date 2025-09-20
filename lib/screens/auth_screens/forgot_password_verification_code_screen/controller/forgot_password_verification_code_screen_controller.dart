@@ -61,15 +61,18 @@ class ForgotPasswordVerifyCodeScreenController extends GetxController {
       final response =
           await ApiService.postApi(Urls.forgetPassword, {"email": email});
       if (response != null) {
+        Get.closeAllSnackbars();
         Get.snackbar(
           "Code Sent",
           "A new verification code has been sent to your email.",
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar("Error", response["message"]);
       }
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", AppStrings.somethingWentWrong);
     }
   }
@@ -86,11 +89,13 @@ class ForgotPasswordVerifyCodeScreenController extends GetxController {
         "${otpTextEditingController1.text}${otpTextEditingController2.text}${otpTextEditingController3.text}${otpTextEditingController4.text}";
 
     if (otp.length != 4) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", "Please enter a valid 4-digit OTP");
       return;
     }
 
     if (email.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", "Email is missing. Please try again.");
       return;
     }
@@ -112,15 +117,19 @@ class ForgotPasswordVerifyCodeScreenController extends GetxController {
 
           appLogger(otpVerificationModel.data.data);
           appLogger(PrefsHelper.token);
+          Get.closeAllSnackbars();
           Get.snackbar("Success", "OTP verified successfully");
           Get.toNamed(AppRoutes.resetPasswordScreen);
         } else {
+          Get.closeAllSnackbars();
           Get.snackbar("Error", otpVerificationModel.message);
         }
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar("Error", "OTP verification failed. Please try again.");
       }
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar(
           "Error", "OTP verification request failed. Please try again.");
     }

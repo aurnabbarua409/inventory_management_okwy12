@@ -10,7 +10,7 @@ import 'package:inventory_app/screens/retailer_screens/retailer_notification_scr
 import 'package:inventory_app/screens/retailer_screens/retailer_setting/retailer_profile_screen/controller/retailer_profile_screen_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
-import 'package:inventory_app/utils/app_invitelink.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';

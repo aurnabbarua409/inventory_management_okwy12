@@ -25,12 +25,12 @@ class SignupVerificationCodeScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       body: Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AuthAppbarWidget(text: AppStrings.enterVerificationCode),
-            Expanded(
-              child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AuthAppbarWidget(text: AppStrings.enterVerificationCode),
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,38 +117,36 @@ class SignupVerificationCodeScreen extends StatelessWidget {
                       backgroundColor: AppColors.primaryBlue,
                     ),
                     const SpaceWidget(spaceHeight: 12),
-                    Obx(() {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const TextWidget(
-                              text: AppStrings.didntReceiveOtp,
-                              fontColor: AppColors.onyxBlack,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              maxLines: 1,
-                            ),
-                            const SpaceWidget(spaceWidth: 8),
-                            TextButtonWidget(
-                              onPressed: () {
-                                controller.resendCode();
-                              },
-                              text: AppStrings.resendOtp,
-                              textColor: AppColors.primaryBlue,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const TextWidget(
+                            text: AppStrings.didntReceiveOtp,
+                            fontColor: AppColors.onyxBlack,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            maxLines: 1,
+                          ),
+                          const SpaceWidget(spaceWidth: 8),
+                          TextButtonWidget(
+                            onPressed: () {
+                              controller.resendCode();
+                            },
+                            text: AppStrings.resendOtp,
+                            textColor: AppColors.primaryBlue,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

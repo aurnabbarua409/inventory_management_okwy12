@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_images_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 import 'package:inventory_app/models/new_version/update_product_model.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -52,7 +52,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
             "id: ${products[index].id}, availability: ${products[index].availability}");
 
         final updatedItem = UpdateProductModel2(
-            product: products[index].id ?? "",
+            product: products[index].id?.id ?? "",
             availability: products[index].availability ?? false,
             price: products[index].price?.toDouble() ?? 0);
         updatedData.add(updatedItem.toJson());
@@ -298,7 +298,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
             ),
             Expanded(
               child: TextWidget(
-                text: item.productName ?? "N/A",
+                text: item.id?.productName ?? "N/A",
                 fontSize: 14,
                 fontColor: AppColors.black,
                 softWrap: true,
@@ -323,7 +323,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
             ),
             Expanded(
               child: TextWidget(
-                text: item.additionalInfo ?? "N/A",
+                text: item.id?.additionalInfo ?? "N/A",
                 fontSize: 14,
                 fontColor: AppColors.black,
                 softWrap: true,
@@ -346,7 +346,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
               spaceWidth: 10,
             ),
             TextWidget(
-              text: item.quantity.toString(),
+              text: item.id?.quantity.toString(),
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -365,7 +365,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
               spaceWidth: 10,
             ),
             TextWidget(
-              text: item.unit ?? "N/A",
+              text: item.id?.unit ?? "N/A",
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -422,7 +422,7 @@ class WholesalerPendingOrderDetailController extends GetxController {
               spaceWidth: 10,
             ),
             TextWidget(
-              text: ((item.quantity ?? 0) * (item.price ?? 0)).toString(),
+              text: ((item.id?.quantity ?? 0) * (item.price ?? 0)).toString(),
               fontSize: 14,
               fontColor: AppColors.black,
             ),

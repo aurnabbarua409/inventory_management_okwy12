@@ -4,6 +4,7 @@ import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_history/controller/wholesaler_order_history_controller.dart';
 import 'package:inventory_app/screens/widgets/tabbar_view.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -54,7 +55,7 @@ class _WholesalerTabViewState extends State<WholesalerTabView> {
 
   void _handleTabSelection() async {
     if (!mounted) return;
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {});
   }
 
@@ -732,7 +733,7 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                           ),
                           TextWidget(
                             text:
-                                "Invoice: ${invoice['id'].substring(0, 7) ?? "N/A"}",
+                                "Invoice: ${invoice['id'].substring(invoice['id'].length - 7) ?? "N/A"}",
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             fontColor: AppColors.onyxBlack,
@@ -801,49 +802,59 @@ class _BuildListWidgetConfirmState extends State<BuildListWidgetConfirm> {
                           ),
                         ],
                       ),
-                      PopupMenuButton(
-                        constraints: const BoxConstraints(
-                          minWidth: 18,
-                          minHeight: 18,
-                        ),
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                        ),
-                        icon: const Icon(
-                          Icons.more_vert,
-                          color: AppColors.black,
-                          size: 18,
-                        ),
-                        color: AppColors.white,
-                        onSelected: (value) async {
-                          if (value == 1) {
-                            widget.showDeleteOrderDialog(
-                                context, invoice["id"]);
-                          }
-                          if (value == 2) {
-                            setState(() {
-                              status = 'delivered';
-                            });
+                      status == 'confirmed'
+                          ? PopupMenuButton(
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                              ),
+                              icon: const Icon(
+                                Icons.more_vert,
+                                color: AppColors.black,
+                                size: 18,
+                              ),
+                              color: AppColors.white,
+                              onSelected: (value) async {
+                                // if (value == 1) {
+                                //   widget.showDeleteOrderDialog(
+                                //       context, invoice["id"]);
+                                // }
+                                if (value == 1) {
+                                  setState(() {
+                                    status = 'delivered';
+                                  });
 
-                            final url = Urls.setDelivered + invoice["id"];
-                            await ApiService.patchApi(url, {});
-                            Get.snackbar(
-                                'Successfully updated the status to delivered',
-                                'Now please refresh again to see the updated status');
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text(AppStrings.delete),
-                          ),
-                          if (status == 'confirmed')
-                            const PopupMenuItem(
-                              value: 2,
-                              child: Text(AppStrings.deliver),
+                                  final url = Urls.setDelivered + invoice["id"];
+                                  final response =
+                                      await ApiService.patchApi(url, {});
+                                  if (response != null) {
+                                    Get.snackbar(
+                                      'Success',
+                                      'Successfully updated the status to delivered',
+                                    );
+                                  }
+                                  Get.find<WholesalerOrderHistoryController>()
+                                      .initialize();
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                // const PopupMenuItem(
+                                //   value: 1,
+                                //   child: Text(AppStrings.delete),
+                                // ),
+                                if (status == 'confirmed')
+                                  const PopupMenuItem(
+                                    value: 1,
+                                    child: Text(AppStrings.deliver),
+                                  ),
+                              ],
+                            )
+                          : const SizedBox(
+                              width: 20,
                             ),
-                        ],
-                      ),
                     ],
                   ),
                 ],

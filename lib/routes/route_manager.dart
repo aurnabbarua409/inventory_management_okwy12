@@ -34,7 +34,6 @@ import '../screens/retailer_screens/retailer_order_history_details_screen/retail
 import '../screens/retailer_screens/retailer_saved_order_screen/retailer_saved_order_screen.dart';
 import '../screens/splash_screen/splash_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_settings/wholesaler_change_password_screen/wholesaler_change_password_screen.dart';
-import '../screens/wholesaler_screens/wholesaler_find_wholeseller_screen/wholesaler_find_wholeseller_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_confirmed_order_details_screen/wholesaler_confirmed_order_details_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_new_order_details_screen/wholesaler_new_order_details_screen.dart';
 import '../screens/wholesaler_screens/wholesaler_new_orders_screen/wholesaler_pending_order_details_screen/wholesaler_pending_order_details_screen.dart';
@@ -171,7 +170,7 @@ class RouteManager {
       ),
       GetPage(
         name: AppRoutes.retailerConfirmOrderDetailsHistoryScreen,
-        page: () =>  const RetailerConfirmedOrderDetailsHistoryScreen(),
+        page: () => const RetailerConfirmedOrderDetailsHistoryScreen(),
         // binding: GeneralBindings(),
       ),
       GetPage(
@@ -249,17 +248,16 @@ class RouteManager {
         page: () => const WholesalerNotificationScreen(),
         // binding: GeneralBindings(),
       ),
-      GetPage(
-        name: AppRoutes.wholesalerFindWholeSellerScreen,
-        page: () => WholesalerFindWholeSellerScreen(),
-        // binding: GeneralBindings(),
-      ),
+
       GetPage(
         name: AppRoutes.noInternetConnection,
         page: () => const NoInternetScreen(),
         // binding: GeneralBindings(),
       ),
-      GetPage(name: AppRoutes.retailerSavedOrderHistoryScreen, page: () => RetailerSavedOrderHistoryScreen(),)
+      GetPage(
+        name: AppRoutes.retailerSavedOrderHistoryScreen,
+        page: () => RetailerSavedOrderHistoryScreen(),
+      )
     ];
   }
 }

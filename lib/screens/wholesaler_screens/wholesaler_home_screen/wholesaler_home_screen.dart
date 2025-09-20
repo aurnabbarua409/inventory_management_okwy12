@@ -10,7 +10,7 @@ import 'package:inventory_app/screens/wholesaler_screens/wholesaler_order_histor
 import 'package:inventory_app/screens/wholesaler_screens/wholesaler_settings/wholesaler_profile_screen/controller/wholesaler_profile_screen_controller.dart';
 import 'package:inventory_app/screens/widgets/home_list_widget.dart';
 import 'package:inventory_app/services/api_service.dart';
-import 'package:inventory_app/utils/app_invitelink.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/icon_widget/icon_widget.dart';
@@ -39,9 +39,9 @@ class _WholesalerHomeScreenState extends State<WholesalerHomeScreen> {
     // TODO: implement initState
     super.initState();
     Get.put(WholesalerOrderHistoryController());
-    Get.find<WholesalerOrderHistoryController>().initialize();
+    // Get.find<WholesalerOrderHistoryController>().initialize();
     Get.put(NotificationsController());
-    Get.find<NotificationsController>().getNotificationsRepo();
+    // Get.find<NotificationsController>().getNotificationsRepo();
   }
 
   @override

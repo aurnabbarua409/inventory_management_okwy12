@@ -17,4 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 
 
 issue:
-1. Subscription has issue
+1. Obx has issue

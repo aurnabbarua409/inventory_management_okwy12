@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
+import 'package:inventory_app/utils/app_logger.dart';
 
 import '../../constants/app_colors.dart';
 import '../../utils/app_size.dart';
@@ -9,13 +11,15 @@ class SearchBarWidget extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final int maxLines;
-  final Function(String) onChanged;
+  final FindWholesalerController wholesalerController;
+  // final Function(String) onChanged;
 
   const SearchBarWidget({
     Key? key,
+    required this.wholesalerController,
     required this.controller,
     required this.hintText,
-    required this.onChanged,
+    // required this.onChanged,
     this.validator,
     this.keyboardType,
     this.maxLines = 1,
@@ -29,6 +33,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
+    appLogger(widget.controller.text);
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -42,7 +47,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         style: const TextStyle(
           color: AppColors.black,
         ),
-        onChanged: widget.onChanged, // Call the provided onChanged callback
+        onChanged: (value) {
+          setState(() {});
+        },
+        // onChanged: widget.onChanged, // Call the provided onChanged callback
         decoration: InputDecoration(
           fillColor: AppColors.white,
           hintText: widget.hintText,
@@ -72,8 +80,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   onPressed: () {
                     setState(() {
                       widget.controller.clear();
+                      widget.wholesalerController.fetchWholesalers();
                     });
-                    widget.onChanged("");
                   },
                 )
               : null,

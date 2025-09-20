@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/retailer/order_history/retailer_pending_model.dart';
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
@@ -15,8 +15,7 @@ import 'package:inventory_app/widgets/popup_widget/popup_widget.dart';
 import 'package:inventory_app/widgets/space_widget/space_widget.dart';
 import 'package:inventory_app/widgets/text_widget/text_widgets.dart';
 import 'controller/retailer_pending_order_details_controller.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_model.dart'
-    as getPending;
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 
 class OrderDetailsController extends GetxController {
   // var orderList = [
@@ -41,7 +40,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
 
   bool isEditing = false;
 
-  void showProductDetailsDialog(BuildContext context, getPending.Product item) {
+  void showProductDetailsDialog(BuildContext context, Product item) {
     showCustomPopup(
       context,
       [
@@ -87,7 +86,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
             ),
             Expanded(
               child: TextWidget(
-                text: item.productName ?? "N/A",
+                text: item.id?.productName ?? "N/A",
                 fontSize: 14,
                 fontColor: AppColors.black,
                 softWrap: true,
@@ -112,7 +111,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
             ),
             Expanded(
               child: TextWidget(
-                text: item.additionalInfo ?? "N/A",
+                text: item.id?.additionalInfo ?? "N/A",
                 fontSize: 14,
                 fontColor: AppColors.black,
                 softWrap: true,
@@ -135,7 +134,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               spaceWidth: 10,
             ),
             TextWidget(
-              text: item.quantity.toString(),
+              text: item.id?.quantity.toString(),
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -154,7 +153,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
               spaceWidth: 10,
             ),
             TextWidget(
-              text: item.unit ?? "N/A",
+              text: item.id?.unit ?? "N/A",
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -205,7 +204,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                 ),
               ),
               value: pendingController.selectedUnit.value,
-              items: pendingController.units
+              items: AppCommonFunction.units
                   .map((item) => DropdownMenuItem<String>(
                         value: item,
                         child: Text(
@@ -537,7 +536,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                 Expanded(
                   flex: 4,
                   child: Text(
-                    item.productName ?? "N/A",
+                    item.id?.productName ?? "N/A",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 12,
@@ -549,7 +548,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                 Expanded(
                   flex: 1,
                   child: Text(
-                    item.quantity.toString(),
+                    item.id!.quantity.toString(),
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 12,
@@ -561,7 +560,7 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                 Expanded(
                   flex: 1,
                   child: Text(
-                    item.unit ?? "N/A",
+                    item.id?.unit ?? "N/A",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 12,
@@ -592,13 +591,15 @@ class _RetailerPendingOrderDetailsHistoryScreenState
                         child: const Text(AppStrings.edit),
                         onTap: () {
                           pendingController.productNameController.text =
-                              item.productName!;
+                              item.id!.productName!;
                           pendingController.selectedUnit.value =
-                              item.unit ?? pendingController.selectedUnit.value;
+                              item.id?.unit ??
+                                  pendingController.selectedUnit.value;
                           pendingController.additionalInfoController.text =
-                              item.additionalInfo ?? '';
-                          pendingController.quantity.value = item.quantity ?? 0;
-                          showProductEditDialog(context, item.id!);
+                              item.id?.additionalInfo ?? '';
+                          pendingController.quantity.value =
+                              item.id?.quantity ?? 0;
+                          showProductEditDialog(context, item.id!.id!);
                           setState(() {});
                         },
                       ),

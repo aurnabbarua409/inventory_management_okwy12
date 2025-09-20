@@ -10,12 +10,14 @@ class BuildInvoiceTableWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invoiceItems = confirmedController.confirmedData.value != null
-        ? confirmedController.product.map((product) => {
-                  "product": product.productName,
-                  "qty": product.quantity.toString(),
-                  "unit": product.unit,
-                  "price": product.price.toString(),
-                  "total": ((product.price ?? 0) * (product.quantity ?? 0)).toString(),
+        ? confirmedController.product
+            .map((product) => {
+                  "product": product.id?.productName,
+                  "qty": product.id?.quantity.toString(),
+                  "unit": product.id?.unit,
+                  "price": product.price,
+                  "total": ((product.price ?? 0) * (product.id?.quantity ?? 0))
+                      .toDouble(),
                 })
             .toList()
         : [];
@@ -35,17 +37,16 @@ class BuildInvoiceTableWidget extends StatelessWidget {
               BuildTableCellWidget("Product", flex: 2, isHeader: true),
               BuildTableCellWidget("Qty", flex: 1, isHeader: true),
               BuildTableCellWidget("Unit", flex: 1, isHeader: true),
-              BuildTableCellWidget("Price", flex: 1, isHeader: true),
+              BuildTableCellWidget("Unit Price", flex: 1, isHeader: true),
               BuildTableCellWidget("Total", flex: 1, isHeader: true),
             ],
           ),
         ),
         // Table Rows
-        ...invoiceItems!.asMap().entries.map((entry) {
+        ...invoiceItems.asMap().entries.map((entry) {
           final index = entry.key + 1;
           final item = entry.value;
-          confirmedController.totalPrice.value +=
-              double.tryParse(item["total"] ?? "0") ?? 0;
+          confirmedController.totalPrice.value += item["total"] ?? 0.0;
           return Container(
             padding:
                 EdgeInsets.symmetric(vertical: ResponsiveUtils.width(12.0)),
@@ -59,8 +60,12 @@ class BuildInvoiceTableWidget extends StatelessWidget {
                 BuildTableCellWidget(item["product"] ?? "", flex: 2),
                 BuildTableCellWidget(item["qty"] ?? "", flex: 1),
                 BuildTableCellWidget(item["unit"] ?? "", flex: 1),
-                BuildTableCellWidget(item["price"] ?? "", flex: 1),
-                BuildTableCellWidget(item["total"] ?? "", flex: 1),
+                BuildTableCellWidget(
+                    confirmedController.formatPrice(item["price"]),
+                    flex: 1),
+                BuildTableCellWidget(
+                    confirmedController.formatPrice(item["total"] ?? 0.0),
+                    flex: 1),
               ],
             ),
           );

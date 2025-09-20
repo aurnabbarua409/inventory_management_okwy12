@@ -31,6 +31,7 @@ class SignupScreenController extends GetxController {
 
     // Ensure a role is selected before continuing
     if (userRole == null) {
+      Get.closeAllSnackbars();
       Get.snackbar('Error', 'Please select a role (Retailer/Wholesaler)');
       return;
     }
@@ -41,6 +42,7 @@ class SignupScreenController extends GetxController {
     final confirmPassword = confirmPasswordController.text.trim();
 
     if (password != confirmPassword) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", "Passwords do not match");
       return;
     }
@@ -82,14 +84,16 @@ class SignupScreenController extends GetxController {
             'email': email,
             'userId': userId,
           });
-
+          Get.closeAllSnackbars();
           Get.snackbar('Success',
               signUpData?.message ?? "Please fully fill up your information");
         } else {
+          Get.closeAllSnackbars();
           Get.snackbar('Error', signUpData?.message ?? 'Sign-up failed');
         }
       }
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar('Error', 'Sign-up request failed. Please try again.');
     }
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
-import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
@@ -12,6 +11,7 @@ class ForgotPasswordScreenController extends GetxController {
 
   void forgotPassword() async {
     if (emailController.text.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar(
         'Missing Information',
         'Please enter your email address to continue.',
@@ -25,12 +25,14 @@ class ForgotPasswordScreenController extends GetxController {
         final response =
             await ApiService.postApi(Urls.forgetPassword, {"email": email});
         if (response != null) {
+          Get.closeAllSnackbars();
           Get.snackbar("Success", response["message"]);
           Get.toNamed(
             AppRoutes.forgotPasswordVerificationCodeScreen,
             arguments: {'email': emailController.text},
           );
         } else {
+          Get.closeAllSnackbars();
           Get.snackbar("Error", response["message"]);
         }
       } catch (e) {

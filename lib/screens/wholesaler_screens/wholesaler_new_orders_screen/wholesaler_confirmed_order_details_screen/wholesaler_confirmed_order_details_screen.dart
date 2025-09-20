@@ -219,12 +219,11 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
     final invoiceItems = confirmedController.confirmedData.value != null
         ? confirmedController.confirmedData.value?.product!
             .map((product) => {
-                  "product": product.productName,
-                  "qty": product.quantity.toString(),
-                  "unit": product.unit,
-                  "price": product.price.toString(),
-                  "total": ((product.price ?? 0) * (product.quantity ?? 0))
-                      .toString(),
+                  "product": product.id?.productName,
+                  "qty": product.id?.quantity.toString(),
+                  "unit": product.id?.unit,
+                  "price": product.price,
+                  "total": ((product.price ?? 0) * (product.id?.quantity ?? 0)),
                 })
             .toList()
         : [];
@@ -244,7 +243,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
               _buildTableCell("Product", flex: 2, isHeader: true),
               _buildTableCell("Qty", flex: 1, isHeader: true),
               _buildTableCell("Unit", flex: 1, isHeader: true),
-              _buildTableCell("Price", flex: 1, isHeader: true),
+              _buildTableCell("Unit Price", flex: 1, isHeader: true),
               _buildTableCell("Total", flex: 1, isHeader: true),
             ],
           ),
@@ -253,7 +252,7 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
         ...invoiceItems!.asMap().entries.map((entry) {
           final index = entry.key + 1;
           final item = entry.value;
-          totalAmount += double.tryParse(item["total"] ?? "0") ?? 0;
+          totalAmount += item["total"] ?? 0.0;
           return Container(
             padding:
                 EdgeInsets.symmetric(vertical: ResponsiveUtils.width(12.0)),
@@ -268,8 +267,10 @@ class _RetailerConfirmedOrderDetailsHistoryScreenState
                 _buildTableCell(item["product"] ?? "", flex: 2),
                 _buildTableCell(item["qty"] ?? "", flex: 1),
                 _buildTableCell(item["unit"] ?? "", flex: 1),
-                _buildTableCell(item["price"] ?? "", flex: 1),
-                _buildTableCell(item["total"] ?? "", flex: 1),
+                _buildTableCell(confirmedController.formatPrice(item["price"]),
+                    flex: 1),
+                _buildTableCell(confirmedController.formatPrice(item["total"]),
+                    flex: 1),
               ],
             ),
           );

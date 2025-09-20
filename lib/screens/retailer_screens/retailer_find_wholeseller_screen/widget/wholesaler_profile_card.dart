@@ -30,8 +30,8 @@ class WholesalerProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "Wholesaler Card: ${wholesaler.storeInformation.businessName}, isSelected: $isSelected");
+    // print(
+    //     "Wholesaler Card: ${wholesaler.storeInformation.businessName}, isSelected: $isSelected");
     return GestureDetector(
       onTap: () => onLongPress(!isSelected),
       onDoubleTap: () => onDoubleTap(false),

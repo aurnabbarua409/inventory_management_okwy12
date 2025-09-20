@@ -45,10 +45,12 @@ class StoreInformationScreenController extends GetxController {
     final userId = arguments['userId'] ?? "";
 
     if (userId.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar('Error', 'User ID is missing.');
       return;
     }
     if (!isChecked.value) {
+      Get.closeAllSnackbars();
       Get.snackbar("Oops!",
           "You need to agree to the Terms and Conditions to continue.");
       return;
@@ -73,6 +75,7 @@ class StoreInformationScreenController extends GetxController {
             StoreUpdateResponse.fromJson(response);
 
         if (storeUpdateResponse.success) {
+          Get.closeAllSnackbars();
           Get.snackbar('Success', storeUpdateResponse.message);
 
           Get.toNamed(AppRoutes.signupVerificationCodeScreen, arguments: {
@@ -81,13 +84,16 @@ class StoreInformationScreenController extends GetxController {
             'userId': userId,
           });
         } else {
+          Get.closeAllSnackbars();
           Get.snackbar('Error', storeUpdateResponse.message);
         }
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar(
             'Error', 'Failed to update store information. Please try again.');
       }
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar(
           'Error', 'Store information update failed. Please try again.');
     }

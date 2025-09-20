@@ -26,7 +26,7 @@ class SignInScreenController extends GetxController {
       // emailController.text = 'j2f8ctwkgx@jkotypc.com'; //retailer production
 
       // emailController.text = 'bk1mlihfgi@zudpck.com'; //whole saler production
-      // emailController.text = "codob27286@forexru.com"; //retailer local
+      // emailController.text = "mdabdurrazzakrakib290@gmail.com"; //retailer local
       // emailController.text = "f2dm2rcm0a@zudpck.com"; // wholesaler for local
       // whole saler: bk1mlihfgi@zudpck.com
       // retailer: j2f8ctwkgx@jkotypc.com
@@ -45,6 +45,7 @@ class SignInScreenController extends GetxController {
       final password = passwordController.text.trim();
 
       if (email.isEmpty || password.isEmpty) {
+        Get.closeAllSnackbars();
         Get.snackbar('Error', 'Please enter both email and password.');
         return;
       }
@@ -65,6 +66,7 @@ class SignInScreenController extends GetxController {
         SocketApi.init();
         await _saveUserDataAndNavigate(response);
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar(
             'Error', response['message'] ?? 'Login failed. Please try again.');
       }
@@ -98,6 +100,7 @@ class SignInScreenController extends GetxController {
     final email = signInData["data"]?["email"] ?? "";
 
     if (token.isEmpty || role.isEmpty || userId.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar('Error', 'Missing user data. Please try again.');
       return;
     }
@@ -126,6 +129,7 @@ class SignInScreenController extends GetxController {
     } else {
       throw Exception('Unknown role detected.');
     }
+    Get.closeAllSnackbars();
     Get.snackbar('Success', 'Logged in Succesfully');
     Get.offAllNamed(AppRoutes.bottomNavBar,
         arguments: {'userRole': role, 'userId': userId});

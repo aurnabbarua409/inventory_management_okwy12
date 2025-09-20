@@ -85,7 +85,7 @@ class _WholesalerNewOrderDetailsScreenState
                                 flex: 1,
                               ),
                               _buildHeaderCell("Avail", flex: 1),
-                              _buildHeaderCell("Price", flex: 1),
+                              _buildHeaderCell("Unit_Price", flex: 1),
                               _buildHeaderCell("Total", flex: 1),
                               _buildHeaderCell("", flex: 1),
                               // const SpaceWidget(spaceWidth: 10),
@@ -103,7 +103,17 @@ class _WholesalerNewOrderDetailsScreenState
                               Expanded(
                                 child: ButtonWidget(
                                   onPressed: () {
-                                    pendingController.onSave;
+                                    if (pendingController.isEditing.any(
+                                        (isEditing) => isEditing == true)) {
+                                      Get.snackbar(
+                                        'Hold on!',
+                                        'You have unsaved changes. Please save them before saving as draft.',
+                                        snackPosition: SnackPosition.TOP,
+                                      );
+
+                                      return;
+                                    }
+                                    pendingController.onSave();
                                   },
                                   label: AppStrings.save,
                                   backgroundColor: AppColors.primaryBlue,
@@ -184,7 +194,7 @@ class _WholesalerNewOrderDetailsScreenState
       final item = entry.value;
       // bool isPriceNotZero = item. != 0;
       num price = item.price ?? 0.0;
-      int quantity = item.quantity ?? 0;
+      int quantity = item.id?.quantity ?? 0;
       num totalPrice = price * quantity;
       bool available = item.availability ?? false;
 
@@ -220,7 +230,7 @@ class _WholesalerNewOrderDetailsScreenState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
-                    item.productName ?? "N/A",
+                    item.id?.productName ?? "N/A",
                     // item["name"]?.toString() ?? "",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
@@ -250,7 +260,7 @@ class _WholesalerNewOrderDetailsScreenState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    item.unit ?? "Kg",
+                    item.id?.unit ?? "Kg",
                     // item["unit"]?.toString() ?? "",
                     textAlign: TextAlign.left,
                     style: const TextStyle(

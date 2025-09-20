@@ -34,6 +34,7 @@ class SignupVerifyCodeScreenController extends GetxController {
     userId = arguments['userId'] ?? "";
 
     if (userId.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", "User ID is missing.");
       return;
     }
@@ -42,6 +43,7 @@ class SignupVerifyCodeScreenController extends GetxController {
     userRole = UserRole.values.firstWhere(
       (e) => e.name.toLowerCase() == roleString.toLowerCase(),
       orElse: () {
+        Get.closeAllSnackbars();
         Get.snackbar("Error", "Invalid user role.");
         return UserRole.retailer; // Default to Retailer
       },
@@ -79,15 +81,18 @@ class SignupVerifyCodeScreenController extends GetxController {
       final response =
           await ApiService.postApi(Urls.forgetPassword, {"email": email});
       if (response != null) {
+        Get.closeAllSnackbars();
         Get.snackbar(
           "Code Sent",
           "A new verification code has been sent to your email.",
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar("Error", response["message"]);
       }
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", AppStrings.somethingWentWrong);
     }
   }
@@ -103,11 +108,13 @@ class SignupVerifyCodeScreenController extends GetxController {
         "${otpTextEditingController1.text}${otpTextEditingController2.text}${otpTextEditingController3.text}${otpTextEditingController4.text}";
 
     if (otp.length != 4) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", "Please enter a valid 4-digit OTP");
       return;
     }
 
     if (email.isEmpty) {
+      Get.closeAllSnackbars();
       Get.snackbar("Error", "Email is missing. Please try again.");
       return;
     }
@@ -124,15 +131,19 @@ class SignupVerifyCodeScreenController extends GetxController {
 
       if (response != null) {
         if (response['success'] ?? false) {
+          Get.closeAllSnackbars();
           Get.snackbar("Success", response['message']);
           Get.offAllNamed(AppRoutes.onboardingScreen);
         } else {
+          Get.closeAllSnackbars();
           Get.snackbar("Failed", response['message']);
         }
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar("Error", "OTP verification failed. Please try again.");
       }
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar(
           "Error", "OTP verification request failed. Please try again.");
     }

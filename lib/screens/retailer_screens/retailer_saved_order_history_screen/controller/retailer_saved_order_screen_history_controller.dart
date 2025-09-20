@@ -12,6 +12,7 @@ import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -37,18 +38,6 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
   final RxInt quantity = 0.obs;
   var selectedUnit = 'Kg'.obs;
 
-  final List<String> units = [
-    'Kg',
-    'Pcs',
-    'Roll',
-    'Crate',
-    'Bottle',
-    'Carton',
-    'Gal',
-    'Bag',
-    'Pkt',
-    'Other',
-  ];
   void setSelectedUnit(String? value) {
     selectedUnit.value = value ?? 'pcs';
   }
@@ -379,6 +368,7 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
                       Get.snackbar(
                           'Success: $success', 'Failed to restore product');
                     }
+                    clearSelection();
                   },
                   label: AppStrings.yes,
                   backgroundColor: AppColors.primaryBlue,
@@ -552,7 +542,7 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
                 ),
               ),
               value: selectedUnit.value,
-              items: units
+              items: AppCommonFunction.units
                   .map((item) => DropdownMenuItem<String>(
                         value: item,
                         child: Text(
@@ -654,7 +644,7 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
       final body = {
         "status": false,
         "price": 0,
-        "availability": false,       
+        "availability": false,
       };
       final response = await ApiService.patchApi(url, body);
       fetchOrders();
@@ -672,7 +662,6 @@ class RetailerSavedOrderScreenHistoryController extends GetxController {
       return false;
     }
   }
-
 
   @override
   void onClose() {

@@ -13,6 +13,7 @@ import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_co
 import 'package:inventory_app/screens/retailer_screens/retailer_find_wholeseller_screen/controller/find_wholesaler_controller.dart';
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -38,19 +39,6 @@ class RetailerSavedOrderScreenController extends GetxController {
   final RxInt quantity = 0.obs;
   var selectedUnit = 'Kg'.obs;
 
-  final List<String> units = [
-    'Kg',
-    'Pcs',
-    'Roll',
-    'Crate',
-    'Bottle',
-    'Carton',
-    'Gal',
-    'Bag',
-    'Pkt',
-    'Cup',
-    'Other',
-  ];
   void setSelectedUnit(String? value) {
     selectedUnit.value = value ?? 'pcs';
   }
@@ -225,6 +213,7 @@ class RetailerSavedOrderScreenController extends GetxController {
         arguments: {'selectedProductIds': selectedProductIds});
     Get.find<BottomNavbarController>().changeIndex(1);
     Get.toNamed(AppRoutes.bottomNavBar);
+    selectedProductIds.clear();
     clearSelection();
   }
 
@@ -386,7 +375,7 @@ class RetailerSavedOrderScreenController extends GetxController {
                 ),
               ),
               value: selectedUnit.value,
-              items: units
+              items: AppCommonFunction.units
                   .map((item) => DropdownMenuItem<String>(
                         value: item,
                         child: Text(

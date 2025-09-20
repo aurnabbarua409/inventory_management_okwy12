@@ -22,19 +22,7 @@ class RetailerCreateNewOrderScreenController extends GetxController {
   var quantity = 1.obs;
   var isLoading = false.obs;
   var selectedUnit = 'Pcs'.obs;
-  final List<String> units = [
-    'Pcs',
-    'Cup',
-    'Unit',
-    'Roll',
-    'Crate',
-    'Bottle',
-    'Carton',
-    'Gal',
-    'Bag',
-    'Pkt',
-    'Other',
-  ];
+
 
   //SpeechToText speechToText = SpeechToText();
   var isListening = false.obs;

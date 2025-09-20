@@ -166,7 +166,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
         itemBuilder: (context, index) {
           final invoice = invoices[index];
           appLogger("Invoice at index $index: $invoice");
-
+          int currentIndex = DefaultTabController.of(context).index;
           return Card(
             color: AppColors.white,
             elevation: 3,
@@ -225,8 +225,6 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                           const SpaceWidget(spaceHeight: 4),
                           GestureDetector(
                             onTap: () {
-                              int currentIndex =
-                                  DefaultTabController.of(context).index;
                               if (currentIndex == 0) {
                                 Get.toNamed(
                                     AppRoutes
@@ -261,30 +259,35 @@ class _OrdersTabViewState extends State<OrdersTabView> {
                           ),
                         ],
                       ),
-                      PopupMenuButton(
-                        constraints:
-                            const BoxConstraints(minWidth: 18, minHeight: 18),
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                        icon: const Icon(
-                          Icons.more_vert,
-                          color: AppColors.black,
-                          size: 18,
-                        ),
-                        color: AppColors.white,
-                        onSelected: (value) {
-                          if (value == 1) {
-                            // Handle the delete functionality
-                            widget.showDeleteOrderDialog(
-                                context, invoice["id"]);
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text(AppStrings.delete),
-                          ),
-                        ],
-                      ),
+                      currentIndex != 2
+                          ? PopupMenuButton(
+                              constraints: const BoxConstraints(
+                                  minWidth: 18, minHeight: 18),
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero),
+                              icon: const Icon(
+                                Icons.more_vert,
+                                color: AppColors.black,
+                                size: 18,
+                              ),
+                              color: AppColors.white,
+                              onSelected: (value) {
+                                if (value == 1) {
+                                  // Handle the delete functionality
+                                  widget.showDeleteOrderDialog(
+                                      context, invoice["id"]);
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(
+                                  value: 1,
+                                  child: Text(AppStrings.delete),
+                                ),
+                              ],
+                            )
+                          : const SizedBox(
+                              width: 20,
+                            ),
                     ],
                   ),
                 ],

@@ -28,7 +28,7 @@ class OtpInputFieldWidget extends StatelessWidget {
       height: ResponsiveUtils.width(52),
       width: ResponsiveUtils.width(48),
       child: TextFormField(
-        controller: controller,
+        controller: controller,       
         onFieldSubmitted: onFieldSubmitted,
         validator: (value) {
           if (value == null || value.isEmpty) {

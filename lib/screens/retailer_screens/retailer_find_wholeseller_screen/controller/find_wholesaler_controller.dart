@@ -31,21 +31,41 @@ class FindWholesalerController extends GetxController {
   late TextEditingController searchController;
   final RxBool isLoading = false.obs;
 
-  late ScrollController scrollController;
-  final page = 1.obs;
-  final hasMore = true.obs;
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    onInitial();
+  }
 
-  void onScroll() {
-    if (scrollController.position.pixels >=
-        scrollController.position.maxScrollExtent - 200) {
-      fetchWholesalers();
-    }
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    onDispose();
+  }
+
+  void onInitial() {
+    fetchWholesalers();
+    searchController = TextEditingController();
+
+    // Bind search function
+    // searchController.addListener(() {
+    //   filterWholesalers(searchController.text);
+    // });
+
+    appLogger("find wholesaler controller initialized");
+  }
+
+  void onDispose() {
+    searchController.dispose();
+    appLogger("find wholesaler controller disposed");
   }
 
   // Fetch wholesalers from the API
   Future<void> fetchWholesalers() async {
-    if (isLoading.value || !hasMore.value) return;
-
+    appLogger(
+        "Wholesaler length: ${wholesalers.length} and filtered wholesaler length: ${filteredWholesalers.length}");
     try {
       String? token = await PrefsHelper.getToken();
       if (token.isEmpty) {
@@ -53,42 +73,55 @@ class FindWholesalerController extends GetxController {
         return;
       }
       isLoading.value = true;
-      var response =
-          await ApiService.getApi("${Urls.getWholesaler}?page=${page.value}");
-      isLoading.value = false;
-      appLogger(response);
-      if (response != null) {
-        final mGetWholesalers = MGetWholesalers.fromJson(response);
+      int page = 1;
+      bool hasMore = true;
+      wholesalers.clear();
+      filteredWholesalers.clear();
+      while (hasMore) {
+        var response =
+            await ApiService.getApi("${Urls.getWholesaler}?page=$page");
 
-        if (mGetWholesalers.success) {
-          appLogger("data is coming from wholesaler");
-          if (mGetWholesalers.data.isEmpty) {
-            hasMore.value = false; // no more data
+        appLogger(response);
+        if (response != null) {
+          final mGetWholesalers = MGetWholesalers.fromJson(response);
+
+          if (mGetWholesalers.success) {
+            appLogger("data is coming from wholesaler");
+            if (mGetWholesalers.data.isEmpty) {
+              hasMore = false; // no more data
+            } else {
+              wholesalers.addAll(mGetWholesalers.data);
+              filteredWholesalers.addAll(mGetWholesalers
+                  .data); // Assign all to filtered list initially
+              page++;
+              selectedItems.clear();
+              selectedItems
+                  .addAll(List.generate(wholesalers.length, (_) => false));
+            }
           } else {
-            wholesalers.addAll(mGetWholesalers.data);
-            filteredWholesalers.addAll(
-                mGetWholesalers.data); // Assign all to filtered list initially
-            page.value++;
-            selectedItems.clear();
-            selectedItems
-                .addAll(List.generate(wholesalers.length, (_) => false));
+            Get.snackbar('Error', mGetWholesalers.message);
           }
         } else {
-          Get.snackbar('Error', mGetWholesalers.message);
+          hasMore = false;
+          Get.snackbar('Error', 'Failed to load wholesalers');
         }
-      } else {
-        Get.snackbar('Error', 'Failed to load wholesalers');
       }
     } catch (e) {
       appLogger("error in fetching wholesaler: $e");
       // Get.snackbar('Error', 'An error occurred while fetching wholesalers');
+    } finally {
+      isLoading.value = false;
     }
   }
 
   // Filter wholesalers by hitting different API endpoints
   void filterWholesalers(String query) async {
     if (query.isEmpty) {
-      filteredWholesalers.assignAll(wholesalers);
+      appLogger("After cleaning the query: ${wholesalers.length}");
+      fetchWholesalers();
+      // filteredWholesalers = wholesalers;
+      // appLogger(message)
+
       return;
     }
     appLogger("Writing query: $query");
@@ -113,7 +146,7 @@ class FindWholesalerController extends GetxController {
         _handleResponse(response);
       } else {
         var response = await ApiService.getApi(
-            '${Urls.getWholesaler}?storeInformation.businessName=$query');
+            '${Urls.getWholesaler}?businessName=$query');
         _handleResponse(response);
       }
       selectedItems
@@ -263,6 +296,7 @@ class FindWholesalerController extends GetxController {
           selectedWholesalerIds.add(filteredWholesalers[i].id);
         }
       }
+      update();
       debugPrint("Updated selected wholesaler IDs: $selectedWholesalerIds");
     } catch (e) {
       appLogger(e);
@@ -461,6 +495,9 @@ class FindWholesalerController extends GetxController {
         ElevatedButton(
           onPressed: () {
             Get.back();
+            selectedProductIds.clear();
+            searchController.clear();
+            fetchWholesalers();
             // Get.offNamed(AppRoutes.retailerOrderHistoryScreen);
             Get.find<BottomNavbarController>().changeIndex(2);
             Get.toNamed(AppRoutes.bottomNavBar);

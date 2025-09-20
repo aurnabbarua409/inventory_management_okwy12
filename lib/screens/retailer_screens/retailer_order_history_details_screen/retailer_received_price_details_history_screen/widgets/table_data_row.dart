@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_order_history_details_screen/retailer_received_price_details_history_screen/controller/retailer_received_price_details_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 
@@ -49,7 +50,7 @@ class _TableDataRowState extends State<TableDataRow> {
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text(
-            "No orders available. Please go back and refresh",
+            "No orders available",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -69,7 +70,7 @@ class _TableDataRowState extends State<TableDataRow> {
               final item = widget.productsReceived[index];
               bool isAvailable = item.availability ?? false;
               num price = item.price ?? 0.0;
-              int quantity = item.quantity ?? 0;
+              int quantity = item.id?.quantity ?? 0;
               num total = price * quantity;
 
               return InkWell(
@@ -107,7 +108,7 @@ class _TableDataRowState extends State<TableDataRow> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          item.productName ?? "N/A",
+                          item.id?.productName ?? "N/A",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 12 *
@@ -205,7 +206,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                 ),
                               )
                             : Text(
-                                item.quantity.toString(),
+                                item.id!.quantity.toString(),
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   fontSize: 10,
@@ -217,7 +218,7 @@ class _TableDataRowState extends State<TableDataRow> {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          item.unit ?? "pcs",
+                          item.id?.unit ?? "pcs",
                           textAlign: TextAlign.left,
                           style: const TextStyle(
                             fontSize: 10,
@@ -306,7 +307,7 @@ class _TableDataRowState extends State<TableDataRow> {
                                       try {
                                         quantity = int.parse(
                                             item.textEditingController!.text);
-                                        item.quantity = quantity;
+                                        item.id?.quantity = quantity;
                                         total = quantity * price;
                                         widget.controller.updateGrandTotal();
 
@@ -315,21 +316,28 @@ class _TableDataRowState extends State<TableDataRow> {
                                         appLogger(e);
                                       }
                                     } else {
-                                      item.quantity =
+                                      item.id?.quantity =
                                           widget.controller.prevQuantity[index];
                                       Get.snackbar("Error",
                                           'You can not increase the quantity more than wholesaler approved, if you want additional quantity send new order');
                                     }
                                   }
                                   if (value == 2) {
-                                    final url = Urls.deleteProduct + item.id!;
-                                    final response =
-                                        await ApiService.deleteApi(url, {});
-                                    appLogger(response);
-                                    widget.productsReceived
-                                        .removeWhere((id) => item.id == id.id);
+                                    AppCommonFunction.showDeleteOrderDialog(
+                                      context,
+                                      () async {
+                                        final url =
+                                            Urls.deleteProduct + item.id!.id!;
+                                        final response =
+                                            await ApiService.deleteApi(url, {});
+                                        appLogger(response);
+                                        widget.productsReceived.removeWhere(
+                                            (id) => item.id == id.id);
+                                        widget.controller.updateGrandTotal();
 
-                                    setState(() {});
+                                        setState(() {});
+                                      },
+                                    );
                                   }
                                 },
                                 itemBuilder: (context) => [

@@ -6,6 +6,7 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_create_new_order_screen/controller/retailer_create_new_order_controller.dart';
 import 'package:inventory_app/screens/widgets/item_counter_button.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/icon_button_widget/icon_button_widget.dart';
 import 'package:inventory_app/widgets/normal_text_field_widget/normal_text_field_widget.dart';
@@ -108,7 +109,7 @@ class RetailerCreateNewOrderScreen extends StatelessWidget {
                                     value: controller.selectedUnit.isNotEmpty
                                         ? controller.selectedUnit.value
                                         : null,
-                                    items: controller.units.map((item) {
+                                    items: AppCommonFunction.units.map((item) {
                                       return DropdownMenuItem<String>(
                                         value: item,
                                         child: Text(

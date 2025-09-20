@@ -160,7 +160,7 @@ class _WholesalerPendingOrderDetailsScreenState
                             _buildHeaderCell("Qty", flex: 1),
                             _buildHeaderCell("Unit", flex: 1),
                             _buildHeaderCell("Avail", flex: 1),
-                            _buildHeaderCell("Price", flex: 1),
+                            _buildHeaderCell("Unit Price", flex: 1),
                             _buildHeaderCell("Total", flex: 1),
                           ],
                         ),
@@ -219,7 +219,7 @@ class _WholesalerPendingOrderDetailsScreenState
       final item = entry.value;
       // appLogger(item.product[0].productId.name);
       num price = item.price ?? 0.0;
-      int quantity = item.quantity ?? 1;
+      int quantity = item.id?.quantity ?? 1;
       num total = price * quantity;
       final isAvailable = item.availability ?? false;
       return GestureDetector(
@@ -255,7 +255,7 @@ class _WholesalerPendingOrderDetailsScreenState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
-                    item.productName ?? "N/A",
+                    item.id?.productName ?? "N/A",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 10,
@@ -270,7 +270,7 @@ class _WholesalerPendingOrderDetailsScreenState
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      item.quantity.toString(),
+                      item.id!.quantity.toString(),
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 10,
@@ -284,7 +284,7 @@ class _WholesalerPendingOrderDetailsScreenState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    item.unit ?? "pcs",
+                    item.id?.unit ?? "pcs",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 10,

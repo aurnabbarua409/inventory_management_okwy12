@@ -13,7 +13,7 @@ import 'package:inventory_app/helpers/prefs_helper.dart';
 import 'package:inventory_app/models/retailer/retailer_settings/retailer_profile/retailer_get_profile_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
 import 'package:inventory_app/services/api_service.dart';
-import 'package:inventory_app/utils/app_invitelink.dart';
+import 'package:inventory_app/utils/app_common_function.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
 import 'package:path_provider/path_provider.dart';

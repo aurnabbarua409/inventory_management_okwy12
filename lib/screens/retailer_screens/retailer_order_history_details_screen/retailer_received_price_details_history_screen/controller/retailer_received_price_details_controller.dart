@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:inventory_app/constants/app_colors.dart';
 import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
-import 'package:inventory_app/models/new_version/get_pending_order_model.dart';
+import 'package:inventory_app/models/new_version/get_new_order_model.dart';
 // import 'package:inventory_app/models/retailer/order_history/retailer_recieved_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/retailer_screens/retailer_order_history_screen/controller/retailer_order_history_controller.dart';
 import 'package:inventory_app/services/api_service.dart';
 import 'package:inventory_app/utils/app_logger.dart';
 import 'package:inventory_app/utils/app_urls.dart';
@@ -60,7 +61,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
       wholesaler.value = arg['wholesaler'];
       prevQuantity = List.generate(
         products.length,
-        (index) => products[index].quantity ?? 0,
+        (index) => products[index].id?.quantity ?? 0,
       );
 
       appLogger(products);
@@ -115,7 +116,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
             ),
             Expanded(
               child: TextWidget(
-                text: item.productName ?? "N/A",
+                text: item.id?.productName ?? "N/A",
                 fontSize: 14,
                 fontColor: AppColors.black,
                 softWrap: true,
@@ -140,7 +141,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
             ),
             Expanded(
               child: TextWidget(
-                text: item.additionalInfo ?? "N/A",
+                text: item.id?.additionalInfo ?? "N/A",
                 fontSize: 14,
                 fontColor: AppColors.black,
                 softWrap: true,
@@ -163,7 +164,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
               spaceWidth: 10,
             ),
             TextWidget(
-              text: item.quantity.toString(),
+              text: item.id?.quantity.toString(),
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -182,7 +183,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
               spaceWidth: 10,
             ),
             TextWidget(
-              text: item.unit ?? "N/A",
+              text: item.id?.unit ?? "N/A",
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -239,7 +240,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
               spaceWidth: 10,
             ),
             TextWidget(
-              text: ((item.quantity ?? 1) * (item.price ?? 0)).toString(),
+              text: ((item.id?.quantity ?? 1) * (item.price ?? 0)).toString(),
               fontSize: 14,
               fontColor: AppColors.black,
             ),
@@ -409,8 +410,10 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     List<Map<String, dynamic>> data = [];
     for (int i = 0; i < products.length; i++) {
       if (products[i].availability ?? false) {
-        data.add(
-            {"_id": products[i].id, "quantity": products[i].quantity ?? 0});
+        data.add({
+          "_id": {"_id": products[i].id!.id},
+          "quantity": products[i].id?.quantity ?? 0
+        });
       }
       appLogger('added data: $data');
     }
@@ -424,6 +427,8 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
       } else {
         Get.snackbar("Failed", "Failed to update");
       }
+      await Get.find<RetailerOrderHistoryController>().initalize();
+      Get.back();
     } catch (e) {
       appLogger(e);
       Get.snackbar("Error", "Failed to update");
@@ -447,19 +452,6 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
   }
 
   var selectedUnit = 'Kg'.obs;
-
-  final List<String> units = [
-    'Kg',
-    'Pcs',
-    'Roll',
-    'Crate',
-    'Bottle',
-    'Carton',
-    'Gal',
-    'Bag',
-    'Pkt',
-    'Other',
-  ];
 
   // Decrement the quantity (minimum is 1)
   void decrementQuantity() {
@@ -513,7 +505,7 @@ class RetailerReceivedOrderDetailsHistoryController extends GetxController {
     for (int i = 0; i < products.length; i++) {
       if (products[i].availability ?? false) {
         grandtotal.value +=
-            ((products[i].price ?? 0.0) * (products[i].quantity ?? 1));
+            ((products[i].price ?? 0.0) * (products[i].id?.quantity ?? 1));
       }
     }
   }

@@ -158,8 +158,10 @@ class SigninScreen extends StatelessWidget {
                       label: 'Retailer',
                       onPressed: () {
                         controller.emailController.text =
-                            'royofaw944@mardiek.com';
-                        controller.passwordController.text = '12345678';
+                            "wonip92449@blaxion.com"; //retailer local
+                        // controller.emailController.text =
+                        //     'royofaw944@mardiek.com';
+                        controller.passwordController.text = '1234';
                         controller.signInUser();
                       },
                     ),
@@ -169,8 +171,10 @@ class SigninScreen extends StatelessWidget {
                       label: 'Wholesaler',
                       onPressed: () {
                         controller.emailController.text =
-                            'cabemog361@aperiol.com';
-                        controller.passwordController.text = '12345678';
+                            "mdabdurrazzakrakib290@gmail.com"; // wholesaler for local
+                        // controller.emailController.text =
+                        //     'cabemog361@aperiol.com';
+                        controller.passwordController.text = '12345';
                         controller.signInUser();
                       },
                     ),

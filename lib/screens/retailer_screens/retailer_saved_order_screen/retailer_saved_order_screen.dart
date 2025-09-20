@@ -5,6 +5,7 @@ import 'package:inventory_app/constants/app_icons_path.dart';
 import 'package:inventory_app/constants/app_strings.dart';
 import 'package:inventory_app/models/new_version/get_all_order_model.dart';
 import 'package:inventory_app/routes/app_routes.dart';
+import 'package:inventory_app/screens/bottom_nav_bar/controller/bottom_navbar_controller.dart';
 import 'package:inventory_app/screens/retailer_screens/retailer_saved_order_screen/controller/retailer_saved_order_screen_controller.dart';
 import 'package:inventory_app/widgets/appbar_widget/main_appbar_widget.dart';
 import 'package:inventory_app/widgets/button_widget/button_widget.dart';
@@ -53,7 +54,9 @@ class _RetailerSavedOrderScreenState extends State<RetailerSavedOrderScreen> {
                         IconButtonWidget(
                           onTap: () {
                             controller.clearSelection();
-                            Get.back();
+                            Get.find<BottomNavbarController>().changeIndex(0);
+                            Get.toNamed(AppRoutes.bottomNavBar);
+                            // Get.back();
                           },
                           icon: AppIconsPath.backIcon,
                           color: AppColors.white,
